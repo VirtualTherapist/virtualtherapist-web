@@ -1,0 +1,12 @@
+@(message: String)
+
+@style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
+
+@script = {<script rel="text/javascript"></script>}
+
+@main("Pagina Titel")(style){
+    <div class="container">
+        <h1>Virtual coach</h1>
+    </div>
+}(script)
+
