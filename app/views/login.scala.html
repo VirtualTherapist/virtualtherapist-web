@@ -1,0 +1,16 @@
+@(message: String)(error: String)
+
+@loginscreen(message)(error) {
+    <form role="form" method="POST" action="@routes.LoginController.login()" >
+        <div class="form-group">
+            <label for="inputEmail">Email adres</label>
+            <input type="email" class="form-control" name="email" placeholder="Email adres">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Wachtwoord</label>
+            <input type="password" class="form-control" name="password" placeholder="Wachtwoord">
+        </div>
+        <button type="submit" class="btn btn-warning">Submit</button>
+    </form>
+}
+

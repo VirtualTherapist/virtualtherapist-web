@@ -2372,7 +2372,7 @@ Component: timeline
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-/* Contains the password input and the login button */
+/* Contains the password input and the loginscreen button */
 .lockscreen-item > .lockscreen-credentials {
   margin-left: 80px;
 }
@@ -2389,7 +2389,7 @@ Component: timeline
   text-align: center;
 }
 /* 
-    Page: register and login
+    Page: register and loginscreen
 */
 .form-box {
   width: 360px;

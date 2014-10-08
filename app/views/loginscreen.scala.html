@@ -1,0 +1,26 @@
+@(title: String)(error: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/AdminLTE.css")">
+    </head>
+
+    <body>
+    @if( !error.equals("") ) {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    @content
+    </body>
+
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))" type="text/javascript"></script>
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.js"))" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/AdminLTE/app.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/AdminLTE/dashboard.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/AdminLTE/demo.js")" type="text/javascript"></script>
+</html>
