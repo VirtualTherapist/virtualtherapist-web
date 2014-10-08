@@ -1,0 +1,25 @@
+@(users: java.util.List[User])
+
+    @style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
+
+    @script = {<script rel="text/javascript"></script>}
+
+@main("Virtual Therapist")(style){
+    <div class="container">
+        <h1>Gebruikers</h1>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Naam:</th>
+                <th>Email:</th>
+            </tr>
+            @for(user <- users){
+                <tr>
+                    <td><a href="@routes.ApplicationController.getUser(user.id)">@user.name</a></td>
+                    <td>@user.email</td>
+                </tr>
+            }
+        </table>
+
+    </div>
+}(script)
