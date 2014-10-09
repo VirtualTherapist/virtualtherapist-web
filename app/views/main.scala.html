@@ -20,6 +20,7 @@
                     <ul class="nav navbar-nav">
                         <li class=@{if (request.path == routes.ApplicationController.homepage().toString()) "active" else ""}><a href="@routes.ApplicationController.homepage()">Home</a></li>
                         <li class=@{if (request.path == routes.ApplicationController.showUsers().toString()) "active" else ""}><a href="@routes.ApplicationController.showUsers()">Gebruikers</a></li>
+                        <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
                     </ul>
                     <div class="navbar-form navbar-right">
                         <a href="@routes.LoginController.logout()"><button type="submit" class="btn btn-warning">Log uit!</button></a>
