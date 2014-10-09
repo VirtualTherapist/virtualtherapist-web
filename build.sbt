@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "5.1.+",
   "org.webjars" % "bootstrap" % "3.1.1",
   "org.webjars" % "jquery" % "2.1.1",
-  "org.webjars" %% "webjars-play" % "2.3.0"
+  "org.webjars" %% "webjars-play" % "2.3.0",
+  "org.webjars" % "x-editable-bootstrap3" % "1.5.1"
 )
 
 

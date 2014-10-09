@@ -5,6 +5,7 @@ import filters.SessionFilter;
 import models.Answer;
 import models.Question;
 import models.User;
+import play.Logger;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -56,6 +57,30 @@ public class QuestionController extends Controller
     public static Result deleteQuestion(Integer id)
     {
         Ebean.find(Answer.class, id).delete();
+
+        return questionpage();
+    }
+
+    public static Result updateQuestion()
+    {
+        DynamicForm questionForm    = form().bindFromRequest();
+
+        Question q = Ebean.find(Question.class, questionForm.get("pk"));
+        q.question = questionForm.get("value");
+        q.save();
+
+        return questionpage();
+    }
+
+    public static Result updateAnswer()
+    {
+        DynamicForm answerForm    = form().bindFromRequest();
+
+        Logger.debug("Updating answer");
+
+        Answer a = Ebean.find(Answer.class, answerForm.get("pk"));
+        a.answer = answerForm.get("value");
+        a.save();
 
         return questionpage();
     }
