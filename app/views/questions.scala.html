@@ -27,8 +27,8 @@
             </tr>
             @for(answer <- answers){
                 <tr>
-                    <td>@answer.answer</td>
                     <td>@answer.question.question</td>
+                    <td>@answer.answer</td>
                     <td><a href="@routes.QuestionController.deleteQuestion(answer.id)">Delete</a></td>
                 </tr>
             }

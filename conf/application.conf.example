@@ -37,9 +37,8 @@ application.langs="en"
 # By convention, the default datasource is named `default`
 #
 db.default.driver=com.mysql.jdbc.Driver
-db.default.url="mysql://root:root@localhost:8889/virtualtherapist"
-// windows users:
 
+<<<<<<< HEAD:conf/application.conf
 # Bas DB Settings #########################################
 # db.default.url="jdbc:mysql://3306/virtualtherapist"
 # db.default.user=root
@@ -49,9 +48,17 @@ db.default.url="mysql://root:root@localhost:8889/virtualtherapist"
 # Vasco DB Settings
  db.default.url="jdbc:mysql://localhost:3306/virtualtherapist"
  db.default.user=root
+=======
+# DB settings for Unix systems.
+db.default.url="mysql://user:password@localhost/database"
 
-# db.default.password=""
-#
+# DB settings for Windows #########################################
+#db.default.url="jdbc:mysql://3306/database"
+#db.default.user="user"
+#db.default.password="password"
+#############################################################
+>>>>>>> 0ee0df757c4115bcc6f3d279977b94b04aaa5558:conf/application.conf.example
+
 # You can expose this datasource via JNDI if needed (Useful for JPA)
 # db.default.jndiName=DefaultDS
 
@@ -81,8 +88,6 @@ logger.play=INFO
 # Logger provided to your application:
 logger.application=DEBUG
 
-
 # Session Config
 application.lang.cookie=VIRTUAL_COACH_SESSION
 session.expererationtime=1 # in uren
-
