@@ -4,7 +4,6 @@ import com.avaje.ebean.Ebean;
 import filters.SessionFilter;
 import models.Answer;
 import models.Question;
-import models.User;
 import play.Logger;
 import play.data.DynamicForm;
 import play.mvc.Controller;
@@ -12,7 +11,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import views.html.questions;
 
-import java.util.List;
+import java.util.*;
 
 import static play.data.Form.form;
 import static play.libs.Json.toJson;
@@ -28,14 +27,43 @@ public class QuestionController extends Controller
     {
         List<Answer> allAnswers = Ebean.find(Answer.class).findList();
 
-        return ok(questions.render(allAnswers));
+        return ok(questions.render(allAnswers, null));
     }
 
     public static Result showQuestions()
     {
-        List<Answer> allAnswers = Ebean.find(Answer.class).findList();
+        Set<Answer> allAnswers = Ebean.find(Answer.class).findSet();
 
         return ok(toJson(allAnswers));
+    }
+
+    public static Result searchQuestion()
+    {
+        DynamicForm searchForm        = form().bindFromRequest();
+        //HashSet om dubbele waardes te voorkomen
+        Set<Object> returnData       = new HashSet<Object>();
+        Set<Answer> foundAnswers     = new HashSet<Answer>();
+        Set<Question> foundQuestions = new HashSet<Question>();
+
+        if( searchForm.get("answer") != "" )
+        {
+            foundAnswers = Ebean.find(Answer.class).where().contains("answer", searchForm.get("answer")).findSet();
+            foundAnswers.addAll(Ebean.find(Answer.class).where().like("answer", searchForm.get("answer")).findSet());
+            foundAnswers.addAll(Ebean.find(Answer.class).where().eq("answer", searchForm.get("answer")).findSet());
+
+            for( Answer ans : foundAnswers ){ returnData.add(ans); }
+        }
+        if( searchForm.get("question") != "" )
+        {
+            foundQuestions = Ebean.find(Question.class).where().contains("question", searchForm.get("question")).findSet();
+            foundQuestions.addAll(Ebean.find(Question.class).where().like("question", searchForm.get("question")).findSet());
+            foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", searchForm.get("question")).findSet());
+
+            for( Question question : foundQuestions ){ returnData.add(question); }
+        }
+
+//        return ok(toJson(returnData));
+        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions)));
     }
 
     public static Result saveQuestion()
@@ -54,9 +82,16 @@ public class QuestionController extends Controller
         return questionpage();
     }
 
-    public static Result deleteQuestion(Integer id)
+    public static Result deleteAnswer(Integer id)
     {
         Ebean.find(Answer.class, id).delete();
+
+        return questionpage();
+    }
+
+    public static Result deleteQuestion(Integer id)
+    {
+        Ebean.find(Question.class, id).delete();
 
         return questionpage();
     }

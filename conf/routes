@@ -3,30 +3,32 @@
 # ~~~~
 
 # Home page
-GET         /                            controllers.ApplicationController.homepage()
-GET         /gebruikers/all              controllers.ApplicationController.showUsers()
-GET         /gebruikers/:id              controllers.ApplicationController.getUser(id: Integer)
+GET         /                         controllers.ApplicationController.homepage()
+GET         /gebruikers/all           controllers.ApplicationController.showUsers()
+GET         /gebruikers/:id           controllers.ApplicationController.getUser(id: Integer)
 
-GET         /vragen                      controllers.QuestionController.questionpage()
-POST        /vragen/opslaan              controllers.QuestionController.saveQuestion()
-GET         /vragen/all                  controllers.QuestionController.showQuestions()
-GET         /vragen/delete/:id           controllers.QuestionController.deleteQuestion(id: Integer)
-POST        /vragen/update               controllers.QuestionController.updateQuestion()
-POST        /antwoord/update             controllers.QuestionController.updateAnswer()
+GET         /vragen                   controllers.QuestionController.questionpage()
+POST        /vragen                   controllers.QuestionController.searchQuestion()
+POST        /vragen/opslaan           controllers.QuestionController.saveQuestion()
+GET         /vragen/all               controllers.QuestionController.showQuestions()
+GET         /antwoord/delete/:id      controllers.QuestionController.deleteAnswer(id: Integer)
+GET         /vragen/delete/:id        controllers.QuestionController.deleteQuestion(id: Integer)
+POST        /vragen/update            controllers.QuestionController.updateQuestion()
+POST        /antwoord/update          controllers.QuestionController.updateAnswer()
 
-GET         /login                       controllers.LoginController.login()
-POST        /login                       controllers.LoginController.validateLogin()
-GET         /register                    controllers.LoginController.register()
-POST        /register                    controllers.LoginController.createUser()
-GET         /logout                      controllers.LoginController.logout()
+GET         /login                    controllers.LoginController.login()
+POST        /login                    controllers.LoginController.validateLogin()
+GET         /register                 controllers.LoginController.register()
+POST        /register                 controllers.LoginController.createUser()
+GET         /logout                   controllers.LoginController.logout()
 
 # Run initDB link als de db vers is of als hij net gecleared is
-GET         /initDB                      controllers.LoginController.initializeDB()
+GET         /initDB                   controllers.LoginController.initializeDB()
 
 # Chat calls
 #POST        /chat/message          controllers.ChatController.message()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                controllers.Assets.at(path="/public", file)
+GET         /assets/*file             controllers.Assets.at(path="/public", file)
 # Enable webjar based resources to be returned
-GET         /webjars/*file               controllers.WebJarAssets.at(file)
+GET         /webjars/*file            controllers.WebJarAssets.at(file)
