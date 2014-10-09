@@ -43,7 +43,8 @@ body {
     padding-top: 45px;
     display: inline;
     float: left;
-    width: 786px;
+    max-width: 970px;
+    width: 100%;
 }
 /* Customize container */
 @media (min-width: 768px) {
@@ -85,7 +86,9 @@ body {
 }
 header {
     padding-bottom: 15px;
-    display: block;
+    display: inline;
+    float: left;
+    width: 100%;
 }
 header > h1{
     margin: 0px;
@@ -93,6 +96,6 @@ header > h1{
     float: left;
 }
 header > .btn-group{
-    float: right;
     display: inline;
+    float: right;
 }
