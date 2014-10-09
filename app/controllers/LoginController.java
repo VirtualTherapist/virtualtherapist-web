@@ -15,9 +15,6 @@ import java.util.List;
 
 import static play.data.Form.form;
 
-/**
- * Created by Akatchi on 8-10-2014.
- */
 public class LoginController extends Controller
 {
     public static Result login()
