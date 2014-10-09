@@ -3,8 +3,12 @@
 @loginscreen(message)(error) {
     <form role="form" method="POST" action="@routes.LoginController.register()" >
         <div class="form-group">
-            <label for="inputName">Naam:</label>
-            <input type="text" class="form-control" name="name" placeholder="Naam" required>
+            <label for="inputFirstName">Voornaam:</label>
+            <input type="text" class="form-control" name="first_name" placeholder="Naam" required>
+        </div>
+        <div class="form-group">
+            <label for="inputLastName">Achternaam:</label>
+            <input type="text" class="form-control" name="last_name" placeholder="Naam" required>
         </div>
         <div class="form-group">
             <label for="inputEmail">Email adres:</label>

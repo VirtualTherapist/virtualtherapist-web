@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import filters.LoginFilter;
 import models.User;
+import models.UserRole;
 import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import static play.data.Form.form;
+import static play.libs.Json.toJson;
 
 /**
  * Created by Akatchi on 8-10-2014.
@@ -72,19 +74,36 @@ public class LoginController extends Controller
     @With(LoginFilter.class)
     public static Result createUser()
     {
-        Form<User> registerForm = form(User.class).bindFromRequest();
-        User user = registerForm.get();
+        DynamicForm registerForm = form().bindFromRequest();
+        User user = new User();
+        user.first_name       = registerForm.get("first_name");
+        user.last_name        = registerForm.get("last_name");
+        user.email            = registerForm.get("email");
+        user.password         = Crypto.encryptAES(registerForm.get("password"));
 
-        user.password = Crypto.encryptAES(user.password);
+        UserRole rol = Ebean.find(UserRole.class).where().eq("name", "Admin").findUnique();
 
-        Ebean.beginTransaction();
+        user.role    = rol;
+
         user.save();
-        Ebean.commitTransaction();
-        Ebean.endTransaction();
 
         createSession(user.email);
 
         return redirect("/");
+    }
+
+    public static Result initializeDB()
+    {
+        UserRole rol = new UserRole();
+        rol.level = 1;
+        rol.name  = "Gebruiker";
+        rol.save();
+
+        rol.level = 10;
+        rol.name  = "Admin";
+        rol.save();
+
+        return ok(toJson("true"));
     }
 
     public static void createSession(String email)

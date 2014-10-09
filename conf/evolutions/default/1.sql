@@ -10,6 +10,18 @@ create table answer (
   constraint pk_answer primary key (id))
 ;
 
+create table keyword (
+  id                        integer auto_increment not null,
+  keyword                   varchar(255),
+  constraint pk_keyword primary key (id))
+;
+
+create table keyword_category (
+  id                        integer auto_increment not null,
+  name                      varchar(255),
+  constraint pk_keyword_category primary key (id))
+;
+
 create table question (
   id                        integer auto_increment not null,
   question                  varchar(255),
@@ -18,12 +30,37 @@ create table question (
 
 create table user (
   id                        integer auto_increment not null,
-  name                      varchar(255),
+  first_name                varchar(255),
+  last_name                 varchar(255),
   email                     varchar(255),
   password                  varchar(255),
+  role_id                   integer,
   constraint pk_user primary key (id))
 ;
 
+create table user_keyword (
+  id                        integer auto_increment not null,
+  constraint pk_user_keyword primary key (id))
+;
+
+create table user_question (
+  id                        integer auto_increment not null,
+  question                  varchar(255),
+  timestamp                 bigint,
+  constraint pk_user_question primary key (id))
+;
+
+create table user_role (
+  id                        integer auto_increment not null,
+  name                      varchar(255),
+  level                     integer,
+  constraint pk_user_role primary key (id))
+;
+
+alter table answer add constraint fk_answer_question_1 foreign key (question_id) references question (id) on delete restrict on update restrict;
+create index ix_answer_question_1 on answer (question_id);
+alter table user add constraint fk_user_role_2 foreign key (role_id) references user_role (id) on delete restrict on update restrict;
+create index ix_user_role_2 on user (role_id);
 
 
 
@@ -33,9 +70,19 @@ SET FOREIGN_KEY_CHECKS=0;
 
 drop table answer;
 
+drop table keyword;
+
+drop table keyword_category;
+
 drop table question;
 
 drop table user;
+
+drop table user_keyword;
+
+drop table user_question;
+
+drop table user_role;
 
 SET FOREIGN_KEY_CHECKS=1;
 

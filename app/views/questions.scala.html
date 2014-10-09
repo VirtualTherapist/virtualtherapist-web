@@ -1,3 +1,5 @@
+@(answers: java.util.List[Answer])
+
 @style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
 
 @script = {<script rel="text/javascript"></script>}
@@ -17,5 +19,23 @@
             </div>
             <button type="submit" class="btn btn-warning">Opslaan</button>
         </form>
+
+        <br>
+        <table class="table table-striped">
+            <tr>
+                <th>Vraag:</th>
+                <th>Antwoord:</th>
+                <th>Verwijderen</th>
+            </tr>
+            @for(answer <- answers){
+                <tr>
+                    <td>@answer.answer</td>
+                    <td>@answer.question.question</td>
+                    <td><a href="@routes.QuestionController.deleteQuestion(answer.id)">Delete</a></td>
+                </tr>
+            }
+        </table>
+
+
     </div>
 }(script)

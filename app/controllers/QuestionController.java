@@ -25,7 +25,9 @@ public class QuestionController extends Controller
 
     public static Result questionpage()
     {
-        return ok(questions.render());
+        List<Answer> allAnswers = Ebean.find(Answer.class).findList();
+
+        return ok(questions.render(allAnswers));
     }
 
     public static Result showQuestions()
@@ -48,13 +50,13 @@ public class QuestionController extends Controller
         answer.question = question;
         answer.save();
 
-        return ok(toJson(answer));
+        return questionpage();
     }
 
     public static Result deleteQuestion(Integer id)
     {
         Ebean.find(Answer.class, id).delete();
 
-        return ok(toJson("true"));
+        return questionpage();
     }
 }

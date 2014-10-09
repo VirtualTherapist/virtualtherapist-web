@@ -15,7 +15,10 @@ public class User extends Model
     public int id;
 
     @Constraints.Required
-    public String name;
+    public String first_name;
+
+    @Constraints.Required
+    public String last_name;
 
     @Constraints.Required
     @Constraints.Email
@@ -23,5 +26,8 @@ public class User extends Model
 
     @Constraints.Required
     public String password;
+
+    @ManyToOne
+    public UserRole role;
 
 }
