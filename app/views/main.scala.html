@@ -11,6 +11,7 @@
         @style
     </head>
     <body>
+<<<<<<< HEAD
         <div class="container">
             <div class="sidebar">
                 <img class="logo" src="@routes.Assets.at("images/virtualcoach.png")" />
@@ -20,6 +21,23 @@
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
+=======
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="@routes.ApplicationController.homepage()">Virtual Therapist</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class=@{if (request.path == routes.ApplicationController.homepage().toString()) "active" else ""}><a href="@routes.ApplicationController.homepage()">Home</a></li>
+                        <li class=@{if (request.path == routes.ApplicationController.showUsers().toString()) "active" else ""}><a href="@routes.ApplicationController.showUsers()">Gebruikers</a></li>
+                        <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
+                    </ul>
+                    <div class="navbar-form navbar-right">
+                        <a href="@routes.LoginController.logout()"><button type="submit" class="btn btn-warning">Log uit!</button></a>
+                    </div>
+                </div>
+>>>>>>> 0239cf9fe68234f9ef071094c6013450e2478ce8
             </div>
             <div class="content">
                 @content
