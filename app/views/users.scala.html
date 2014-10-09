@@ -5,21 +5,20 @@
     @script = {<script rel="text/javascript"></script>}
 
 @main("Virtual Therapist")(style){
-    <div class="container">
+    <header>
         <h1>Gebruikers</h1>
+    </header>
 
-        <table class="table table-striped">
+    <table class="table table-striped">
+        <tr>
+            <th>Naam:</th>
+            <th>Email:</th>
+        </tr>
+        @for(user <- users){
             <tr>
-                <th>Naam:</th>
-                <th>Email:</th>
+                <td><a href="@routes.ApplicationController.getUser(user.id)">@user.name</a></td>
+                <td>@user.email</td>
             </tr>
-            @for(user <- users){
-                <tr>
-                    <td><a href="@routes.ApplicationController.getUser(user.id)">@user.name</a></td>
-                    <td>@user.email</td>
-                </tr>
-            }
-        </table>
-
-    </div>
+        }
+    </table>
 }(script)
