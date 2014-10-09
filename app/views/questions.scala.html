@@ -5,8 +5,6 @@
 @script = {<script rel="text/javascript"></script>}
 
 @main("Virtual Therapist")(style){
-    <div class="container">
-        <h1>Vragen</h1>
 
         <form role="form" method="POST" action="@routes.QuestionController.saveQuestion()" >
             <div class="form-group">
@@ -36,6 +34,4 @@
             }
         </table>
 
-
-    </div>
 }(script)

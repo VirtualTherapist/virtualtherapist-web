@@ -1,0 +1,101 @@
+/* Space out content a bit */
+body {
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.marketing,
+.footer {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.logo{
+    width: 100%;
+    border-radius: 100px;
+    margin-bottom: 15px;
+}
+.login-name{
+    margin-bottom: 25px;
+    text-align: center;
+}
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+}
+.sidebar{
+    width: 160px;
+    position: fixed;
+    margin-top: 45px;
+}
+.sidebar > .nav-pills > li{
+    width: 100%;
+    text-align: center;
+}
+.sidebar > .nav-pills > li > a:hover{
+     background-color: #f5f5f5;
+}
+.sidebar > .nav-pills > .active > a{
+    background-color: #158cba !important;
+}
+.content {
+    padding-left: 200px;
+    padding-top: 45px;
+    display: inline;
+    float: left;
+    max-width: 970px;
+    width: 100%;
+}
+/* Customize container */
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+
+}
+@media (max-width: 480px) {
+    .sidebar{
+        position: inherit;
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+    }
+    .content {
+        padding-left: 0px;
+        padding-top: 0px;
+        width: 100%;
+    }
+    .logo{
+        display: none;
+    }
+    .login-name{
+        display: none;
+    }
+    .btn{
+        width: 100%;
+    }
+    .btn-group{
+        width: 100%;
+    }
+    header > h1{
+        float: none;
+    }
+    header{
+        text-align: center;
+    }
+}
+header {
+    padding-bottom: 15px;
+    display: inline;
+    float: left;
+    width: 100%;
+}
+header > h1{
+    margin: 0px;
+    display: inline;
+    float: left;
+}
+header > .btn-group{
+    display: inline;
+    float: right;
+}

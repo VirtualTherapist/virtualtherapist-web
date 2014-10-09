@@ -16,6 +16,7 @@ import views.html.index;
 import views.html.login;
 import views.html.register;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +24,6 @@ import java.util.List;
 import static play.data.Form.form;
 import static play.libs.Json.toJson;
 
-/**
- * Created by Akatchi on 8-10-2014.
- */
 public class LoginController extends Controller
 {
     @With(LoginFilter.class)
@@ -56,9 +54,12 @@ public class LoginController extends Controller
         user.email            = loginForm.get("email");
         user.password         = loginForm.get("password");
 
+        UserRole adminRole = Ebean.find(UserRole.class).where().eq("level", "10").findUnique();
+
         List<User> userList = Ebean.find(User.class).where()
                                                         .eq("email", user.email)
-                                                        .eq("password", Crypto.encryptAES(user.password)).findList();
+                                                        .eq("password", Crypto.encryptAES(user.password))
+                                                        .eq("role_id", adminRole.id).findList();
         if( userList.size() == 1 )
         {
             createSession(user.email);
@@ -67,6 +68,8 @@ public class LoginController extends Controller
         }
         else
         {
+            // Hier komt hij ook terecht als je niet bevoegd bent om in te loggen
+            // misschien hier nog een betere error afhandeling maken dat hij een andere error daarvoor geeft
             return ok(login.render("Login pagina", "Error: Foutieve email & wachtwoord combinatie"));
         }
     }
@@ -94,16 +97,22 @@ public class LoginController extends Controller
 
     public static Result initializeDB()
     {
+        List<Object> objectsAdded = new ArrayList<Object>();
+
         UserRole rol = new UserRole();
         rol.level = 1;
         rol.name  = "Gebruiker";
         rol.save();
+        objectsAdded.add(rol);
 
+        rol = new UserRole();
         rol.level = 10;
         rol.name  = "Admin";
         rol.save();
+        objectsAdded.add(rol);
 
-        return ok(toJson("true"));
+
+        return ok(toJson(objectsAdded));
     }
 
     public static void createSession(String email)
