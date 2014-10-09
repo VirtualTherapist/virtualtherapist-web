@@ -1,0 +1,21 @@
+@style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
+
+@script = {<script rel="text/javascript"></script>}
+
+@main("Virtual Therapist")(style){
+    <div class="container">
+        <h1>Vragen</h1>
+
+        <form role="form" method="POST" action="@routes.QuestionController.saveQuestion()" >
+            <div class="form-group">
+                <label for="inputQuestion">Vraag</label>
+                <input type="text" class="form-control" name="question" placeholder="Vraag">
+            </div>
+            <div class="form-group">
+                <label for="inputAnswer">Antwoord</label>
+                <input type="text" class="form-control" name="answer" placeholder="Antwoord">
+            </div>
+            <button type="submit" class="btn btn-warning">Opslaan</button>
+        </form>
+    </div>
+}(script)
