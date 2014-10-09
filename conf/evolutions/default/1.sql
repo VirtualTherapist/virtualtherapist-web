@@ -23,7 +23,7 @@ create table question (
   constraint pk_question primary key (id))
 ;
 
->>>>>>> 0239cf9fe68234f9ef071094c6013450e2478ce8
+
 create table user (
   id                        integer auto_increment not null,
   name                      varchar(255),
@@ -33,10 +33,9 @@ create table user (
 ;
 
 
-
-
 # --- !Downs
 
+>>>>>>> 2a058a2144b018e186d88c20144d94239327463d
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table answer;
