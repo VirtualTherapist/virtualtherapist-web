@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+# --- Created by Ebean DDL
+# To stop Ebean DDL generation, remove this comment and start using Evolutions
+
+# --- !Ups
+
+=======
 # --- Created by Ebean DDL
 # To stop Ebean DDL generation, remove this comment and start using Evolutions
 
@@ -16,6 +23,7 @@ create table question (
   constraint pk_question primary key (id))
 ;
 
+
 create table user (
   id                        integer auto_increment not null,
   name                      varchar(255),
@@ -27,6 +35,7 @@ create table user (
 
 # --- !Downs
 
+>>>>>>> 2a058a2144b018e186d88c20144d94239327463d
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table answer;

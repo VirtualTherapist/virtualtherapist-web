@@ -1,6 +1,6 @@
 @import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
 @import url(//fonts.googleapis.com/css?family=Kaushan+Script);
-/*! 
+/*!
  *   AdminLTE v1.2
  *   Author: AlmsaeedStudio.com
  *   License: Open source - MIT
@@ -9,54 +9,54 @@
 /*
     Core: General style
 ----------------------------
-*/
+  */
 html,
 body {
-  overflow-x: hidden!important;
-  font-family: 'Source Sans Pro', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100%;
-  background: #f9f9f9;
+    overflow-x: hidden!important;
+    font-family: 'Source Sans Pro', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100%;
+    background: #f9f9f9;
 }
 a {
-  color: #3c8dbc;
+    color: #3c8dbc;
 }
 a:hover,
 a:active,
 a:focus {
-  outline: none;
-  text-decoration: none;
-  color: #72afd2;
+    outline: none;
+    text-decoration: none;
+    color: #72afd2;
 }
 /* Layouts */
 .wrapper {
-  min-height: 100%;
+    min-height: 100%;
 }
 .wrapper:before,
 .wrapper:after {
-  display: table;
-  content: " ";
+    display: table;
+    content: " ";
 }
 .wrapper:after {
-  clear: both;
+    clear: both;
 }
 /* Header */
 body > .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1030;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
 }
 /* Define 2 column template */
 .right-side,
 .left-side {
-  min-height: 100%;
-  display: block;
+    min-height: 100%;
+    display: block;
 }
 /*right side - contins main content*/
 .right-side {
-  background-color: #f9f9f9;
+    background-color: #f9f9f9;
   margin-left: 220px;
 }
 /*left side - contains sidebar*/
@@ -747,7 +747,7 @@ body > .header .logo .icon {
     left: 0px;
   }
 }
-/* 
+/*
     Dropdown menus
 ----------------------------
 */
@@ -1125,7 +1125,7 @@ body > .header .logo .icon {
     left: auto;
   }
 }
-/* 
+/*
    All form elements including input, select, textarea etc.
 -----------------------------------------------------------------
 */
@@ -1175,7 +1175,7 @@ body > .header .logo .icon {
 .radio {
   padding-left: 0;
 }
-/* 
+/*
     Compenent: Progress bars
 --------------------------------
 */
@@ -2036,7 +2036,7 @@ Component: timeline
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-/* 
+/*
     Component: callout
 ------------------------
 */
@@ -2076,7 +2076,7 @@ Component: timeline
 .callout.callout-info h4 {
   color: #3A87AD;
 }
-/* 
+/*
     Component: alert
 ------------------------
 */
@@ -2388,7 +2388,7 @@ Component: timeline
   margin-top: 30px;
   text-align: center;
 }
-/* 
+/*
     Page: register and loginscreen
 */
 .form-box {
@@ -2453,7 +2453,7 @@ Component: timeline
     width: 90%;
   }
 }
-/* 
+/*
     Page: 404 and 500 error pages
 ------------------------------------
 */
@@ -2503,7 +2503,7 @@ Component: timeline
 .error-page:after {
   clear: both;
 }
-/* 
+/*
     Page: Invoice
 */
 .invoice {
@@ -2536,12 +2536,12 @@ Component: timeline
     white-space: normal!important;
   }
 }
-/* 
+/*
     Skins
     -----
 */
-/* 
-    Skin Blue 
+/*
+    Skin Blue
     ---------
 */
 /* skin-blue navbar */
