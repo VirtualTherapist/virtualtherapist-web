@@ -4,8 +4,8 @@
 
 # Home page
 GET         /                         controllers.ApplicationController.homepage()
-GET         /gebruikers/all           controllers.ApplicationController.showUsers()
-GET         /gebruikers/:id           controllers.ApplicationController.getUser(id: Integer)
+GET         /gebruikers/all           controllers.UserController.showUsers()
+GET         /gebruikers/:id           controllers.UserController.userPage(id: Integer)
 
 GET         /vragen                   controllers.QuestionController.questionpage()
 POST        /vragen                   controllers.QuestionController.searchQuestion()
@@ -21,6 +21,9 @@ POST        /login                    controllers.LoginController.validateLogin(
 GET         /register                 controllers.LoginController.register()
 POST        /register                 controllers.LoginController.createUser()
 GET         /logout                   controllers.LoginController.logout()
+
+GET         /analyse/:id              controllers.AnalysisController.analysisPageForUser(id: Integer)
+GET         /analyse                  controllers.AnalysisController.analysisPage()
 
 # Run initDB link als de db vers is of als hij net gecleared is
 GET         /initDB                   controllers.LoginController.initializeDB()

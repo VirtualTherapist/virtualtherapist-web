@@ -1,0 +1,41 @@
+@(user: User)
+
+@style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
+
+@script = {
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}
+
+@main("Virtual Therapist")(style){
+
+        <header>
+            <h1>@user.first_name @user.last_name</h1>
+        </header>
+
+        <div class="trending">
+            <h3>Details</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <td>@user.id</td>
+                </tr>
+                <tr>
+                    <th>Voornaam</th>
+                    <td>@user.first_name</td>
+                </tr>
+                <tr>
+                    <th>Achternaam</th>
+                    <td>@user.last_name</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@user.email</td>
+                </tr>
+            </table>
+            <div class="btn-group">
+                <a href="@routes.AnalysisController.analysisPageForUser(user.id)" class="btn btn-primary btn-lg">Naar analyse van deze gebruiker</a>
+            </div>
+        </div>
+
+
+}(script)

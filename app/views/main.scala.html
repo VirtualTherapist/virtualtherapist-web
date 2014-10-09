@@ -17,8 +17,9 @@
                 <h4 class="login-name">Louis Jansen</h4>
                 <ul class="nav nav-pills">
                     <li class=@{if (request.path == routes.ApplicationController.homepage().toString()) "active" else ""}><a href="@routes.ApplicationController.homepage()">Home</a></li>
-                    <li class=@{if (request.path == routes.ApplicationController.showUsers().toString()) "active" else ""}><a href="@routes.ApplicationController.showUsers()">Gebruikers</a></li>
+                    <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
                     <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
+                    <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse overzicht</a></li>
                 </ul>
             </div>
             <div class="content">

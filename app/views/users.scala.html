@@ -17,9 +17,13 @@
         </tr>
         @for(user <- users){
             <tr>
-                <td><a href="@routes.ApplicationController.getUser(user.id)">@user.first_name @user.last_name</a></td>
+                <td><a href="@routes.UserController.userPage(user.id)">@user.first_name @user.last_name</a></td>
                 <td>@user.email</td>
+                @if(user.role != null) {
                 <td>@user.role.name</td>
+                }else{
+                <td></td>
+                }
             </tr>
         }
         </table>
