@@ -2,7 +2,8 @@
 
     @style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
 
-    @script = {<script rel="text/javascript"></script>}
+    @script = {<script rel="text/javascript" src="@routes.Assets.at("javascripts/user.js")"></script>}
+
 
 @main("Virtual Therapist")(style){
     <header>
@@ -20,9 +21,9 @@
                 <td><a href="@routes.UserController.userPage(user.id)">@user.first_name @user.last_name</a></td>
                 <td>@user.email</td>
                 @if(user.role != null) {
-                <td>@user.role.name</td>
+                    <td>@user.role.name</td>
                 }else{
-                <td></td>
+                    <td></td>
                 }
             </tr>
         }
