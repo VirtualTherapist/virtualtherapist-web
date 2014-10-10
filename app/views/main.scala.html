@@ -22,6 +22,7 @@
                     <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
                     <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
                     <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse overzicht</a></li>
+                    <li><a href="@routes.LoginController.logout()">Uitloggen</a></li>
                 </ul>
             </div>
             <div class="content">
