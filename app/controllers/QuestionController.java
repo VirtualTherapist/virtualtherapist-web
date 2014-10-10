@@ -5,6 +5,7 @@ import filters.SessionFilter;
 import models.Answer;
 import models.Question;
 import play.Logger;
+import play.api.libs.Crypto;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -27,7 +28,7 @@ public class QuestionController extends Controller
     {
         List<Answer> allAnswers = Ebean.find(Answer.class).findList();
 
-        return ok(questions.render(allAnswers, null));
+        return ok(questions.render(allAnswers, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result showQuestions()
@@ -63,7 +64,7 @@ public class QuestionController extends Controller
         }
 
 //        return ok(toJson(returnData));
-        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions)));
+        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions), Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result saveQuestion()
