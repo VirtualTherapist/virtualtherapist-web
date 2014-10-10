@@ -3,6 +3,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import models.User;
+import play.api.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
@@ -17,11 +18,11 @@ public class AnalysisController extends Controller {
         if(userId != null) {
             user = Ebean.find(User.class, userId);
         }
-        return ok(analysis.render("Analyse overzicht", user));
+        return ok(analysis.render("Analyse overzicht", user, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result analysisPage() {
-        return ok(analysis.render("Analyse overzicht", null));
+        return ok(analysis.render("Analyse overzicht", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
 }

@@ -1,4 +1,4 @@
-@(users: java.util.List[User])
+@(users: java.util.List[User])(firstname: String)(lastname: String)
 
     @style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
 
@@ -29,4 +29,4 @@
         }
         </table>
 
-}(script)
+}(script)(firstname)(lastname)
