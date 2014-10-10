@@ -101,12 +101,14 @@ public class LoginController extends Controller
 
         UserRole rol = new UserRole();
         rol.level = 1;
+        rol.id = 1;
         rol.name  = "Gebruiker";
         rol.save();
         objectsAdded.add(rol);
 
         rol = new UserRole();
         rol.level = 10;
+        rol.id= 2;
         rol.name  = "Admin";
         rol.save();
         objectsAdded.add(rol);
