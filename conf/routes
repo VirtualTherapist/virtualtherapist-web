@@ -27,7 +27,6 @@ GET         /analyse                         controllers.AnalysisController.anal
 
 # API Calls
 GET         /api/login/:username/:password   controllers.APIController.validateLogin(username: String, password: String)
-GET         /api/vragen/all                  controllers.APIController.getAllQuestions()
 
 # Run initDB link als de db vers is of als hij net gecleared is
 GET         /initDB                          controllers.LoginController.initializeDB()
