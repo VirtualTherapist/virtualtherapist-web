@@ -19,10 +19,10 @@ import static play.data.Form.form;
 import static play.libs.Json.toJson;
 
 @With(SessionFilter.class)
-public class ApplicationController extends Controller
+public class ActivityController extends Controller
 {
 
-    public static Result homepage()
+    public static Result activity()
     {
         return ok(index.render(""));
     }

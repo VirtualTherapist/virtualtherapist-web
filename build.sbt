@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.3.0",
   "org.webjars" % "x-editable-bootstrap3" % "1.5.1",
   "org.webjars" % "font-awesome" % "4.2.0",
-  "org.webjars" % "bootstrap-glyphicons" % "bdd2cbfba0"
+  "org.webjars" % "bootstrap-glyphicons" % "bdd2cbfba0",
+  "org.webjars" % "chartjs" % "26962ce"
 )
 
 

@@ -39,9 +39,12 @@ public class QuestionController extends Controller
 
     public static Result searchQuestion()
     {
-        DynamicForm searchForm        = form().bindFromRequest();
+        Map<String, String[]> parameters = request().body().asFormUrlEncoded();
+        String search = (String) parameters.get("search")[0];
+        //Collection<String[]> answer = parameters.values();
+        //DynamicForm searchForm        = form().bindFromRequest();
         //HashSet om dubbele waardes te voorkomen
-        Set<Object> returnData       = new HashSet<Object>();
+        /*Set<Object> returnData       = new HashSet<Object>();
         Set<Answer> foundAnswers     = new HashSet<Answer>();
         Set<Question> foundQuestions = new HashSet<Question>();
 
@@ -60,10 +63,10 @@ public class QuestionController extends Controller
             foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", searchForm.get("question")).findSet());
 
             for( Question question : foundQuestions ){ returnData.add(question); }
-        }
-
-//        return ok(toJson(returnData));
-        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions)));
+        }*/
+        return ok(search);
+        //return ok(toJson(returnData));
+//        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions)));
     }
 
     public static Result saveQuestion()

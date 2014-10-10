@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET         /                         controllers.ApplicationController.homepage()
+GET         /                         controllers.ActivityController.activity()
 GET         /gebruikers/all           controllers.UserController.showUsers()
 GET         /gebruikers/:id           controllers.UserController.userPage(id: Integer)
 
