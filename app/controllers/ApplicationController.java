@@ -27,18 +27,5 @@ public class ApplicationController extends Controller
         return ok(index.render(""));
     }
 
-    public static Result showUsers()
-    {
-        List<User> allUsers = Ebean.find(User.class).findList();
-
-        return ok(users.render(allUsers));
-    }
-
-
-    public static Result getUser(Integer id)
-    {
-        User user = Ebean.find(User.class, id);
-        return ok(toJson(user));
-    }
 
 }
