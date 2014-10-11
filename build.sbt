@@ -13,12 +13,14 @@ libraryDependencies ++= Seq(
   javaWs,
   "mysql" % "mysql-connector-java" % "5.1.+",
   "org.webjars" % "bootstrap" % "3.1.1",
-  "org.webjars" % "jquery" % "2.1.1",
+  "org.webjars" % "jquery" % "1.*",
   "org.webjars" %% "webjars-play" % "2.3.0",
   "org.webjars" % "x-editable-bootstrap3" % "1.5.1",
   "org.webjars" % "font-awesome" % "4.2.0",
   "org.webjars" % "bootstrap-glyphicons" % "bdd2cbfba0",
   "org.webjars" % "chartjs" % "26962ce"
+  "org.mockito" % "mockito-core" % "1.9.5" % "test",
+  "net.sourceforge.htmlunit" % "htmlunit" % "2.14" % "test"
 )
 
 
