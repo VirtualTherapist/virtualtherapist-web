@@ -1,4 +1,4 @@
-@(answers: java.util.List[Answer])(questions: java.util.List[Question])(firstname: String)(lastname: String)
+@(questions: java.util.List[Question])(answers: java.util.List[Answer])(firstname: String)(lastname: String)
 
 @style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
 
@@ -23,10 +23,12 @@
                         "search" : search,
                         "where" : where
                     }
-                } ).done ( function ( ) {
-                    alert('you have searched: ' + search);
+                } ).done ( function ( data ) {
+
+                    console.log(data);
+                    alert('you have searched: ' + data);
                 } ).fail ( function ( ) {
-                    alert('you have failded: ' + search);
+//                    alert('you have failded: ' + search);
                 } )
             })
         })
@@ -103,34 +105,34 @@
             </div>
         </div>
     <br>
-    @if( answers != null ) {
+    @if( questions != null ) {
         <table id="answers" class="table table-striped">
             <tr>
                 <th>Vraag:</th>
                 <th>Antwoord:</th>
                 <th>Verwijderen</th>
             </tr>
-            @for(answer <- answers) {
+            @for(question <- questions) {
                 <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@answer.question.id">@answer.question.question</a></td>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@answer.id">@answer.answer</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteAnswer(answer.id)">Verwijder</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@question.answer.id">@question.answer.answer</a></td>
+                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteQuestion(question.id)">Verwijder</a></td>
                 </tr>
             }
         </table>
     }
 
-    @if( questions != null ) {
-        <h5>Vragen:</h5>
+    @if( answers != null ) {
+        <h5>Antwoord:</h5>
         <table id="questions" class="table table-striped">
             <tr>
-                <th>Vraag:</th>
+                <th>Antwoord:</th>
                 <th>Verwijderen</th>
             </tr>
-            @for(question <- questions) {
+            @for(answer <- answers) {
                 <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteQuestion(question.id)">Delete</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@answer.id">@answer.answer</a></td>
+                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteAnswer(answer.id)">Delete</a></td>
                 </tr>
             }
         </table>

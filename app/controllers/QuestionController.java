@@ -26,16 +26,16 @@ public class QuestionController extends Controller
 
     public static Result questionpage()
     {
-        List<Answer> allAnswers = Ebean.find(Answer.class).findList();
+        List<Question> allQuestions = Ebean.find(Question.class).findList();
 
-        return ok(questions.render(allAnswers, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
+        return ok(questions.render(allQuestions, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result showQuestions()
     {
-        Set<Answer> allAnswers = Ebean.find(Answer.class).findSet();
+        Set<Question> allQuestions = Ebean.find(Question.class).findSet();
 
-        return ok(toJson(allAnswers));
+        return ok(toJson(allQuestions));
     }
 
     public static Result searchQuestion()
@@ -43,12 +43,15 @@ public class QuestionController extends Controller
         Map<String, String[]> parameters = request().body().asFormUrlEncoded();
         String search = (String) parameters.get("search")[0];
         Collection<String[]> answer = parameters.values();
+
         DynamicForm searchForm        = form().bindFromRequest();
+
         Set<Object> returnData       = new HashSet<Object>();
         Set<Answer> foundAnswers     = new HashSet<Answer>();
         Set<Question> foundQuestions = new HashSet<Question>();
 
-        if( searchForm.get("answer") != "" )
+//        if( searchForm.get("answer") != "" )
+        if( answer.contains("answer") )
         {
             foundAnswers = Ebean.find(Answer.class).where().contains("answer", searchForm.get("answer")).findSet();
             foundAnswers.addAll(Ebean.find(Answer.class).where().like("answer", searchForm.get("answer")).findSet());
@@ -56,7 +59,9 @@ public class QuestionController extends Controller
 
             for( Answer ans : foundAnswers ){ returnData.add(ans); }
         }
-        if( searchForm.get("question") != "" )
+//        if( searchForm.get("question") != "" )
+
+        if( answer.contains("question") )
         {
             foundQuestions = Ebean.find(Question.class).where().contains("question", searchForm.get("question")).findSet();
             foundQuestions.addAll(Ebean.find(Question.class).where().like("question", searchForm.get("question")).findSet());
@@ -65,8 +70,8 @@ public class QuestionController extends Controller
             for( Question question : foundQuestions ){ returnData.add(question); }
         }
 
-//        return ok(toJson(returnData));
-        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions), Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
+        return ok(toJson(returnData));
+//        return ok(questions.render(new ArrayList<Question>(foundQuestions), new ArrayList<Answer>(foundAnswers), Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result saveQuestion()
@@ -76,11 +81,11 @@ public class QuestionController extends Controller
         Question question     = new Question();
 
         answer.answer = aqForm.get("answer");
-        question.question = aqForm.get("question");
-        question.save();
-
-        answer.question = question;
         answer.save();
+
+        question.question = aqForm.get("question");
+        question.answer   = answer;
+        question.save();
 
         return questionpage();
     }

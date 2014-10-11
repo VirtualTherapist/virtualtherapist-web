@@ -16,7 +16,4 @@ public class Answer extends Model
 
     @Constraints.Required
     public String answer;
-
-    @OneToOne(cascade=CascadeType.ALL)
-    public Question question;
 }

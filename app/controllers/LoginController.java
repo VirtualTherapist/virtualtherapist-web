@@ -110,7 +110,7 @@ public class LoginController extends Controller
         rol = new UserRole();
         rol.level = 10;
         rol.id= 2;
-        rol.name  = "Admin";
+        rol.name  = "Super Admin";
         rol.save();
         objectsAdded.add(rol);
 
