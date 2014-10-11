@@ -62,7 +62,8 @@ public class LoginController extends Controller
                                                         .eq("role_id", adminRole.id).findList();
         if( userList.size() == 1 )
         {
-            createSession(user.email);
+            user = userList.get(0);
+            createSession(user.email, user.first_name, user.last_name);
 
             return redirect("/");
         }
@@ -90,9 +91,9 @@ public class LoginController extends Controller
 
         user.save();
 
-        createSession(user.email);
+        createSession(user.email, user.first_name, user.last_name);
 
-        return redirect("/");
+        return ActivityController.activity();
     }
 
     public static Result initializeDB()
@@ -101,12 +102,14 @@ public class LoginController extends Controller
 
         UserRole rol = new UserRole();
         rol.level = 1;
+        rol.id = 1;
         rol.name  = "Gebruiker";
         rol.save();
         objectsAdded.add(rol);
 
         rol = new UserRole();
         rol.level = 10;
+        rol.id= 2;
         rol.name  = "Admin";
         rol.save();
         objectsAdded.add(rol);
@@ -115,15 +118,19 @@ public class LoginController extends Controller
         return ok(toJson(objectsAdded));
     }
 
-    public static void createSession(String email)
+    public static void createSession(String email, String firstname, String lastname)
     {
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(new Date()); // sets calendar time/date
         cal.add(Calendar.HOUR_OF_DAY, Integer.valueOf(Play.application().configuration().getString("session.expererationtime")));
         cal.getTime();
 
+        Logger.debug("email: " + email + " firstname: " + firstname + " lastname: " + lastname);
+
         session(Crypto.encryptAES("expiretime"), Crypto.encryptAES(String.valueOf(cal.getTimeInMillis())));
         session(Crypto.encryptAES("loggedin"), Crypto.encryptAES("true"));
         session(Crypto.encryptAES("email"), Crypto.encryptAES(email));
+        session(Crypto.encryptAES("firstname"), Crypto.encryptAES(firstname));
+        session(Crypto.encryptAES("lastname"), Crypto.encryptAES(lastname));
     }
 }

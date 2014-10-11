@@ -5,6 +5,7 @@ import filters.SessionFilter;
 import models.Answer;
 import models.Question;
 import play.Logger;
+import play.api.libs.Crypto;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -27,7 +28,7 @@ public class QuestionController extends Controller
     {
         List<Answer> allAnswers = Ebean.find(Answer.class).findList();
 
-        return ok(questions.render(allAnswers, null));
+        return ok(questions.render(allAnswers, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result showQuestions()
@@ -41,10 +42,9 @@ public class QuestionController extends Controller
     {
         Map<String, String[]> parameters = request().body().asFormUrlEncoded();
         String search = (String) parameters.get("search")[0];
-        //Collection<String[]> answer = parameters.values();
-        //DynamicForm searchForm        = form().bindFromRequest();
-        //HashSet om dubbele waardes te voorkomen
-        /*Set<Object> returnData       = new HashSet<Object>();
+        Collection<String[]> answer = parameters.values();
+        DynamicForm searchForm        = form().bindFromRequest();
+        Set<Object> returnData       = new HashSet<Object>();
         Set<Answer> foundAnswers     = new HashSet<Answer>();
         Set<Question> foundQuestions = new HashSet<Question>();
 
@@ -63,10 +63,10 @@ public class QuestionController extends Controller
             foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", searchForm.get("question")).findSet());
 
             for( Question question : foundQuestions ){ returnData.add(question); }
-        }*/
-        return ok(search);
-        //return ok(toJson(returnData));
-//        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions)));
+        }
+
+//        return ok(toJson(returnData));
+        return ok(questions.render(new ArrayList<Answer>(foundAnswers), new ArrayList<Question>(foundQuestions), Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
     public static Result saveQuestion()

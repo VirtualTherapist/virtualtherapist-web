@@ -24,7 +24,7 @@ public class ActivityController extends Controller
 
     public static Result activity()
     {
-        return ok(index.render(""));
+        return ok(index.render("", Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
     }
 
 
