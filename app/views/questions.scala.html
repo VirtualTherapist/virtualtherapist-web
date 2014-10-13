@@ -7,27 +7,32 @@
     <script src="@routes.Assets.at("javascripts/questions.js")" type="text/javascript"></script>
     <script type="text/javascript">
         $(document ).ready( function(){
-            $('#search' ).click( function() {
+            $('#search' ).click( function()
+            {
                 where = [];
                 search = $('#search-text' ).val();
-                if($('#question' ).hasClass("active")){
+                if($('#question' ).hasClass("active"))
+                {
                     where.push('question');
                 }
-                if($('#answer' ).hasClass("active")) {
+                if($('#answer' ).hasClass("active"))
+                {
                     where.push('answer');
                 }
-                $.ajax ( {
+                $.ajax (
+                {
                     url : "@routes.QuestionController.searchQuestion()",
                     method : "POST",
                     data: {
                         "search" : search,
                         "where" : where
                     }
-                } ).done ( function ( data ) {
-
+                } ).done ( function ( data )
+                {
                     console.log(data);
-                    alert('you have searched: ' + data);
-                } ).fail ( function ( ) {
+                    alert('you have searched: ' + search);
+                } ).fail ( function ( )
+                {
 //                    alert('you have failded: ' + search);
                 } )
             })

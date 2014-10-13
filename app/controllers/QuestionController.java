@@ -44,6 +44,9 @@ public class QuestionController extends Controller
         String search = (String) parameters.get("search")[0];
         Collection<String[]> answer = parameters.values();
 
+        boolean answerActivated = false;
+        boolean questionActivated = false;
+
         DynamicForm searchForm        = form().bindFromRequest();
 
         Set<Object> returnData       = new HashSet<Object>();
@@ -51,21 +54,33 @@ public class QuestionController extends Controller
         Set<Question> foundQuestions = new HashSet<Question>();
 
 //        if( searchForm.get("answer") != "" )
-        if( answer.contains("answer") )
+        for(String[] item : answer )
         {
-            foundAnswers = Ebean.find(Answer.class).where().contains("answer", searchForm.get("answer")).findSet();
-            foundAnswers.addAll(Ebean.find(Answer.class).where().like("answer", searchForm.get("answer")).findSet());
-            foundAnswers.addAll(Ebean.find(Answer.class).where().eq("answer", searchForm.get("answer")).findSet());
+           for( String temp : item )
+           {
+               Logger.debug("data: " + temp);
+               if( temp.equals("answer") )  { answerActivated = true; }
+               if( temp.equals("question") ){ questionActivated = true; }
+           }
+        }
+
+        if( answerActivated )
+        {
+            Logger.debug("searching answer");
+            foundAnswers = Ebean.find(Answer.class).where().contains("answer", search).findSet();
+            foundAnswers.addAll(Ebean.find(Answer.class).where().like("answer", search).findSet());
+            foundAnswers.addAll(Ebean.find(Answer.class).where().eq("answer", search).findSet());
 
             for( Answer ans : foundAnswers ){ returnData.add(ans); }
         }
 //        if( searchForm.get("question") != "" )
 
-        if( answer.contains("question") )
+        if( questionActivated )
         {
-            foundQuestions = Ebean.find(Question.class).where().contains("question", searchForm.get("question")).findSet();
-            foundQuestions.addAll(Ebean.find(Question.class).where().like("question", searchForm.get("question")).findSet());
-            foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", searchForm.get("question")).findSet());
+            Logger.debug("searching question");
+            foundQuestions = Ebean.find(Question.class).where().contains("question", search).findSet();
+            foundQuestions.addAll(Ebean.find(Question.class).where().like("question", search).findSet());
+            foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", search).findSet());
 
             for( Question question : foundQuestions ){ returnData.add(question); }
         }
