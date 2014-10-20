@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import filters.LoginFilter;
+import filters.SessionFilter;
 import models.User;
 import models.UserRole;
 import play.Logger;
@@ -33,10 +34,11 @@ public class LoginController extends Controller
         return ok(login.render("Login", ""));
     }
 
-    @With(LoginFilter.class)
+    @With(SessionFilter.class)
     public static Result register()
     {
-        return ok(register.render("Registreer", ""));
+        List<UserRole> userRoles = Ebean.find(UserRole.class).findList();
+        return ok(register.render("Registreer", "", userRoles));
     }
 
     public static Result logout()
@@ -75,7 +77,7 @@ public class LoginController extends Controller
         }
     }
 
-    @With(LoginFilter.class)
+    @With(SessionFilter.class)
     public static Result createUser()
     {
         DynamicForm registerForm = form().bindFromRequest();
@@ -85,15 +87,15 @@ public class LoginController extends Controller
         user.email            = registerForm.get("email");
         user.password         = Crypto.encryptAES(registerForm.get("password"));
 
-        UserRole rol = Ebean.find(UserRole.class).where().eq("name", "Admin").findUnique();
+        Logger.debug(registerForm.get("userrole"));
+
+        UserRole rol = Ebean.find(UserRole.class).where().eq("name", registerForm.get("userrole")).findUnique();
 
         user.role    = rol;
 
         user.save();
 
-        createSession(user.email, user.first_name, user.last_name);
-
-        return ActivityController.activity();
+        return ok(index.render("", user.first_name, user.last_name, "Gebruiker: " + user.email + " - " + user.role.name + " aangemaakt!", "success"));
     }
 
     public static Result initializeDB()
@@ -114,6 +116,14 @@ public class LoginController extends Controller
         rol.save();
         objectsAdded.add(rol);
 
+        User admin = new User();
+        admin.email = "admin@therapist.com";
+        admin.first_name = "Virtual";
+        admin.last_name = "Therapist";
+        admin.password = Crypto.encryptAES("password");
+        admin.role = rol;
+        admin.save();
+        objectsAdded.add(admin);
 
         return ok(toJson(objectsAdded));
     }

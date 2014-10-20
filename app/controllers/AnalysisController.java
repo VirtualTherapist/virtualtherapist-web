@@ -18,13 +18,13 @@ public class AnalysisController extends Controller {
         if(userId != null) {
             user = Ebean.find(User.class, userId);
         }
-        return ok(analysis.render("Analyse", user, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
+        return ok(analysis.render("Analyse", user, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
         //return ok();
     }
 
     public static Result analysisPage() {
         //return ok();
-        return ok(analysis.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
+        return ok(analysis.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 
 }
