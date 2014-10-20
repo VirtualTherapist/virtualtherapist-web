@@ -20,4 +20,10 @@ public class Question extends Model
     @OneToOne(cascade=CascadeType.ALL)
     public Answer answer;
 
+    @ManyToOne
+    public User user;
+
+    @Constraints.Required
+    public long created_at;
+
 }

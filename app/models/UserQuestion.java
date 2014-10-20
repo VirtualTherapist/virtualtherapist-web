@@ -5,6 +5,7 @@ import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by Akatchi on 9-10-2014.
@@ -16,17 +17,18 @@ public class UserQuestion extends Model
     public int id;
 
     @Constraints.Required
-    public User userid;
+    @ManyToOne
+    public User user;
 
     @Constraints.Required
-    public String question;
+    public String asked_question;
 
-    public long timestamp;
+    public long created_at;
 
-    public UserQuestion(String question, User userid)
+    public UserQuestion(String asked_question, User user)
     {
-        this.question = question;
-        this.userid = userid;
-        this.timestamp = System.currentTimeMillis();
+        this.asked_question = asked_question;
+        this.user = user;
+        this.created_at = System.currentTimeMillis();
     }
 }

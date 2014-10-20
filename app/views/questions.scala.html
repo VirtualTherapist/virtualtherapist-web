@@ -1,4 +1,4 @@
-@(questions: java.util.List[Question])(answers: java.util.List[Answer])(firstname: String)(lastname: String)
+@(questions: java.util.List[Question])(answers: java.util.List[Answer])(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 @style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
 
@@ -143,4 +143,4 @@
         </table>
     }
 
-}(script)(firstname)(lastname)
+}(script)(firstname)(lastname)(error)(errorType)
