@@ -14,8 +14,7 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class RoutesTest {
 
-    
-    // List with all URLS 
+    // List wich of URLs which are accessable using the HTTP GET method.
     private List<String> getUrls = Arrays.asList(
             "/vragen",
             "/vragen/all",
@@ -23,70 +22,103 @@ public class RoutesTest {
             "/antwoord/delete/1",
             "/login",
             "/register",
-            "/logout"
-            //"/analyse"                // Not Implemented
+            "/logout",
+            "/antwoord/delete/1"
+            
+            // These URLs are defined in con/routes but lack implementation.
+            //"/analyse"               
+            //"/gebruikers/all"
+            //"/gebruikers/1"
     );
+
+    /**
+     * Test if HTTP GET request on url returns result. 
+     *
+     * @param url       URL without the protocol and server, e.g.: /route or /vragen/all. 
+     */
+    public void testGetRoute(String url) {
+        final String url_ = url;
+
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                Result result = route(fakeRequest(GET, url_));
+                assertThat(result).isNotNull();
+            }
+        });
+    }
+
+    /**
+     * Test if HTTP POST request on url returns result. 
+     *
+     * @param url   URL without the protocol and server, e.g.: /route or /vragen/all. 
+     * @param data  A Map with key values representing form data.    
+     */
+    public void testPostRoute(String url, Map data) {
+        final String url_ = url;
+        final Map data_ = data;
+
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                Result result = route(fakeRequest(POST, url_).withFormUrlEncodedBody(data_));
+                assertThat(result).isNotNull();
+            }
+        });
+    }
 
     /** 
      * Iterate over list with urls and perform a fake HTTP GET request on each
      * URL, checking if response is not null.
      */
     @Test
-    public void getUrlTest() {
+    public void getUrlsTest() {
         running(fakeApplication(), new Runnable() {
             public void run() {
                 for (String url: getUrls) {
-                    Result result = route(fakeRequest(GET, url));
-                    assertThat(result).isNotNull();
+                    testGetRoute(url);
                 }
             }
         });
     }
 
     @Test
-    @Ignore("Not implemented.")
-    public void getUserTest() {
-       running(fakeApplication(), new Runnable() {
-           public void run() {
-               Result result = route(fakeRequest(GET, "/gebruikers/all"));
-               assertThat(result).isNotNull();
-           }
-        });
-    }
-
-    @Test
-    @Ignore("Not implemented.")
-    public void postUserTest() {
-       running(fakeApplication(), new Runnable() {
-           public void run() {
-              Result result = route(fakeRequest(GET, "/gebruikers/1"));
-              assertThat(result).isNotNull();
-           }
-        });
-    }
-
-    @Test
     public void postQuestionTest() {
-       running(fakeApplication(), new Runnable() {
-           public void run() {
-              Result result = route(fakeRequest(POST, "/vragen"));
-              assertThat(result).isNotNull();
-           }
-        });
+        testPostRoute("/vragen", new HashMap<>());
     }
 
     @Test
     public void postSaveQuestionTest() {
-        running(fakeApplication(), new Runnable() {
-            public void run() {
-                Map<String, String> map = new HashMap<>();
-                map.put("question", "Is this a question?");
-                map.put("answer", "This this is anwer.");
+        Map<String, String> data = new HashMap<>();
+        data.put("question", "Is this a question?");
+        data.put("answer", "This this is anwer.");
 
+        testPostRoute("/vragen/opslaan", data);
+    }
 
-                Result result = route(fakeRequest(POST, "/vragen/opslaan").withFormUrlEncodedBody(map));
-                assertThat(result).isNotNull();
-            }
-        });
+    @Test
+    public void postUpdateAnwserTest() {
+        Map<String, String> data= new HashMap<>();
+        data.put("value", "42");
+
+        testPostRoute("/antwoord/update", data);
+    }
+
+    @Test 
+    public void postLoginTest() {
+        Map<String, String> data = new HashMap<>();
+        data.put("email", "user@server.com");
+        data.put("password", "42");
+
+        testPostRoute("/login", data);
+    }
+    
+    @Test 
+    public void postRegisterTest() {
+        Map<String, String> data = new HashMap<>();
+        data.put("first_name", "John");
+        data.put("last_name", "Doe");
+        data.put("email", "user@server.com");
+        data.put("password", "42");
+
+        testPostRoute("/register", data);
     }
 }
