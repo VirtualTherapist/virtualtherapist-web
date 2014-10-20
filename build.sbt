@@ -27,3 +27,5 @@ libraryDependencies ++= Seq(
 includeFilter in (Assets, LessKeys.less) := "*.less"
 
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
+
+herokuAppName in Compile := "virtualcoach"
