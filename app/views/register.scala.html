@@ -1,4 +1,4 @@
-@(message: String)(error: String)
+@(message: String)(error: String)(userRoles: java.util.List[UserRole])
 
 @loginscreen(message)(error) {
     <div class="container">
@@ -44,9 +44,23 @@
                 </div>
 
                 <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-group">&nbsp;</i>
+                        </div>
+                        <div class="selector">
+                            <select class="form-control" name="userrole">
+                            @for(role <- userRoles) {
+                                <option value="@role.name">@role.level - @role.name</option>
+                            }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <button type="submit" class="btn btn-primary">Registreer</button>
-                    <a href="@routes.LoginController.login()"><button type="button" class="btn btn-primary">Terug</button></a>
-                    @*<button class="btn btn-primary" type="submit">Inloggen</button>*@
+                    <a class="btn btn-primary" href="/">Terug</a>
                     @*<a href="@routes.LoginController.register()"><button type="button" class="btn btn-primary">Registreer</button></a>*@
                 </div>
 
