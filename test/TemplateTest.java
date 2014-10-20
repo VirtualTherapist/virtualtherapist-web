@@ -3,6 +3,7 @@ import controllers.LoginController;
 import models.Answer;
 import models.Question;
 import models.User;
+import models.UserRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -60,7 +61,8 @@ public class TemplateTest {
     public void registerTest() {
         running(fakeApplication(), new Runnable(){
             public void run(){
-                Content html = views.html.register.render("Registreer", "");
+                List<UserRole> testRoles = new LinkedList<UserRole>();
+                Content html = views.html.register.render("Registreer", "", testRoles);
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Registreer");
             }
@@ -72,7 +74,7 @@ public class TemplateTest {
         running(fakeApplication(), new Runnable(){
             public void run(){
                 //run your test
-                Content html = views.html.index.render("Title", "Test", "Voornaam", "Achternaam");
+                Content html = views.html.index.render("Title", "Test", "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Title");
             }
@@ -84,7 +86,7 @@ public class TemplateTest {
         running(fakeApplication(), new Runnable(){
             public void run(){
                 User testUser = Mockito.mock(User.class);
-                Content html = views.html.analysis.render("Title", testUser, "Voornaam", "Achternaam");
+                Content html = views.html.analysis.render("Title", testUser, "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Title");
             }
@@ -98,7 +100,7 @@ public class TemplateTest {
                 List<Question> testQuestions = new LinkedList<Question>();
                 List<Answer> testAnswers = new LinkedList<Answer>();
                 //run your test
-                Content html = views.html.questions.render(testQuestions, testAnswers, "Voornaam", "Achternaam");
+                Content html = views.html.questions.render(testQuestions, testAnswers, "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Voornaam");
             }
@@ -111,7 +113,7 @@ public class TemplateTest {
            public void run(){
                User testUser = Mockito.mock(User.class);
 
-               Content html = views.html.userdetail.render(testUser, "Voornaam", "Achternaam");
+               Content html = views.html.userdetail.render(testUser, "Voornaam", "Achternaam", "testError", "Test");
                assertThat(contentType(html)).isEqualTo("text/html");
                assertThat(contentAsString(html)).contains("Voornaam");
            }
@@ -124,7 +126,7 @@ public class TemplateTest {
             public void run(){
                 List<User> testUsers = new LinkedList<User>();
 
-                Content html = views.html.users.render(testUsers, "Voornaam", "Achternaam");
+                Content html = views.html.users.render(testUsers, "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Voornaam");
             }
