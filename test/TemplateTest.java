@@ -63,63 +63,63 @@ public class TemplateTest {
         });
     }
 
-    @Test
-    public void indexTest() {
-        running(fakeApplication(), new Runnable(){
-            public void run(){
+    //@Test
+    //public void indexTest() {
+        //running(fakeApplication(), new Runnable(){
+            //public void run(){
                 //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
+                //context = Mockito.mock(Http.Context.class);
                 //mocking flash session, request, etc... as required
-                session = Mockito.mock(Session.class);
-                when(context.session()).thenReturn(session);
-                Http.Context.current.set(context);
+                //session = Mockito.mock(Session.class);
+                //when(context.session()).thenReturn(session);
+                //Http.Context.current.set(context);
 
 
                 //run your test
-                Content html = views.html.index.render("poo");
+                //Content html = views.html.index.render("poo");
 //                assertThat(contentType(html)).isEqualTo("text/html");
 //                assertThat(contentAsString(html)).contains("");
-            }
-        });
-    }
+//            }
+//        });
+//    }
 
 //    @Test
-    public void analysisTest(){
-        running(fakeApplication(), new Runnable(){
-            public void run(){
+    //public void analysisTest(){
+        //running(fakeApplication(), new Runnable(){
+            //public void run(){
                 //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
+                //context = Mockito.mock(Http.Context.class);
                 //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
+                //flash  = Mockito.mock(Http.Flash.class);
+                //when(context.flash()).thenReturn(flash);
+                //Http.Context.current.set(context);
                 //run your test
-                Content html = views.html.index.render("Poo");
-                assertThat(contentType(html)).isEqualTo("text/html");
-                assertThat(contentAsString(html)).contains("Poo");
-            }
-        });
-    }
+                //Content html = views.html.index.render("Poo");
+                //assertThat(contentType(html)).isEqualTo("text/html");
+                //assertThat(contentAsString(html)).contains("Poo");
+//            }
+//        });
+//    }
 
 //    @Test
-    public void questionsTest(){
-        running(fakeApplication(), new Runnable(){
-            public void run(){
+    //public void questionsTest(){
+        //running(fakeApplication(), new Runnable(){
+            //public void run(){
                 //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
+                //context = Mockito.mock(Http.Context.class);
                 //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
+                //flash  = Mockito.mock(Http.Flash.class);
+                //when(context.flash()).thenReturn(flash);
+                //Http.Context.current.set(context);
 
-                List<Question> testQuestions = new ArrayList<Question>();
-                List<Answer> testAnswers = new ArrayList<Answer>();
+                //List<Question> testQuestions = new ArrayList<Question>();
+                //List<Answer> testAnswers = new ArrayList<Answer>();
 
                 //run your test
-                Content html = views.html.questions.render(testAnswers,testQuestions);
-                assertThat(contentType(html)).isEqualTo("text/html");
-                assertThat(contentAsString(html)).isNotEmpty();
-            }
-        });
-    }
+                //Content html = views.html.questions.render(testAnswers,testQuestions);
+                //assertThat(contentType(html)).isEqualTo("text/html");
+                //assertThat(contentAsString(html)).isNotEmpty();
+            //}
+        //});
+    //}
 }

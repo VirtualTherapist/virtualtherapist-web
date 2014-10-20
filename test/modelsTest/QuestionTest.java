@@ -9,12 +9,4 @@ import static org.fest.assertions.Assertions.*;
  */
 public class QuestionTest extends BaseModelTest {
 
-    @Test
-    public void save(){
-        Question question = new Question();
-        question.question = "Test vraag";
-        question.save();
-
-        assertThat(question.id).isNotNull();
-    }
 }
