@@ -1,4 +1,4 @@
-@(user: User)(firstname: String)(lastname: String)
+@(user: User)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 @style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
 
@@ -38,4 +38,4 @@
         </div>
 
 
-}(script)(firstname)(lastname)
+}(script)(firstname)(lastname)(error)(errorType)

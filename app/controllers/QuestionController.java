@@ -28,7 +28,7 @@ public class QuestionController extends Controller
     {
         List<Question> allQuestions = Ebean.find(Question.class).findList();
 
-        return ok(questions.render(allQuestions, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname")))));
+        return ok(questions.render(allQuestions, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 
     public static Result showQuestions()
