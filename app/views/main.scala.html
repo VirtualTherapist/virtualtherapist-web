@@ -1,4 +1,4 @@
-@(title: String)(style: Html)(content: Html)(script: Html)(firstname: String)(lastname: String)
+@(title: String)(style: Html)(content: Html)(script: Html)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 <!DOCTYPE html>
 
@@ -13,6 +13,10 @@
         @style
     </head>
     <body>
+    @if( !error.equals("") ) {
+            <div class="alert alert-@errorType" role="alert">@error</div>
+    }
+
         <div class="container">
             <div class="sidebar">
                 <img class="logo" src="@routes.Assets.at("images/virtualcoach.png")" />
@@ -22,6 +26,7 @@
                     <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
                     <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse</a></li>
                     <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
+                    <li><a href="@routes.LoginController.register()">Maak nieuwe user aan</a></li>
                     <li><a href="@routes.LoginController.logout()">Uitloggen</a></li>
 
                 </ul>

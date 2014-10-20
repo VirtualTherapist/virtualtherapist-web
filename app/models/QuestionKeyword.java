@@ -1,21 +1,24 @@
 package models;
 
+
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by Akatchi on 9-10-2014.
  */
-public class KeywordQuestion extends Model
+@Entity
+public class QuestionKeyword extends Model
 {
-    @Id
-    public int id;
+    @Constraints.Required
+    @OneToOne
+    public Question question;
 
     @Constraints.Required
-    public Question questionid;
-
-    @Constraints.Required
-    public Keyword keywordid;
+    @OneToOne
+    public Keyword keyword;
 }

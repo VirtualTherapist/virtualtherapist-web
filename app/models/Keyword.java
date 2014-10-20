@@ -3,9 +3,7 @@ package models;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by Akatchi on 9-10-2014.
@@ -18,7 +16,5 @@ public class Keyword extends Model
 
     @Constraints.Required
     public String keyword;
-
-    public KeywordCategory categoryid;
 
 }
