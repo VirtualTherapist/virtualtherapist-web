@@ -1,7 +1,6 @@
 import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.ApplicationController;
 import controllers.LoginController;
 import controllers.routes;
 import models.Question;
