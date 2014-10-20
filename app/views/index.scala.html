@@ -1,10 +1,10 @@
-@(message: String)(firstname: String)(lastname: String)(error: String)(errorType: String)
+@(title: String)(message: String)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 @style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">}
 
 @script = {<script rel="text/javascript"></script>}
 
-@main("Virtual Therapist")(style){
+@main(title)(style){
     <header>
         <h1>Virtual coach</h1>
         <div class="btn-group">

@@ -95,7 +95,7 @@ public class LoginController extends Controller
 
         user.save();
 
-        return ok(index.render("", user.first_name, user.last_name, "Gebruiker: " + user.email + " - " + user.role.name + " aangemaakt!", "success"));
+        return ok(index.render("","", user.first_name, user.last_name, "Gebruiker: " + user.email + " - " + user.role.name + " aangemaakt!", "success"));
     }
 
     public static Result initializeDB()
