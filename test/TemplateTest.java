@@ -1,17 +1,26 @@
+import com.avaje.ebean.Ebean;
 import controllers.LoginController;
 import models.Answer;
 import models.Question;
+import models.User;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.android.library.Logger;
+import play.db.ebean.Model;
 import play.mvc.Http;
 import play.mvc.Http.*;
 import play.twirl.api.Content;
+import play.twirl.api.Html;
+import views.html.analysis;
+import views.html.userdetail;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.test.Helpers.*;
 
@@ -24,19 +33,23 @@ public class TemplateTest {
     private Http.Flash flash;
     private Http.Session session;
 
+    private final Http.Request request = mock(Http.Request.class);
+
+    @Before
+    public void setUp() throws Exception {
+        Map<String, String> flashData = Collections.emptyMap();
+        Map<String, Object> argData = Collections.emptyMap();
+        Long id = 2L;
+        play.api.mvc.RequestHeader header = mock(play.api.mvc.RequestHeader.class);
+        Http.Context context = new Http.Context(id, header, request, flashData, flashData, argData);
+        Http.Context.current.set(context);
+    }
+
     @Test
     public void loginTest() {
         running(fakeApplication(), new Runnable() {
             public void run() {
-                //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
-                //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
-
-                //run your test
-                Content html = views.html.login.render("Login", "login");
+                Content html = views.html.login.render("Login", "");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Login");
             }
@@ -47,18 +60,9 @@ public class TemplateTest {
     public void registerTest() {
         running(fakeApplication(), new Runnable(){
             public void run(){
-                //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
-                //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
-
-                //run your test
-                Content html = views.html.register.render("Poo", "poo");
+                Content html = views.html.register.render("Registreer", "");
                 assertThat(contentType(html)).isEqualTo("text/html");
-                assertThat(contentAsString(html)).contains("Poo");
-                assertThat(contentAsString(html)).contains("poo");
+                assertThat(contentAsString(html)).contains("Registreer");
             }
         });
     }
@@ -67,58 +71,62 @@ public class TemplateTest {
     public void indexTest() {
         running(fakeApplication(), new Runnable(){
             public void run(){
-                //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
-                //mocking flash session, request, etc... as required
-                session = Mockito.mock(Session.class);
-                when(context.session()).thenReturn(session);
-                Http.Context.current.set(context);
-
-
                 //run your test
-                Content html = views.html.index.render("poo");
-//                assertThat(contentType(html)).isEqualTo("text/html");
-//                assertThat(contentAsString(html)).contains("");
+                Content html = views.html.index.render("Title", "Test", "Voornaam", "Achternaam");
+                assertThat(contentType(html)).isEqualTo("text/html");
+                assertThat(contentAsString(html)).contains("Title");
             }
         });
     }
 
-//    @Test
+    @Test
     public void analysisTest(){
         running(fakeApplication(), new Runnable(){
             public void run(){
-                //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
-                //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
-                //run your test
-                Content html = views.html.index.render("Poo");
+                User testUser = Mockito.mock(User.class);
+                Content html = views.html.analysis.render("Title", testUser, "Voornaam", "Achternaam");
                 assertThat(contentType(html)).isEqualTo("text/html");
-                assertThat(contentAsString(html)).contains("Poo");
+                assertThat(contentAsString(html)).contains("Title");
             }
         });
     }
 
-//    @Test
+    @Test
     public void questionsTest(){
         running(fakeApplication(), new Runnable(){
             public void run(){
-                //setup HTTP Context
-                context = Mockito.mock(Http.Context.class);
-                //mocking flash session, request, etc... as required
-                flash  = Mockito.mock(Http.Flash.class);
-                when(context.flash()).thenReturn(flash);
-                Http.Context.current.set(context);
-
-                List<Question> testQuestions = new ArrayList<Question>();
-                List<Answer> testAnswers = new ArrayList<Answer>();
-
+                List<Question> testQuestions = new LinkedList<Question>();
+                List<Answer> testAnswers = new LinkedList<Answer>();
                 //run your test
-                Content html = views.html.questions.render(testAnswers,testQuestions);
+                Content html = views.html.questions.render(testQuestions, testAnswers, "Voornaam", "Achternaam");
                 assertThat(contentType(html)).isEqualTo("text/html");
-                assertThat(contentAsString(html)).isNotEmpty();
+                assertThat(contentAsString(html)).contains("Voornaam");
+            }
+        });
+    }
+
+    @Test
+    public void userDetailTest() {
+       running(fakeApplication(), new Runnable(){
+           public void run(){
+               User testUser = Mockito.mock(User.class);
+
+               Content html = views.html.userdetail.render(testUser, "Voornaam", "Achternaam");
+               assertThat(contentType(html)).isEqualTo("text/html");
+               assertThat(contentAsString(html)).contains("Voornaam");
+           }
+       });
+    }
+
+    @Test
+    public void userTest() {
+        running(fakeApplication(), new Runnable(){
+            public void run(){
+                List<User> testUsers = new LinkedList<User>();
+
+                Content html = views.html.users.render(testUsers, "Voornaam", "Achternaam");
+                assertThat(contentType(html)).isEqualTo("text/html");
+                assertThat(contentAsString(html)).contains("Voornaam");
             }
         });
     }
