@@ -1,3 +1,4 @@
+package controllersTest;
 
 import com.avaje.ebean.Ebean;
 import controllers.UserController;

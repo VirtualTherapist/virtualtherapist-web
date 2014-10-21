@@ -12,8 +12,8 @@ import static play.test.Helpers.*;
  /**
  * Created by wahid on 10/10/14.
  */
-public class RoutesTest {
-
+public class RoutesTest 
+{
     // List wich of URLs which are accessable using the HTTP GET method.
     private List<String> getUrls = Arrays.asList(
             "/vragen",
