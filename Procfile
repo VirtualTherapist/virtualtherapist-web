@@ -1,1 +1,1 @@
-web:    target/universal/stage/bin/virtualtherapist-web
+web:    target/universal/stage/bin/virtualcoach
