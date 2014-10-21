@@ -55,7 +55,8 @@ public class TemplateTest {
                 Http.Context.current.set(context);
 
                 //run your test
-                Content html = views.html.register.render("Poo", "poo");
+                //null object is de lijst met userroles die gevraagd wordt op die pagina
+                Content html = views.html.register.render("Poo", "poo", null);
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Poo");
                 assertThat(contentAsString(html)).contains("poo");
