@@ -17,6 +17,7 @@ import utils.HashUtil;
 import views.html.index;
 import views.html.login;
 import views.html.register;
+import views.html.users;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -113,7 +114,9 @@ public class LoginController extends Controller
 
         user.save();
 
-        return ok(index.render("","", user.first_name, user.last_name, "Gebruiker: " + user.email + " - " + user.role.name + " aangemaakt!", "success"));
+//        return redirect("/gebruikers/all");
+
+        return ok(users.render(Ebean.find(User.class).findList(), play.api.libs.Crypto.decryptAES(session(play.api.libs.Crypto.encryptAES("firstname"))), play.api.libs.Crypto.decryptAES(session(play.api.libs.Crypto.encryptAES("lastname"))), "Gebruiker: " + user.email + " - " + user.role.name + " aangemaakt!", "success"));
     }
 
     public static Result initializeDB()
@@ -138,7 +141,7 @@ public class LoginController extends Controller
         admin.email = "admin@therapist.com";
         admin.first_name = "Virtual";
         admin.last_name = "Therapist";
-        admin.password = Crypto.encryptAES("password");
+        admin.password = HashUtil.createHash(admin.email, "password");
         admin.role = rol;
         admin.save();
         objectsAdded.add(admin);

@@ -24,7 +24,7 @@ public class RoutesTest {
             "/register",
             "/logout",
             "/antwoord/delete/1"
-            
+
             // These URLs are defined in con/routes but lack implementation.
             //"/analyse"               
             //"/gebruikers/all"

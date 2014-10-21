@@ -74,6 +74,7 @@ public class TemplateTest {
         running(fakeApplication(), new Runnable(){
             public void run(){
                 //run your test
+                //null object is de lijst met userroles die gevraagd wordt op die pagina
                 Content html = views.html.index.render("Title", "Test", "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Title");
