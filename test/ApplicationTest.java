@@ -24,6 +24,8 @@ import play.i18n.Lang;
 import play.libs.F;
 import play.libs.F.*;
 import play.twirl.api.Content;
+import utils.HashUtil;
+import utils.NLPUtil;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -92,4 +94,49 @@ public class ApplicationTest {
 //            }
 //        });
 //    }
+
+    @Test public void testHash() {
+        String hash = HashUtil.createHash("helderbas@gmail.com", "Bas1991");
+        assertThat(hash).isEqualTo("cae352dbfc4552aca527f49211d6dedd09924e50cd64e73a800fb65806f2f477");
+    }
+
+    @Test
+    public void testNLPMessageTagging() {
+        /*
+        Token:	Dit			    Tag:	Pron
+        Token:	is			    Tag:	V
+        Token:	een			    Tag:	Art
+        Token:	testbericht		Tag:	N
+        Token:	.			    Tag:	Punc
+        Token:	Hiermee			Tag:	Adv
+        Token:	wordt			Tag:	V
+        Token:	de			    Tag:	Art
+        Token:	tag			    Tag:	N
+        Token:	functie			Tag:	N
+        Token:	getest			Tag:	V
+        Token:	.			    Tag:	Punc
+         */
+        String message = "Dit is een testbericht. Hiermee wordt de tag functie getest.";
+        TreeMap<String, String> treeMap1 = new TreeMap();
+        treeMap1.put("Dit", "Pron");
+        treeMap1.put("is", "V");
+        treeMap1.put("een", "Art");
+        treeMap1.put("testbericht", "N");
+        treeMap1.put(".", "Punc");
+
+        TreeMap<String, String> treeMap2 = new TreeMap();
+        treeMap2.put("Hiermee", "Adv");
+        treeMap2.put("wordt", "V");
+        treeMap2.put("de", "Art");
+        treeMap2.put("tag", "N");
+        treeMap2.put("functie", "N");
+        treeMap2.put("getest", "V");
+        treeMap2.put(".", "Punc");
+
+        SortedMap<String, String>[] expectedMaps = new SortedMap[]{treeMap1, treeMap2};
+
+        SortedMap<String, String>[] maps = NLPUtil.getInstance().tagMessage(message);
+        assertThat(maps).isNotEqualTo(null);
+        assertThat(maps).isEqualTo(expectedMaps);
+    }
 }

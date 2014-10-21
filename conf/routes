@@ -28,13 +28,14 @@ GET         /analyse/:id                          controllers.AnalysisController
 GET         /analyse                              controllers.AnalysisController.analysisPage()
 
 # API Calls
-GET         /api/login/:username/:password        controllers.APIController.validateLogin(username: String, password: String)
+# Authentication header meesturen: "authentication: sha256("email" + "password")" (email en password aan elkaar)
+GET         /api/login                      controllers.APIController.validateLogin()
 
 # Run initDB link als de db vers is of als hij net gecleared is
 GET         /initDB                               controllers.LoginController.initializeDB()
 
 # Chat calls
-#POST        /chat/message          controllers.ChatController.message()
+POST        /chat/message                   controllers.APIController.message()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                         controllers.Assets.at(path="/public", file)
