@@ -13,6 +13,7 @@ import play.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
+import utils.HashUtil;
 import views.html.index;
 import views.html.login;
 import views.html.register;
@@ -52,22 +53,36 @@ public class LoginController extends Controller
     public static Result validateLogin()
     {
         DynamicForm loginForm = form().bindFromRequest();
+
+        System.out.println(loginForm.get("password"));
+
+        String hash = HashUtil.createHash(loginForm.get("email"), loginForm.get("password"));
+
         User user             = new User();
         user.email            = loginForm.get("email");
-        user.password         = loginForm.get("password");
+        user.password         = hash;
+
+        System.out.println("user.password: " + user.password);
 
         UserRole adminRole = Ebean.find(UserRole.class).where().eq("level", "10").findUnique();
 
-        List<User> userList = Ebean.find(User.class).where()
-                                                        .eq("email", user.email)
-                                                        .eq("password", Crypto.encryptAES(user.password))
-                                                        .eq("role_id", adminRole.id).findList();
+        List<User> userList = new ArrayList<User>();
+        if(hash != null) {
+            userList = Ebean.find(User.class).where()
+                    .eq("email", user.email)
+                    .eq("password", user.password).findList();
+        }
+
         if( userList.size() == 1 )
         {
             user = userList.get(0);
             createSession(user.email, user.first_name, user.last_name);
 
             return redirect("/");
+        }
+        else if(hash == null)
+        {
+            return ok(login.render("Login pagina", "Error: Er is iets mis gegaan, probeer het opnieuw."));
         }
         else
         {
@@ -81,11 +96,14 @@ public class LoginController extends Controller
     public static Result createUser()
     {
         DynamicForm registerForm = form().bindFromRequest();
+
+        String hash = HashUtil.createHash(registerForm.get("email"), registerForm.get("password"));
+
         User user = new User();
         user.first_name       = registerForm.get("first_name");
         user.last_name        = registerForm.get("last_name");
         user.email            = registerForm.get("email");
-        user.password         = Crypto.encryptAES(registerForm.get("password"));
+        user.password         = hash;
 
         Logger.debug(registerForm.get("userrole"));
 

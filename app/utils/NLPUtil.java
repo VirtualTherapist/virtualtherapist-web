@@ -91,7 +91,7 @@ public class NLPUtil {
             TreeMap<String, String> sortedMap = new TreeMap<>();
             for(int j = 0; j < tags.length; j++) {
                 sortedMap.put(tokens[j], tags[j]);
-                System.out.println("Token:\t" + tokens[j] + "\t\t\tTag:\t" + tags[j]);
+                //System.out.println("Token:\t" + tokens[j] + "\t\t\tTag:\t" + tags[j]);
             }
             tokensAndTags[i] = sortedMap;
         }
