@@ -138,7 +138,7 @@ public class LoginController extends Controller
         admin.email = "admin@therapist.com";
         admin.first_name = "Virtual";
         admin.last_name = "Therapist";
-        admin.password = Crypto.encryptAES("password");
+        admin.password = HashUtil.createHash("admin@therapist.com", "password");
         admin.role = rol;
         admin.save();
         objectsAdded.add(admin);

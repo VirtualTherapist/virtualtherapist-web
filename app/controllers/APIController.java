@@ -4,12 +4,14 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import filters.APIAuthHeaderFilter;
 import models.Answer;
 import models.User;
 import play.libs.Crypto;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import utils.HashUtil;
 import utils.NLPUtil;
 
@@ -24,13 +26,11 @@ import static play.libs.Json.toJson;
  */
 public class APIController extends Controller
 {
+    @With(APIAuthHeaderFilter.class)
     public static Result validateLogin()
     {
-        User user = null;
         String secret = request().getHeader("authentication");
-        if(secret != null) {
-            user = authenticate(secret);
-        }
+        User user = Ebean.find(User.class).where().eq("password", secret).findUnique();
 
         if (user != null)
         {
@@ -48,13 +48,8 @@ public class APIController extends Controller
 
     }
 
+    @With(APIAuthHeaderFilter.class)
     public static play.mvc.Result message() {
-        String secret = request().getHeader("authentication");
-        if(secret != null) {
-            authenticate(secret);
-        }else{
-            return unauthorized();
-        }
 
         JsonNode jsonNode = request().body().asJson();
         if(jsonNode == null) {
@@ -71,9 +66,5 @@ public class APIController extends Controller
         }
     }
 
-    public static User authenticate(String secret) {
-        User user = Ebean.find(User.class).where()
-                .eq("password", secret).findUnique();
-        return user;
-    }
+
 }
