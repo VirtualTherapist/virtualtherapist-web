@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
 import models.Answer;
+import models.Chat;
+import models.ChatContext;
 import models.Question;
 import models.User;
 import play.Logger;
@@ -22,14 +24,13 @@ import utils.NLPUtil;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import static play.libs.Json.toJson;
 import static play.mvc.Controller.request;
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.ok;
-import static play.mvc.Results.unauthorized;
+import static play.mvc.Results.*;
 
 /**
  * Created by Akatchi on 10-10-2014.
@@ -82,6 +83,32 @@ public class APIController extends SwaggerBaseApiController
             }
         }
     }*/
+
+    public static Result setChatContext() {
+        String secret = request().getHeader("authentication");
+        User user = Ebean.find(User.class, secret);
+
+        Map<String, String[]> postVariables = request().body().asFormUrlEncoded();
+        String mood = postVariables.get("mood")[0];
+        String lat = postVariables.get("lat")[0];
+        String lng = postVariables.get("lng")[0];
+
+        Chat chat = new Chat();
+        chat.user = user;
+        chat.lat = Double.parseDouble(lat);
+        chat.lng = Double.parseDouble(lng);
+        chat.mood = mood;
+        chat.save();
+
+        /*
+        ChatContext chatContext = new ChatContext();
+        chatContext.mood = mood;
+        chatContext.lat = Double.parseDouble(lat);
+        chatContext.lng = Double.parseDouble(lng);
+        */
+
+        return ok();
+    }
 
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
     public static WebSocket<String> WebSocket()
