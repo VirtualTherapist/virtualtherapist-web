@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Script for (re)starting the server. 
+#
+# If you want to restart the server after a 
+set -e
+
+PROJECT_DIR=/home/auke/projects/virtualtherapist-web/
+PID_FILE=/tmp/play.pid
+
+echo "Preparing application for launch."
+activator clean stage
+
+if [ -f $PID_FILE ]; then
+  echo "Stopping server."
+  kill $(cat $PID_FILE)
+fi
+
+echo "Launching application."
+# Launch application in backgroud and redirect all output to /dev/null/.
+$PROJECT_DIR"target/universal/stage/bin/virtualcoach-web" -Dpidfile.path=/tmp/play.pid >/dev/null 2>&1 &

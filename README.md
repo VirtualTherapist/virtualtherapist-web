@@ -22,14 +22,35 @@ be created automatically.
 
 When in production edit `application.secret` and set a unique key.
 
-Start
------
-Start the webapp using [`activator`][1]:
+Start development server
+------------------------
+Start the webapp for development using [`activator`][1]:
 
     $ activator run
 
 By default the application listens on port 9000 of your machine.
 
+
+Start production server
+-----------------------
+First, make sure you've a set a application secret. Of cource, do not use the secret
+in that
+It's not recommmanded to start the server in production using `$activator run`.
+["Play checks with SBT to see if any files have changed, and this may have significant performance impacts on your application."][2]
+
+Clean the application by removing caches and compiled stuff. Now prepare the application
+using the `stage` task.
+
+    $ activator clean stage
+
+An executable has been placed in `target/universal/stage/bin/` directory. Use this executable
+to start the server.
+
+    $ target/universal/stage/bin/virtualcoach-web -Dpidfile.path=/tmp/play.pid > /dev/null 2>&1 &
+
+Stopping the server is easy:
+
+    $ kill $(cat /tmp/play.pid)
+
 [1]:https://typesafe.com/activator
-
-
+[2]:https://www.playframework.com/documentation/2.4.x/Production
