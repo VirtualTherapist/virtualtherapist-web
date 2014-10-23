@@ -7,6 +7,7 @@
 GET         /                                controllers.ActivityController.activity()
 GET         /gebruikers/all                  controllers.UserController.showUsers()
 GET         /gebruikers/:id                  controllers.UserController.userPage(id: Integer)
+GET         /gebruikers/delete/:id           controllers.UserController.deleteUser(id: Integer)
 
 GET         /vragen                          controllers.QuestionController.questionpage()
 POST        /vragen                          controllers.QuestionController.searchQuestion()
@@ -26,6 +27,8 @@ GET         /logout                          controllers.LoginController.logout(
 GET         /analyse/:id                     controllers.AnalysisController.analysisPageForUser(id: Integer)
 GET         /analyse                         controllers.AnalysisController.analysisPage()
 
+GET         /server                          controllers.APIController.WebSocket()
+
 # API Calls
 # Authentication header meesturen: "authentication: sha256("email" + "password")" (email en password aan elkaar)
 GET         /api/login                       controllers.APIController.validateLogin()
@@ -34,7 +37,7 @@ GET         /api/login                       controllers.APIController.validateL
 GET         /initDB                          controllers.LoginController.initializeDB()
 
 # Chat calls
-POST        /chat/message                    controllers.APIController.message()
+# POST        /chat/message                    controllers.APIController.message()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /swagger-ui                     controllers.Assets.at(path="/public/swagger-ui", file = "index.html")

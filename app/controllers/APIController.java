@@ -4,10 +4,7 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
 import models.Answer;
 import models.Question;
@@ -37,11 +34,15 @@ import static play.mvc.Results.unauthorized;
 /**
  * Created by Akatchi on 10-10-2014.
  */
-@Api(value = "/api", description = "API operations")
+@Api(value = "/api", description = "API operations", basePath = "http://localhost:9000/api")
 public class APIController extends SwaggerBaseApiController
 {
-    @ApiOperation(nickname = "validateLogin", value="", notes = "Validates app login", response = JsonNode.class, httpMethod = "GET")
-    //@ApiResponses(new Array(new ApiResponse(code = 401, message = "Unauthorized"), new ApiResponse(code = 200, message = "Login validated")))
+    @ApiOperation(nickname = "ValidateLogin", value="ValidateLogin", notes = "Validates app login", response = User.class, httpMethod = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Login valid"),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authentication", value = "sha256(Email + password)", required = true, dataType = "string", paramType = "header")})
     @With(APIAuthHeaderFilter.class)
     public static Result validateLogin()
     {
@@ -50,11 +51,11 @@ public class APIController extends SwaggerBaseApiController
 
         if (user != null)
         {
-            ObjectNode result = Json.newObject();
-            result.put("first_name", user.first_name);
-            result.put("last_name", user.last_name);
-            result.put("status", 200);
-            return ok(toJson(result));
+            //ObjectNode result = Json.newObject();
+            //result.put("first_name", user.first_name);
+            //result.put("last_name", user.last_name);
+            //result.put("status", 200);
+            return ok(toJson(user));
         }
         else
         {
@@ -63,7 +64,7 @@ public class APIController extends SwaggerBaseApiController
 
 
     }
-
+    /*
     @With(APIAuthHeaderFilter.class)
     public static play.mvc.Result message() {
 
@@ -80,8 +81,9 @@ public class APIController extends SwaggerBaseApiController
                 return ok();
             }
         }
-    }
+    }*/
 
+    @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
     public static WebSocket<String> WebSocket()
     {
         return new WebSocket<String>()
