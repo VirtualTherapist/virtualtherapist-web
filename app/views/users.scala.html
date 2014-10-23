@@ -15,6 +15,7 @@
             <th>Naam:</th>
             <th>Email:</th>
             <th>Rol:</th>
+            <th>Actie: </th>
         </tr>
         @for(user <- users){
             <tr>
@@ -25,6 +26,7 @@
                 }else{
                     <td></td>
                 }
+                <td><a href="@routes.UserController.deleteUser(user.id)">Verwijderen</a></td>
             </tr>
         }
         </table>

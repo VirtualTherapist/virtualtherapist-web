@@ -10,11 +10,15 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import filters.APIAuthHeaderFilter;
 import models.Answer;
+import models.Question;
 import models.User;
+import play.Logger;
 import play.libs.Crypto;
+import play.libs.F;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.WebSocket;
 import play.mvc.With;
 import utils.HashUtil;
 import utils.NLPUtil;
@@ -76,6 +80,57 @@ public class APIController extends SwaggerBaseApiController
                 return ok();
             }
         }
+    }
+
+    public static WebSocket<String> WebSocket()
+    {
+        return new WebSocket<String>()
+        {
+            // Called when the Websocket Handshake is done.
+            public void onReady(WebSocket.In<String> in, final WebSocket.Out<String> out)
+            {
+                // For each event received on the socket,
+                in.onMessage(new F.Callback<String>()
+                {
+                    public void invoke(String event)
+                    {
+                        // Log events to the console
+                        if( event.contains("[question]") )
+                        {
+                            String[] question = event.split("\\[question\\]");
+                            Logger.debug("Vraag: " + question[1]);
+
+                            //Code om de beste question uit te kiezen
+                            //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
+                            List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question[1]).findList();
+
+                            Answer bestAnswer = new Answer();
+
+                            //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
+                            if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
+                            else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
+
+                            Logger.debug("Antwoord: " + bestAnswer.answer);
+
+                            //Het antwoord terugsturen naar de client
+                            out.write(bestAnswer.answer);
+                        }
+                    }
+                });
+
+                // When the socket is closed.
+                in.onClose(new F.Callback0()
+                {
+                    public void invoke()
+                    {
+                        Logger.debug("Disconnected");
+                    }
+                });
+
+                // Send a single 'Hello!' message
+//                out.write("Connected");
+            }
+        };
     }
 
 

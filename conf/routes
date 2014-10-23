@@ -41,13 +41,8 @@ GET         /swagger-ui                     controllers.Assets.at(path="/public/
 GET         /swagger-ui/*file               controllers.Assets.at(path ="/public/swagger-ui", file)
 GET         /assets/*file                   controllers.Assets.at(path, file)
 
-
-
 # Enable webjar based resources to be returned
 GET         /webjars/*file                   controllers.WebJarAssets.at(file)
-
-
-
 
 # API docs route
 GET     /api-docs                       controllers.ApiHelpController.getResources()
