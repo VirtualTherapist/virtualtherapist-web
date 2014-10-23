@@ -19,6 +19,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "font-awesome" % "4.2.0",
   "org.webjars" % "bootstrap-glyphicons" % "bdd2cbfba0",
   "org.webjars" % "chartjs" % "26962ce",
+  "com.wordnik" %% "swagger-play2" % "1.3.10" exclude("org.reflections", "reflections"),
+  //"org.reflections" % "reflections" % "0.9.8" notTransitive (),
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "net.sourceforge.htmlunit" % "htmlunit" % "2.14" % "test"
 )
