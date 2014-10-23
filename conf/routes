@@ -4,40 +4,42 @@
 
 # Home page
 
-GET         /                                     controllers.ActivityController.activity()
-GET         /gebruikers/all                       controllers.UserController.showUsers()
-GET         /gebruikers/:id                       controllers.UserController.userPage(id: Integer)
-GET         /gebruikers/delete/:id                controllers.UserController.deleteUser(id: Integer)
+GET         /                             controllers.ActivityController.activity()
+GET         /gebruikers/all               controllers.UserController.showUsers()
+GET         /gebruikers/:id               controllers.UserController.userPage(id: Integer)
+GET         /gebruikers/delete/:id        controllers.UserController.deleteUser(id: Integer)
 
-GET         /vragen                               controllers.QuestionController.questionpage()
-POST        /vragen                               controllers.QuestionController.searchQuestion()
-POST        /vragen/opslaan                       controllers.QuestionController.saveQuestion()
-GET         /vragen/all                           controllers.QuestionController.showQuestions()
-GET         /antwoord/delete/:id                  controllers.QuestionController.deleteAnswer(id: Integer)
-GET         /vragen/delete/:id                    controllers.QuestionController.deleteQuestion(id: Integer)
-POST        /vragen/update                        controllers.QuestionController.updateQuestion()
-POST        /antwoord/update                      controllers.QuestionController.updateAnswer()
+GET         /vragen                       controllers.QuestionController.questionpage()
+POST        /vragen                       controllers.QuestionController.searchQuestion()
+POST        /vragen/opslaan               controllers.QuestionController.saveQuestion()
+GET         /vragen/all                   controllers.QuestionController.showQuestions()
+GET         /antwoord/delete/:id          controllers.QuestionController.deleteAnswer(id: Integer)
+GET         /vragen/delete/:id            controllers.QuestionController.deleteQuestion(id: Integer)
+POST        /vragen/update                controllers.QuestionController.updateQuestion()
+POST        /antwoord/update              controllers.QuestionController.updateAnswer()
 
-GET         /login                                controllers.LoginController.login()
-POST        /login                                controllers.LoginController.validateLogin()
-GET         /register                             controllers.LoginController.register()
-POST        /register                             controllers.LoginController.createUser()
-GET         /logout                               controllers.LoginController.logout()
+GET         /login                        controllers.LoginController.login()
+POST        /login                        controllers.LoginController.validateLogin()
+GET         /register                     controllers.LoginController.register()
+POST        /register                     controllers.LoginController.createUser()
+GET         /logout                       controllers.LoginController.logout()
 
-GET         /analyse/:id                          controllers.AnalysisController.analysisPageForUser(id: Integer)
-GET         /analyse                              controllers.AnalysisController.analysisPage()
+GET         /analyse/:id                  controllers.AnalysisController.analysisPageForUser(id: Integer)
+GET         /analyse                      controllers.AnalysisController.analysisPage()
+
+GET         /server                       controllers.APIController.WebSocket()
 
 # API Calls
 # Authentication header meesturen: "authentication: sha256("email" + "password")" (email en password aan elkaar)
-GET         /api/login                      controllers.APIController.validateLogin()
+GET         /api/login                    controllers.APIController.validateLogin()
 
 # Run initDB link als de db vers is of als hij net gecleared is
-GET         /initDB                               controllers.LoginController.initializeDB()
+GET         /initDB                       controllers.LoginController.initializeDB()
 
 # Chat calls
-POST        /chat/message                   controllers.APIController.message()
+POST        /chat/message                 controllers.APIController.message()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                         controllers.Assets.at(path="/public", file)
+GET         /assets/*file                 controllers.Assets.at(path="/public", file)
 # Enable webjar based resources to be returned
-GET         /webjars/*file                        controllers.WebJarAssets.at(file)
+GET         /webjars/*file                controllers.WebJarAssets.at(file)
