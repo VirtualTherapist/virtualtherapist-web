@@ -1,0 +1,39 @@
+@(title: String)(firstname: String)(lastname: String)(error: String)(errorType: String)
+
+@style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
+
+@script = {
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}
+
+@main(title)(style){
+
+    <h1>Keyword Trends</h1>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+            Maand
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">September</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Augustus</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juli</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juni</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mei</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">April</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ouder</a></li>
+        </ul>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div >
+                <h4>Trends in Juli</h4>
+
+            </div>
+        </div>
+    </div>
+
+}(script)(firstname)(lastname)(error)(errorType)
