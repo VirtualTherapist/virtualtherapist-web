@@ -6,9 +6,15 @@
 
 
 @main("Virtual Therapist")(style){
-    <header>
+    <div class="row header">
         <h1>Gebruikers</h1>
-    </header>
+        <div class="btn-group">
+            <a href="@routes.LoginController.register()" class="btn btn-primary btn-lg">
+                <span class="glyphicon glyphicon-plus"></span>
+                Toevoegen
+            </a>
+        </div>
+    </div>
 
     <table class="table table-striped">
         <tr>
