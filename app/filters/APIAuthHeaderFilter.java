@@ -26,7 +26,7 @@ public class APIAuthHeaderFilter extends Action.Simple {
         }
     }
 
-    private boolean authenticate(String secret) {
+    public static boolean authenticate(String secret) {
         User user = Ebean.find(User.class).where()
                 .eq("password", secret).findUnique();
 
