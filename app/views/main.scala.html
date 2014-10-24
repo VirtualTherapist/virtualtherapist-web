@@ -8,9 +8,13 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("/public/images", "favicon.png")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "bootstrap-lumen.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "jumbotron-narrow.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "sweet-alert.css")">
         <link rel="stylesheet" meedia="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))">
         <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-glyphicons.css"))">
         @style
+        <!-- Dit moet hierboven, anders werkt alert niet -->
+        <script src="@routes.Assets.at("/public/javascripts", "sweet-alert.js")" type="text/javascript"></script>
+
     </head>
     <body>
     @if( !error.equals("") ) {
@@ -26,7 +30,6 @@
                     <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
                     <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse</a></li>
                     <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
-                    <li><a href="@routes.LoginController.register()">Maak nieuwe user aan</a></li>
                     <li><a href="@routes.LoginController.logout()">Uitloggen</a></li>
 
                 </ul>
@@ -39,9 +42,12 @@
         </div>
 
 
-
     </body>
-    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))" type="text/javascript"></script>
+
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.js"))" type="text/javascript"></script>
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("Chart.js"))" type="text/javascript"></script>
     <script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.js"))" type="text/javascript"></script>
     @script
+
+
 </html>

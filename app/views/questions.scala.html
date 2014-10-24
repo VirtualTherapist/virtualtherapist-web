@@ -6,7 +6,23 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script src="@routes.Assets.at("/public/javascripts", "questions.js")" type="text/javascript"></script>
     <script type="text/javascript">
+        $.fn.extend({
+            toggleText:function(a,b){
+                if(this.html()==a){this.html(b)}
+                else{this.html(a)}
+            }
+        });
+
         $(document ).ready( function(){
+
+            $('#questionButton' ).click(function(){
+                $('#questionForm' ).slideToggle(200);
+                $('#questionButton').toggleText(
+                    '<span class="glyphicon glyphicon-remove"></span> Annuleren',
+                    '<span class="glyphicon glyphicon-plus"></span> Toevoegen'
+                );
+            });
+
             $('#search' ).click( function()
             {
                 where = [];
@@ -29,29 +45,34 @@
                     }
                 } ).done ( function ( data )
                 {
-                    console.log(data);
+                    fillSearch(data)
                     alert('you have searched: ' + search);
                 } ).fail ( function ( )
                 {
 //                    alert('you have failded: ' + search);
                 } )
-            })
-        })
+            });
+        });
+        function fillSearch(searches){
+            for(search in searches ){
+                // TODO fill searches
+            }
+        }
     </script>
 }
 
 @main("Virtual Therapist")(style){
 
-        <header>
+        <div class="row header">
+
             <h1>Vragen</h1>
             <div class="btn-group">
-                <a href="" class="btn btn-primary btn-lg">
+                <button class="btn btn-primary btn-lg" id="questionButton">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Voeg toe
-                </a>
+                    Toevoegen
+                </button>
             </div>
-        </header>
-        <br><br><br>
+        </div>
         <!--<form role="form" method="POST" action="@routes.QuestionController.searchQuestion()" >
             <div class="form-group">
                 <label for="inputQuestion">Vraag</label>
@@ -65,27 +86,27 @@
         </form>
         <br>-->
 
-
-
-        <!--<form role="form" method="POST" action="@routes.QuestionController.saveQuestion()" >
-            <div class="form-group">
-                <label for="inputQuestion">Vraag</label>
-                <input type="text" class="form-control" name="question" placeholder="Vraag">
+        <div class="row" style="display: none;" id="questionForm">
+            <div class="col-md-12">
+                <div class="well">
+                    <form role="form" method="POST" action="@routes.QuestionController.saveQuestion()" >
+                        <div class="form-group">
+                            <label for="inputQuestion">Vraag</label>
+                            <textarea type="text" class="form-control" name="question" placeholder="Vraag"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAnswer">Antwoord</label>
+                            <textarea class="form-control" name="answer" placeholder="Antwoord"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Opslaan</button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="inputAnswer">Antwoord</label>
-                <input type="text" class="form-control" name="answer" placeholder="Antwoord">
-            </div>
-            <button type="submit" class="btn btn-warning">Opslaan</button>
-        </form>-->
+        </div>
         <!--<div class="row">
             <div class="well well-sm">Add More content</div>
         </div>-->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="well">Hieronder kan je vragen en antwoorden bekijken</div>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-md-5">
                 <div class="btn-group pull-left" data-toggle="buttons">
@@ -99,7 +120,7 @@
             </div>
             <div class="col-md-7">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="search-text">
+                    <input type="text" class="form-control" id="search-text" onkeypress="{if (event.keyCode==13)search()}" autofocus>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-warning" id="search">
                             <span class="glyphicon glyphicon-search"></span>
@@ -112,18 +133,22 @@
     <br>
     @if( questions != null ) {
         <table id="answers" class="table table-striped">
-            <tr>
-                <th>Vraag:</th>
-                <th>Antwoord:</th>
-                <th>Verwijderen</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Vraag:</th>
+                    <th>Antwoord:</th>
+                    <th style="width: 10px;">Verwijder</th>
+                </tr>
+            </thead>
+            <tbody>
             @for(question <- questions) {
                 <tr>
                     <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
                     <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@question.answer.id">@question.answer.answer</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteQuestion(question.id)">Verwijder</a></td>
+                    <td><a class="btn btn-danger btn-xs" href="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
                 </tr>
             }
+            </tbody>
         </table>
     }
 
