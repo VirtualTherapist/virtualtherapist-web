@@ -5,7 +5,8 @@ set -e
 PROJECT_DIR=/home/auke/projects/virtualtherapist-web/
 PID_FILE=/tmp/play.pid
 
-git pull origin feature/57
+git checkout master
+git pull origin master
 
 echo "Preparing application for launch."
 activator clean stage
@@ -17,4 +18,4 @@ fi
 
 echo "Launching application."
 # Launch application in backgroud and redirect all output to /dev/null/.
-authbind $PROJECT_DIR"target/universal/stage/bin/virtualcoach-web" -Dhttp.port=80 -Dpidfile.path=/tmp/play.pid >/dev/null 2>&1 &
+$PROJECT_DIR"target/universal/stage/bin/virtualcoach-web" -Dhttp.port=80 -Dpidfile.path=/tmp/play.pid >/dev/null 2>&1 &

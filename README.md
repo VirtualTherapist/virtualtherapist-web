@@ -38,6 +38,8 @@ in that
 It's not recommmanded to start the server in production using `$activator run`.
 ["Play checks with SBT to see if any files have changed, and this may have significant performance impacts on your application."][2]
 
+First, make sure that the user that is running the application is allowed to use port 80.
+
 Clean the application by removing caches and compiled stuff. Now prepare the application
 using the `stage` task.
 
