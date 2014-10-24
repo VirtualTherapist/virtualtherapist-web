@@ -1,32 +1,20 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
 import models.Answer;
 import models.Chat;
-import models.ChatContext;
 import models.Question;
 import models.User;
 import play.Logger;
-import play.libs.Crypto;
 import play.libs.F;
-import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.With;
-import utils.HashUtil;
-import utils.NLPUtil;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
 
 import static play.libs.Json.toJson;
 import static play.mvc.Controller.request;
@@ -84,30 +72,48 @@ public class APIController extends SwaggerBaseApiController
         }
     }*/
 
+    @ApiOperation(nickname = "CreateChatWithContext", value="CreateChatWithContext", notes = "Creates a chat and adds te context", response = Integer.class, httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Chat and context created"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 400, message = "Missing mood variable")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "mood", value = "User mood", required = true, dataType = "string", paramType = "post"),
+            @ApiImplicitParam(name = "lat", value = "User location lat", required = false, dataType = "double", paramType = "post"),
+            @ApiImplicitParam(name = "lng", value = "User location lng", required = false, dataType = "double", paramType = "post")})
+    @With(APIAuthHeaderFilter.class)
     public static Result setChatContext() {
         String secret = request().getHeader("authentication");
-        User user = Ebean.find(User.class, secret);
+        User user = Ebean.find(User.class).where().eq("password", secret).findUnique();
 
         Map<String, String[]> postVariables = request().body().asFormUrlEncoded();
+        if(postVariables == null || !postVariables.containsKey("mood"))
+            return badRequest("Missing mood variable");
+
         String mood = postVariables.get("mood")[0];
-        String lat = postVariables.get("lat")[0];
-        String lng = postVariables.get("lng")[0];
+        String lat = null;
+        String lng = null;
+        if(postVariables.containsKey("lat") && postVariables.containsKey("lng")) {
+            lat = postVariables.get("lat")[0];
+            lng = postVariables.get("lng")[0];
+        }
 
         Chat chat = new Chat();
         chat.user = user;
-        chat.lat = Double.parseDouble(lat);
-        chat.lng = Double.parseDouble(lng);
+        if(lat != null && lng != null) {
+            chat.lat = Double.parseDouble(lat);
+            chat.lng = Double.parseDouble(lng);
+        }else{
+            chat.lat = 0;
+            chat.lng = 0;
+        }
         chat.mood = mood;
         chat.save();
 
-        /*
-        ChatContext chatContext = new ChatContext();
-        chatContext.mood = mood;
-        chatContext.lat = Double.parseDouble(lat);
-        chatContext.lng = Double.parseDouble(lng);
-        */
+        if(chat != null)
+            return created(toJson(chat.id));
 
-        return ok();
+        return internalServerError();
     }
 
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
