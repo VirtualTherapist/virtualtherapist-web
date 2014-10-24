@@ -49,9 +49,12 @@ body {
 /* Customize container */
 @media (min-width: 768px) {
     .container {
-        max-width: 730px;
+        max-width: 870px;
     }
 
+}
+textarea{
+    resize: vertical;
 }
 @media (max-width: 480px) {
     .sidebar{
@@ -77,25 +80,25 @@ body {
     .btn-group{
         width: 100%;
     }
-    header > h1{
+    .header > h1{
         float: none;
     }
-    header{
+    .header{
         text-align: center;
     }
 }
-header {
+.header {
     padding-bottom: 15px;
     display: inline;
-    float: left;
+
     width: 100%;
 }
-header > h1{
+.header > h1{
     margin: 0px;
     display: inline;
     float: left;
 }
-header > .btn-group{
+.header > .btn-group{
     display: inline;
     float: right;
 }
