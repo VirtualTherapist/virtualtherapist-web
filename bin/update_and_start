@@ -5,6 +5,11 @@ set -e
 PROJECT_DIR=/root/virtualcoach/
 PID_FILE=/tmp/play.pid
 
+if [ -f $PID_FILE ]; then
+  echo "Stopping server."
+  kill $(cat $PID_FILE)
+fi
+
 cd $PROJECT_DIR
 git checkout master
 git pull origin master
@@ -12,10 +17,6 @@ git pull origin master
 echo "Preparing application for launch."
 $PROJECT_DIR"activator" clean compile stage
 
-if [ -f $PID_FILE ]; then
-  echo "Stopping server."
-  kill $(cat $PID_FILE)
-fi
 
 echo "Launching application."
 # Launch application in backgroud and redirect all output to /dev/null/.
