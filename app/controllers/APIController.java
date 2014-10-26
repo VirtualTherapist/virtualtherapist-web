@@ -158,34 +158,34 @@ public class APIController extends SwaggerBaseApiController
                             if(APIAuthHeaderFilter.authenticate(data.get("token"))){ // see if the token is valid.
                                 if( data.containsKey("question") ) // see if there's a question to be checked
                                 {
-                                    String user_email = data.get("email"); // fetch the user mail
-                                    User user = Ebean.find(User.class).where().eq("email", user_email).findUnique();
-                                    Logger.debug("user: "+user.email);
-                                    Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
-
-                                    String question = data.get("question"); // fetch the question
-                                    final SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
-                                    Logger.debug("user: "+user.email);
-                                    storeChat(user, question, tokens); // store everything that's being said
-
-
-//                                    Logger.debug("Tokens: "+tokens[0]);
-//                                    Logger.debug("Vraag: " + );
-
-                                    //Code om de beste question uit te kiezen
-                                    //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
-                                    List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question).findList();
-
-                                    Answer bestAnswer = new Answer();
-
-                                    //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
-                                    if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
-                                    else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
-
-                                    Logger.debug("Antwoord: " + bestAnswer.answer);
-
-                                    //Het antwoord terugsturen naar de client
-                                    out.write(bestAnswer.answer);
+//                                    String user_email = data.get("email"); // fetch the user mail
+//                                    User user = Ebean.find(User.class).where().eq("email", user_email).findUnique();
+//                                    Logger.debug("user: "+user.email);
+//                                    Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
+//
+//                                    String question = data.get("question"); // fetch the question
+////                                    final SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
+//                                    Logger.debug("user: "+user.email);
+//                                    storeChat(user, question, tokens); // store everything that's being said
+//
+//
+////                                    Logger.debug("Tokens: "+tokens[0]);
+////                                    Logger.debug("Vraag: " + );
+//
+//                                    //Code om de beste question uit te kiezen
+//                                    //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
+//                                    List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question).findList();
+//
+//                                    Answer bestAnswer = new Answer();
+//
+//                                    //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
+//                                    if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
+//                                    else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
+//
+//                                    Logger.debug("Antwoord: " + bestAnswer.answer);
+//
+//                                    //Het antwoord terugsturen naar de client
+//                                    out.write(bestAnswer.answer);
                                 }
                             }
                         }
