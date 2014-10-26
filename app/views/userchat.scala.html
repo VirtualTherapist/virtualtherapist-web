@@ -1,0 +1,45 @@
+@(title: String)(user: User)(firstname: String)(lastname: String)(error: String)(errorType: String)
+
+@style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
+
+@script = {
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}
+
+@main(title)(style){
+
+    @if(user == null) {
+        <h1>Gespreksgeschiedenis</h1>
+    }else{
+        <h1>Gespreksgeschiedenis - @user.first_name @user.last_name</h1>
+    }
+
+    <div class="trending">
+        <table class="table table-striped">
+            <tr>
+                <th>Nr</th>
+                <th>Datum</th>
+                <th>Locatie</th>
+                <th>Aanleiding</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2014-10-03</td>
+                <td>Bakker Bart</td>
+                <td>Was bij de bakker</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2014-09-22</td>
+                <td>Supermarkt</td>
+                <td>Ik moest avondeten kopen.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>2014-07-22</td>
+                <td>Thuis</td>
+                <td>Ik had veel te veel gegeten tijdens BBQen</td>
+            </tr>
+        </table>
+    </div>
+}(script)(firstname)(lastname)(error)(errorType)

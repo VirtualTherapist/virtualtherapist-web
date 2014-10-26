@@ -19,13 +19,13 @@ public class ChatController extends Controller {
 
     public static Result chatList()
     {
-        return ok(analysis.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
+        return ok(userchat.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 
     public static Result showChat(Integer id)
     {
-        return ok(register.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
+        return ok(chatlist.render("Analyse", null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 }

@@ -3,6 +3,7 @@ package controllersTest;
 import controllers.routes;
 import com.avaje.ebean.Ebean;
 import org.junit.Test;
+import org.junit.Ignore;
 import test.BaseTest;
 import modelsTest.DatabaseFunctions;
 import models.Question;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.*;
 
+@Ignore
 public class QuestionTest extends BaseTest
 {
     @Test
@@ -55,5 +57,4 @@ public class QuestionTest extends BaseTest
             }
         });
     }
-
 }
