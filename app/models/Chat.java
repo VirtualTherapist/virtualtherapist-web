@@ -4,29 +4,33 @@ import com.avaje.ebean.annotation.CreatedTimestamp;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by Akatchi on 9-10-2014.
+ * Created by bas on 23-10-14.
  */
 @Entity
-public class UserQuestion extends Model
-{
+public class Chat extends Model {
+
     @Id
     public int id;
 
     @Constraints.Required
-    @ManyToOne
+    @OneToOne
     public User user;
 
     @Constraints.Required
-    public String asked_question;
+    public double lat;
+
+    @Constraints.Required
+    public double lng;
+
+    @Constraints.Required
+    public String mood;
 
     @Column(name="created_at")
     @CreatedTimestamp
     public Date createdAt;
+
 }
