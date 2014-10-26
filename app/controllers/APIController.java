@@ -164,7 +164,7 @@ public class APIController extends SwaggerBaseApiController
                                     Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
 
                                     String question = data.get("question"); // fetch the question
-                                    SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
+                                    final SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
                                     Logger.debug("user: "+user.email);
                                     storeChat(user, question, tokens); // store everything that's being said
 
