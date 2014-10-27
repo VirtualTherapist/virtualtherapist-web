@@ -35,6 +35,7 @@ GET         /chat/:id                        controllers.ChatController.showChat
 # API Calls
 # Authentication header meesturen: "authentication: sha256("email" + "password")" (email en password aan elkaar)
 GET         /api/login                       controllers.APIController.validateLogin()
+POST        /api/context                     controllers.APIController.setChatContext()
 
 # Run initDB link als de db vers is of als hij net gecleared is
 GET         /initDB                          controllers.LoginController.initializeDB()
