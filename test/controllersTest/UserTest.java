@@ -8,6 +8,7 @@ import models.UserRole;
 import modelsTest.DatabaseFunctions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.Computer;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -31,6 +32,7 @@ public class UserTest extends BaseTest
     /*
      * Test om te kijken of het mogelijk is om users te deleten
      */
+    @Ignore
     @Test
     public void testDeleteUser()
     {
