@@ -131,11 +131,20 @@ public class LoginController extends Controller
         objectsAdded.add(rol);
 
         rol = new UserRole();
+        rol.level = 5;
+        rol.id = 2;
+        rol.name  = "Therapeut";
+        rol.save();
+        objectsAdded.add(rol);
+
+        rol = new UserRole();
         rol.level = 10;
-        rol.id= 2;
+        rol.id = 3;
         rol.name  = "Super Admin";
         rol.save();
         objectsAdded.add(rol);
+
+
 
         User admin = new User();
         admin.email = "admin@therapist.com";
