@@ -1,0 +1,56 @@
+@(title: String)(user: User)(firstname: String)(lastname: String)(error: String)(errorType: String)
+
+@style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
+
+@script = {
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "chat.css")">
+}
+
+@main(title)(style){
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+            @if(user == null) {
+            
+            <h1>Gespreksgeschiedenis <small>2014-09-27</small></h1>
+            }else{
+                <h1>Gespreksgeschiedenis - @user.first_name @user.last_name</h1>
+            }
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <p class="well">
+                    <span class="client"><b>Henk-Jan de Groot</b></span></br>
+                    Quisque ullamcorper efficitur consequat. Nunc placerat, quam non venenatis sodales, felis risus consectetur urna, nec feugiat metus felis ac quam. 
+                    <br><span class="timestamp pull-right">13:32</span>
+                </p>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-1">
+                <p class="well pull-right">
+                <span class="therapist"><b>Therapeut</b></span></br />
+                    Quisque ullamcorper efficitur consequat. Nunc placerat, quam non venenatis sodales, felis risus consectetur urna, nec feugiat metus felis ac quam. 
+                    <br><span class="timestamp pull-right">13:33</span>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <p class="well">
+                    <span class="client"><b>Henk-Jan de Groot</b></span><br>
+                    Quisque ullamcorper efficitur consequat. Nunc placerat, quam non venenatis sodales, felis risus consectetur urna, nec feugiat metus felis ac quam. 
+                    <br>
+                    <span class="timestamp pull-right">13:35</span>
+                </p>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
+}(script)(firstname)(lastname)(error)(errorType)

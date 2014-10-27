@@ -10,6 +10,7 @@ import static play.test.Helpers.*;
 import models.UserRole;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import play.test.WithApplication;
 import play.test.FakeApplication;
 
@@ -38,6 +39,7 @@ public class UserTest
     /*
      * Test om te testen of er users gemaakt kunnen worden
      */
+    @Ignore
     @Test
     public void testSaveUser()
     {

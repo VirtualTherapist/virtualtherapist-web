@@ -14,5 +14,7 @@ dist
 /RUNNING_PID
 /.settings
 conf/evolutions
+<<<<<<< HEAD
 conf/application.conf
 *.log
+application.conf
