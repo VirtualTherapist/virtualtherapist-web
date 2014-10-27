@@ -1,11 +1,14 @@
 package models;
 
+import com.avaje.ebean.annotation.CreatedTimestamp;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Date;
 
 /**
  * Created by Akatchi on 9-10-2014.
@@ -23,12 +26,7 @@ public class UserQuestion extends Model
     @Constraints.Required
     public String asked_question;
 
-    public long created_at;
-
-    public UserQuestion(String asked_question, User user)
-    {
-        this.asked_question = asked_question;
-        this.user = user;
-        this.created_at = System.currentTimeMillis();
-    }
+    @Column(name="created_at")
+    @CreatedTimestamp
+    public Date createdAt;
 }

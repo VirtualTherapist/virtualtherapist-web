@@ -1,11 +1,11 @@
 package models;
 
+import com.avaje.ebean.annotation.CreatedTimestamp;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by bas on 23-10-14.
@@ -17,7 +17,7 @@ public class Chat extends Model {
     public int id;
 
     @Constraints.Required
-    @ManyToOne
+    @OneToOne
     public User user;
 
     @Constraints.Required
@@ -28,5 +28,9 @@ public class Chat extends Model {
 
     @Constraints.Required
     public String mood;
+
+    @Column(name="created_at")
+    @CreatedTimestamp
+    public Date createdAt;
 
 }

@@ -1,20 +1,25 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
-import models.Answer;
-import models.Chat;
-import models.Question;
-import models.User;
+import models.*;
 import play.Logger;
+import play.api.libs.json.Json;
 import play.libs.F;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.With;
+import scala.util.parsing.json.JSONArray;
+import scala.util.parsing.json.JSONObject;
+import utils.NLPUtil;
 
-import java.util.List;
-import java.util.Map;
+import java.io.ObjectInputStream;
+import java.util.*;
 
 import static play.libs.Json.toJson;
 import static play.mvc.Controller.request;
@@ -116,9 +121,26 @@ public class APIController extends SwaggerBaseApiController
         return internalServerError();
     }
 
+    private static Map<String, String> parseJson(String s){
+
+        Map<String,String> map = new HashMap<String,String>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            map = mapper.readValue(s,
+                    new TypeReference<HashMap<String,String>>(){});
+            Logger.debug("poep" +map);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return map;
+    }
+
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
     public static WebSocket<String> WebSocket()
     {
+        NLPUtil tokenizer = NLPUtil.getInstance();
+
         return new WebSocket<String>()
         {
             // Called when the Websocket Handshake is done.
@@ -129,26 +151,43 @@ public class APIController extends SwaggerBaseApiController
                 {
                     public void invoke(String event)
                     {
-                        // Log events to the console
-                        if( event.contains("[question]") )
-                        {
-                            String[] question = event.split("\\[question\\]");
-                            Logger.debug("Vraag: " + question[1]);
-
-                            //Code om de beste question uit te kiezen
-                            //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
-                            List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question[1]).findList();
-
-                            Answer bestAnswer = new Answer();
-
-                            //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
-                            if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
-                            else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
-
-                            Logger.debug("Antwoord: " + bestAnswer.answer);
-
-                            //Het antwoord terugsturen naar de client
-                            out.write(bestAnswer.answer);
+                        // parse the json string from websocket into a map
+                        Map<String, String> data = parseJson(event);
+                        Logger.debug("incomming: "+event);
+                        if(data.containsKey("token")){ // check for the token
+                            if(APIAuthHeaderFilter.authenticate(data.get("token"))){ // see if the token is valid.
+                                if( data.containsKey("question") ) // see if there's a question to be checked
+                                {
+//                                    String user_email = data.get("email"); // fetch the user mail
+//                                    User user = Ebean.find(User.class).where().eq("email", user_email).findUnique();
+//                                    Logger.debug("user: "+user.email);
+//                                    Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
+//
+//                                    String question = data.get("question"); // fetch the question
+////                                    final SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
+//                                    Logger.debug("user: "+user.email);
+//                                    storeChat(user, question, tokens); // store everything that's being said
+//
+//
+////                                    Logger.debug("Tokens: "+tokens[0]);
+////                                    Logger.debug("Vraag: " + );
+//
+//                                    //Code om de beste question uit te kiezen
+//                                    //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
+//                                    List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question).findList();
+//
+//                                    Answer bestAnswer = new Answer();
+//
+//                                    //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
+//                                    if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
+//                                    else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
+//
+//                                    Logger.debug("Antwoord: " + bestAnswer.answer);
+//
+//                                    //Het antwoord terugsturen naar de client
+//                                    out.write(bestAnswer.answer);
+                                }
+                            }
                         }
                     }
                 });
@@ -161,11 +200,30 @@ public class APIController extends SwaggerBaseApiController
                         Logger.debug("Disconnected");
                     }
                 });
-
-                // Send a single 'Hello!' message
-//                out.write("Connected");
             }
         };
+    }
+
+    /**
+     *
+     * @param user
+     * @param question
+     * @param keywords
+     */
+    private static void storeChat(User user, String question, SortedMap<String, String>[] keywords){
+        // Store the userquestion
+        UserQuestion q = new UserQuestion();
+        q.asked_question = question;
+        q.user = user;
+        q.save();
+
+        // store keywords
+        for(SortedMap<String, String> map : keywords){
+            for(Map.Entry<String, String> entry : map.entrySet()){
+                Logger.debug("key: " + entry.getKey() + " Value: " + entry.getValue());
+            }
+        }
+
     }
 
 

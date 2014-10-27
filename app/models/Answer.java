@@ -18,6 +18,4 @@ public class Answer extends Model
     @Constraints.Required
     public String answer;
 
-    @ManyToMany(mappedBy = "answers", cascade=CascadeType.ALL)
-    public List<ChatLine> chatLines;
 }
