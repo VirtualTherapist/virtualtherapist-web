@@ -1,4 +1,5 @@
 import org.junit.Test;
+import org.junit.Ignore;
 import play.mvc.Result;
 
 import java.util.Arrays;
@@ -103,6 +104,7 @@ public class RoutesTest
     }
 
     @Test 
+    @Ignore
     public void postLoginTest() {
         Map<String, String> data = new HashMap<>();
         data.put("email", "user@server.com");

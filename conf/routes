@@ -29,6 +29,9 @@ GET         /analyse                         controllers.AnalysisController.anal
 
 GET         /server                          controllers.APIController.WebSocket()
 
+GET         /chat/all                        controllers.ChatController.chatList()
+GET         /chat/:id                        controllers.ChatController.showChat(id: Integer)
+
 # API Calls
 # Authentication header meesturen: "authentication: sha256("email" + "password")" (email en password aan elkaar)
 GET         /api/login                       controllers.APIController.validateLogin()
