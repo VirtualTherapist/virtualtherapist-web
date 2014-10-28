@@ -139,7 +139,7 @@ public class APIController extends SwaggerBaseApiController
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
     public static WebSocket<String> WebSocket()
     {
-        NLPUtil tokenizer = NLPUtil.getInstance();
+        //NLPUtil tokenizer = NLPUtil.getInstance();
 
         return new WebSocket<String>()
         {
@@ -164,7 +164,7 @@ public class APIController extends SwaggerBaseApiController
                                     Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
 
                                     String question = data.get("question"); // fetch the question
-                                    SortedMap<String, String>[] tokens = tokenizer.tagMessage(question);
+                                    SortedMap<String, String>[] tokens = NLPUtil.getInstance().tagMessage(question);
                                     Logger.debug("user: "+user.email);
                                     storeChat(user, question, tokens); // store everything that's being said
 
