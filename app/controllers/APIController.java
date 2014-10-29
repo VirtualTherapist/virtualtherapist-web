@@ -2,23 +2,17 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
+import com.wordnik.swagger.annotations.*;
 import models.*;
 import play.Logger;
-import play.api.libs.json.Json;
 import play.libs.F;
-import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.With;
-import scala.util.parsing.json.JSONArray;
-import scala.util.parsing.json.JSONObject;
 import utils.NLPUtil;
 
-import java.io.ObjectInputStream;
 import java.util.*;
 
 import static play.libs.Json.toJson;
@@ -29,52 +23,25 @@ import static play.mvc.Results.*;
  * Created by Akatchi on 10-10-2014.
  */
 @Api(value = "/api", description = "API operations", basePath = "http://localhost:9000/api")
-public class APIController extends SwaggerBaseApiController
-{
+public class APIController extends SwaggerBaseApiController {
     @ApiOperation(nickname = "ValidateLogin", value="ValidateLogin", notes = "Validates app login", response = User.class, httpMethod = "GET")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Login valid"),
-            @ApiResponse(code = 401, message = "Unauthorized")})
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "authentication", value = "sha256(Email + password)", required = true, dataType = "string", paramType = "header")})
+            @ApiImplicitParam(name = "authentication", value = "sha256(Email + password)", required = true, dataType = "string", paramType = "header")
+    })
     @With(APIAuthHeaderFilter.class)
-    public static Result validateLogin()
-    {
+    public static Result validateLogin() {
         String secret = request().getHeader("authentication");
         User user = Ebean.find(User.class).where().eq("password", secret).findUnique();
 
-        if (user != null)
-        {
-            //ObjectNode result = Json.newObject();
-            //result.put("first_name", user.first_name);
-            //result.put("last_name", user.last_name);
-            //result.put("status", 200);
+        if (user != null) {
             return ok(toJson(user));
         }
-        else
-        {
-            return unauthorized();
-        }
-
+        return unauthorized();
     }
-    /*
-    @With(APIAuthHeaderFilter.class)
-    public static play.mvc.Result message() {
-
-        JsonNode jsonNode = request().body().asJson();
-        if(jsonNode == null) {
-            return badRequest("Expecting JSON");
-        }else{
-            String message = jsonNode.findPath("message").textValue();
-            if(message == null) {
-                return badRequest("Missing parameter [message]");
-            }else{
-                System.out.println(message);
-                SortedMap<String, String>[] tokensAndTags = NLPUtil.getInstance().tagMessage(message);
-                return ok();
-            }
-        }
-    }*/
 
     @ApiOperation(nickname = "SetChatRating", value= "SetRatingOfChat", notes = "Rates a chat.", response = Integer.class, httpMethod = "POST")
     @ApiResponses(value = {
@@ -119,11 +86,13 @@ public class APIController extends SwaggerBaseApiController
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Chat and context created"),
             @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 400, message = "Missing mood variable")})
+            @ApiResponse(code = 400, message = "Missing mood variable")
+    })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mood", value = "User mood", required = true, dataType = "string", paramType = "post"),
             @ApiImplicitParam(name = "lat", value = "User location lat", required = false, dataType = "double", paramType = "post"),
-            @ApiImplicitParam(name = "lng", value = "User location lng", required = false, dataType = "double", paramType = "post")})
+            @ApiImplicitParam(name = "lng", value = "User location lng", required = false, dataType = "double", paramType = "post")
+    })
     @With(APIAuthHeaderFilter.class)
     public static Result setChatContext() {
         String secret = request().getHeader("authentication");
@@ -168,7 +137,7 @@ public class APIController extends SwaggerBaseApiController
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            map = mapper.readValue(s,
+            map = mapper.readValue(s, 
                     new TypeReference<HashMap<String,String>>(){});
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,27 +147,20 @@ public class APIController extends SwaggerBaseApiController
     }
 
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
-    public static WebSocket<String> WebSocket()
-    {
-        //NLPUtil tokenizer = NLPUtil.getInstance();
-
-        return new WebSocket<String>()
-        {
+    public static WebSocket<String> WebSocket() {
+        return new WebSocket<String>() {
             // Called when the Websocket Handshake is done.
-            public void onReady(WebSocket.In<String> in, final WebSocket.Out<String> out)
-            {
+            public void onReady(WebSocket.In<String> in, final WebSocket.Out<String> out) {
                 // For each event received on the socket,
-                in.onMessage(new F.Callback<String>()
-                {
-                    public void invoke(String event)
-                    {
+                in.onMessage(new F.Callback<String>() {
+                    public void invoke(String event) {
                         // parse the json string from websocket into a map
                         Map<String, String> data = parseJson(event);
                         Logger.debug("incomming: "+event);
-                        if(data.containsKey("token")){ // check for the token
-                            if(APIAuthHeaderFilter.authenticate(data.get("token"))){ // see if the token is valid.
-                                if( data.containsKey("question") ) // see if there's a question to be checked
-                                {
+                        if (data.containsKey("token")) { // check for the token
+                            if (APIAuthHeaderFilter.authenticate(data.get("token"))) { // see if the token is valid.
+                                if (data.containsKey("question")) { // see if there's a question to be checked
+                                
                                     String user_email = data.get("email"); // fetch the user mail
                                     User user = Ebean.find(User.class).where().eq("email", user_email).findUnique();
                                     Logger.debug("user: "+user.email);
