@@ -56,7 +56,6 @@ public class APIController extends SwaggerBaseApiController
             return unauthorized();
         }
 
-
     }
     /*
     @With(APIAuthHeaderFilter.class)
@@ -76,6 +75,45 @@ public class APIController extends SwaggerBaseApiController
             }
         }
     }*/
+
+    @ApiOperation(nickname = "SetChatRating", value= "SetRatingOfChat", notes = "Rates a chat.", response = Integer.class, httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Chat updated with rating"),
+            @ApiResponse(code = 400, message = "Invalid or missing variables"),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "rating", value = "User rating of the chat", required = true, dataType = "int", paramType = "post"),
+            @ApiImplicitParam(name = "chat_id", value = "Id of chat", required = true, dataType = "int", paramType = "post")
+    })
+    @With(APIAuthHeaderFilter.class)
+    public static Result setChatRating() {
+        String secret = request().getHeader("authentication");
+        User user = Ebean.find(User.class).where().eq("password", secret).findUnique();
+
+        Map<String, String[]> postVariables = request().body().asFormUrlEncoded();
+
+        int rating, chatId;
+        try {
+            // Retrieve 'rating' and 'chat_id' variables as integers.
+            rating = Integer.parseInt(postVariables.get("rating")[0]);
+            chatId = Integer.parseInt(postVariables.get("chat_id")[0]);
+        } catch (NullPointerException e) {
+            return badRequest("Variables 'rating' and/or 'chat_id' are missing.");
+        }
+
+        Chat chat = Ebean.find(Chat.class, chatId);
+        
+        // User can't rate chats from other users.
+        if (chat.user != user) {
+            return unauthorized();
+        }
+
+        chat.rating = rating;
+        chat.save();
+
+        return ok();
+    }
 
     @ApiOperation(nickname = "CreateChatWithContext", value="CreateChatWithContext", notes = "Creates a chat and adds te context", response = Integer.class, httpMethod = "POST")
     @ApiResponses(value = {
@@ -105,31 +143,34 @@ public class APIController extends SwaggerBaseApiController
 
         Chat chat = new Chat();
         chat.user = user;
-        if(lat != null && lng != null) {
+
+        if (lat != null && lng != null) {
             chat.lat = Double.parseDouble(lat);
             chat.lng = Double.parseDouble(lng);
-        }else{
+        } else {
             chat.lat = 0;
             chat.lng = 0;
         }
+
         chat.mood = mood;
         chat.save();
 
-        if(chat != null)
+        if (chat != null) {
             return created(toJson(chat.id));
+        }
 
         return internalServerError();
     }
 
-    private static Map<String, String> parseJson(String s){
+    private static Map<String, String> parseJson(String s) {
 
         Map<String,String> map = new HashMap<String,String>();
         ObjectMapper mapper = new ObjectMapper();
+
         try {
             map = mapper.readValue(s,
                     new TypeReference<HashMap<String,String>>(){});
-            Logger.debug("poep" +map);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -193,10 +234,8 @@ public class APIController extends SwaggerBaseApiController
                 });
 
                 // When the socket is closed.
-                in.onClose(new F.Callback0()
-                {
-                    public void invoke()
-                    {
+                in.onClose(new F.Callback0() {
+                    public void invoke() {
                         Logger.debug("Disconnected");
                     }
                 });
@@ -210,7 +249,7 @@ public class APIController extends SwaggerBaseApiController
      * @param question
      * @param keywords
      */
-    private static void storeChat(User user, String question, SortedMap<String, String>[] keywords){
+    private static void storeChat(User user, String question, SortedMap<String, String>[] keywords) {
         // Store the userquestion
         UserQuestion q = new UserQuestion();
         q.asked_question = question;
@@ -218,13 +257,10 @@ public class APIController extends SwaggerBaseApiController
         q.save();
 
         // store keywords
-        for(SortedMap<String, String> map : keywords){
-            for(Map.Entry<String, String> entry : map.entrySet()){
+        for(SortedMap<String, String> map : keywords) {
+            for(Map.Entry<String, String> entry : map.entrySet()) {
                 Logger.debug("key: " + entry.getKey() + " Value: " + entry.getValue());
             }
         }
-
     }
-
-
 }
