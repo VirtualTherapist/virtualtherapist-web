@@ -6,6 +6,7 @@ import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by bas on 23-10-14.
@@ -33,4 +34,6 @@ public class Chat extends Model {
     @CreatedTimestamp
     public Date createdAt;
 
+    @OneToMany(mappedBy="chat")
+    public List<ChatLine> chatlines;
 }

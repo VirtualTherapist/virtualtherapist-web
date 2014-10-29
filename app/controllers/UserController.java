@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+
 import models.Chat;
 import models.User;
 import play.api.libs.Crypto;
@@ -28,9 +29,9 @@ public class UserController extends Controller
     {
         User user = Ebean.find(User.class, id);
         List<Chat> chats = Ebean.find(Chat.class)
-                .where()
-                .eq("user_id", user.id)
+                .where().eq("user_id", user.id)
                 .findList();
+
 
         return ok(userdetail.render(chats, user, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }

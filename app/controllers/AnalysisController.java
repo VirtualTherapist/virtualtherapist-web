@@ -8,9 +8,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
 
-/**
- * Created by bas on 9-10-14.
- */
 public class AnalysisController extends Controller {
 
     public static Result analysisPageForUser(Integer userId) {
