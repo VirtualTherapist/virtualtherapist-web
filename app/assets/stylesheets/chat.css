@@ -1,0 +1,17 @@
+.clickable {
+    cursor: pointer;
+}
+
+.client {
+    font-style: bold;
+    color: #158cba;
+}
+
+.therapist {
+    font-style: bold;
+    color: #ff851b;
+}
+
+.timestamp {
+    font-style: italic;
+}
