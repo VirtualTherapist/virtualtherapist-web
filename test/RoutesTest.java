@@ -1,4 +1,5 @@
 import org.junit.Test;
+import org.junit.Ignore;
 import play.mvc.Result;
 
 import java.util.Arrays;
@@ -12,8 +13,8 @@ import static play.test.Helpers.*;
  /**
  * Created by wahid on 10/10/14.
  */
-public class RoutesTest {
-
+public class RoutesTest 
+{
     // List wich of URLs which are accessable using the HTTP GET method.
     private List<String> getUrls = Arrays.asList(
             "/vragen",
@@ -103,6 +104,7 @@ public class RoutesTest {
     }
 
     @Test 
+    @Ignore
     public void postLoginTest() {
         Map<String, String> data = new HashMap<>();
         data.put("email", "user@server.com");

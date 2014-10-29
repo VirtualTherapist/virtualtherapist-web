@@ -4,38 +4,38 @@
 # --- !Ups
 
 create table answer (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   answer                    varchar(255),
   constraint pk_answer primary key (id))
 ;
 
 create table category (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   constraint pk_category primary key (id))
 ;
 
 create table chat (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   user_id                   integer,
   lat                       double,
   lng                       double,
   mood                      varchar(255),
-  created_at                timestamp not null,
+  created_at                datetime not null,
   constraint pk_chat primary key (id))
 ;
 
 create table chat_line (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   chat_id                   integer,
   user_question_id          integer,
   answer_id                 integer,
-  created_at                timestamp not null,
+  created_at                datetime not null,
   constraint pk_chat_line primary key (id))
 ;
 
 create table keyword (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   keyword                   varchar(255),
   constraint pk_keyword primary key (id))
 ;
@@ -46,7 +46,7 @@ create table keyword_category (
 ;
 
 create table question (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   question                  varchar(255),
   answer_id                 integer,
   user_id                   integer,
@@ -60,7 +60,7 @@ create table question_keyword (
 ;
 
 create table user (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   first_name                varchar(255),
   last_name                 varchar(255),
   email                     varchar(255),
@@ -70,15 +70,15 @@ create table user (
 ;
 
 create table user_question (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   user_id                   integer,
   asked_question            varchar(255),
-  created_at                timestamp not null,
+  created_at                datetime not null,
   constraint pk_user_question primary key (id))
 ;
 
 create table user_role (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   level                     integer,
   constraint pk_user_role primary key (id))
@@ -88,24 +88,6 @@ create table userquestion_keyword (
   userquestion_id           integer,
   keyword_id                integer)
 ;
-
-create sequence answer_seq;
-
-create sequence category_seq;
-
-create sequence chat_seq;
-
-create sequence chat_line_seq;
-
-create sequence keyword_seq;
-
-create sequence question_seq;
-
-create sequence user_seq;
-
-create sequence user_question_seq;
-
-create sequence user_role_seq;
 
 alter table chat add constraint fk_chat_user_1 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_chat_user_1 on chat (user_id);
@@ -131,58 +113,40 @@ alter table user add constraint fk_user_role_11 foreign key (role_id) references
 create index ix_user_role_11 on user (role_id);
 alter table user_question add constraint fk_user_question_user_12 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_user_question_user_12 on user_question (user_id);
-alter table userquestion_keyword add constraint fk_userquestion_keyword_userq_13 foreign key (userquestion_id) references user_question (id) on delete restrict on update restrict;
-create index ix_userquestion_keyword_userq_13 on userquestion_keyword (userquestion_id);
-alter table userquestion_keyword add constraint fk_userquestion_keyword_keywo_14 foreign key (keyword_id) references keyword (id) on delete restrict on update restrict;
-create index ix_userquestion_keyword_keywo_14 on userquestion_keyword (keyword_id);
+alter table userquestion_keyword add constraint fk_userquestion_keyword_userquestion_13 foreign key (userquestion_id) references user_question (id) on delete restrict on update restrict;
+create index ix_userquestion_keyword_userquestion_13 on userquestion_keyword (userquestion_id);
+alter table userquestion_keyword add constraint fk_userquestion_keyword_keyword_14 foreign key (keyword_id) references keyword (id) on delete restrict on update restrict;
+create index ix_userquestion_keyword_keyword_14 on userquestion_keyword (keyword_id);
 
 
 
 # --- !Downs
 
-SET REFERENTIAL_INTEGRITY FALSE;
+SET FOREIGN_KEY_CHECKS=0;
 
-drop table if exists answer;
+drop table answer;
 
-drop table if exists category;
+drop table category;
 
-drop table if exists chat;
+drop table chat;
 
-drop table if exists chat_line;
+drop table chat_line;
 
-drop table if exists keyword;
+drop table keyword;
 
-drop table if exists keyword_category;
+drop table keyword_category;
 
-drop table if exists question;
+drop table question;
 
-drop table if exists question_keyword;
+drop table question_keyword;
 
-drop table if exists user;
+drop table user;
 
-drop table if exists user_question;
+drop table user_question;
 
-drop table if exists user_role;
+drop table user_role;
 
-drop table if exists userquestion_keyword;
+drop table userquestion_keyword;
 
-SET REFERENTIAL_INTEGRITY TRUE;
-
-drop sequence if exists answer_seq;
-
-drop sequence if exists category_seq;
-
-drop sequence if exists chat_seq;
-
-drop sequence if exists chat_line_seq;
-
-drop sequence if exists keyword_seq;
-
-drop sequence if exists question_seq;
-
-drop sequence if exists user_seq;
-
-drop sequence if exists user_question_seq;
-
-drop sequence if exists user_role_seq;
+SET FOREIGN_KEY_CHECKS=1;
 

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Script for updating and (re)starting the server. 
+set -e
+
+PROJECT_DIR=/root/virtualcoach/
+PID_FILE=/tmp/play.pid
+
+if [ -f $PID_FILE ]; then
+  echo "Stopping server."
+  kill $(cat $PID_FILE)
+fi
+
+cd $PROJECT_DIR
+git checkout master
+git pull origin master
+
+echo "Preparing application for launch."
+$PROJECT_DIR"activator" clean compile stage
+
+
+echo "Launching application."
+# Launch application in backgroud and redirect all output to /dev/null/.
+$PROJECT_DIR"target/universal/stage/bin/virtualcoach-web"  -Dpidfile.path=/tmp/play.pid >/dev/null 2>&1 &
