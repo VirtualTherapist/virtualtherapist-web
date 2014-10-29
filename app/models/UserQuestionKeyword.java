@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
  * Created by Akatchi on 20-10-2014.
  */
 @Entity
-public class UserquestionKeyword extends Model
+public class UserQuestionKeyword extends Model
 {
     @Constraints.Required
     @OneToOne
