@@ -95,23 +95,37 @@
                 </thead>
 
                 <tbody style="cursor:pointer;">
-                    @for(chat <- chats) {
-                        <tr id="chat-@chat.id" class="chat">
-                            <td>@chat.id</td>
-                            <td>@chat.createdAt.format("dd MMM yyyy")</td>
-                            <td>@chat.mood</td>
-                            <td>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            </td>
-                            <td id="chatdisplay-icon-@chat.id" class="chatdisplay-icon"><span class="glyphicon glyphicon-plus"></span></td>
-                        </tr>
-                        <tr id="chatdisplay-@chat.id" class="chatdisplay" style="display: none; ">
+                    @if(chats.size <= 0) {
+                        <tr>
                             <td colspan="5">
-                                @if(chat.chatlines.size > 0) {
+                                <b>Er hebben nog geen gesprekken plaatsgevonden.</b>
+                            </td>
+                        </tr>
+
+                    } else {
+                        @for(chat <- chats) {
+                            <tr id="chat-@chat.id" class="chat">
+                                <td>@chat.id</td>
+                                <td>@chat.createdAt.format("dd MMM yyyy")</td>
+                                <td>@chat.mood</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                </td>
+                                <td id="chatdisplay-icon-@chat.id" class="chatdisplay-icon"><span class="glyphicon glyphicon-plus"></span></td>
+                            </tr>
+                            <tr id="chatdisplay-@chat.id" class="chatdisplay" style="display : none ; ">
+                                <td colspan="5">
+                                @if(chat.chatlines.size <= 0) {
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <b>Er heeft geen gesprek plaatsgevonden</b>
+                                        </div>
+                                    </div>
+                                } else {
                                     @for(chatline <- chat.chatlines) {
                                         <div class="row">
                                             <div class="col-md-10">
@@ -123,15 +137,10 @@
                                             </div>
                                         </div>
                                     }
-                                } else {
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <b>Er heeft geen gesprek plaatsgevonden</b>
-                                        </div>
-                                    </div>
                                 }
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        }
                     }
                 </body>
             </table>

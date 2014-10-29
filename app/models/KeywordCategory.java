@@ -14,6 +14,9 @@ import javax.persistence.Table;
 @Entity
 public class KeywordCategory extends Model
 {
+    @Id
+    public Integer id;
+
     @Constraints.Required
     @OneToOne
     public Keyword keyword;

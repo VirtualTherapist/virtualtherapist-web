@@ -20,7 +20,10 @@
                     '<span class="glyphicon glyphicon-plus"></span> Toevoegen'
                 );
             });
-            $('#search' ).click( function() {
+
+            $('#search' ).click( function()
+            {
+
                 where = [];
                 search = $('#search-text' ).val();
                 if($('#question' ).hasClass("active"))
@@ -56,6 +59,7 @@
 
     <header>
 
+
         <h1>Vragen</h1>
         <div class="btn-group">
             <button class="btn btn-primary btn-lg" id="questionButton">
@@ -78,6 +82,7 @@
                     </div>
                     <button type="submit" class="btn btn-warning">Opslaan</button>
                 </form>
+
             </div>
         </div>
     </div>

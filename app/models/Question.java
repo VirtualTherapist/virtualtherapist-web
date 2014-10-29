@@ -1,9 +1,11 @@
 package models;
 
+import com.avaje.ebean.annotation.CreatedTimestamp;
 import play.data.validation.*;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Akatchi on 9-10-2014.
@@ -23,7 +25,7 @@ public class Question extends Model
     @ManyToOne
     public User user;
 
-    @Constraints.Required
-    public long created_at;
-
+    @Column(name="created_at")
+    @CreatedTimestamp
+    public Date createdAt;
 }
