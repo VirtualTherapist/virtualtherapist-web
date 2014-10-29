@@ -58,7 +58,7 @@ public class QuestionController extends Controller
         {
            for( String temp : item )
            {
-               Logger.debug("data: " + temp);
+//               Logger.debug("data: " + temp);
                if( temp.equals("answer") )  { answerActivated = true; }
                if( temp.equals("question") ){ questionActivated = true; }
            }
@@ -66,7 +66,7 @@ public class QuestionController extends Controller
 
         if( answerActivated )
         {
-            Logger.debug("searching answer");
+//            Logger.debug("searching answer");
             foundAnswers = Ebean.find(Answer.class).where().contains("answer", search).findSet();
             foundAnswers.addAll(Ebean.find(Answer.class).where().like("answer", search).findSet());
             foundAnswers.addAll(Ebean.find(Answer.class).where().eq("answer", search).findSet());
@@ -77,7 +77,7 @@ public class QuestionController extends Controller
 
         if( questionActivated )
         {
-            Logger.debug("searching question");
+//            Logger.debug("searching question");
             foundQuestions = Ebean.find(Question.class).where().contains("question", search).findSet();
             foundQuestions.addAll(Ebean.find(Question.class).where().like("question", search).findSet());
             foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", search).findSet());
@@ -188,7 +188,7 @@ public class QuestionController extends Controller
     {
         DynamicForm answerForm    = form().bindFromRequest();
 
-        Logger.debug("Updating answer");
+//        Logger.debug("Updating answer");
 
         Answer a = Ebean.find(Answer.class, answerForm.get("pk"));
         a.answer = answerForm.get("value");
