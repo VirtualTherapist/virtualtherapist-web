@@ -8,8 +8,10 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("/public/images", "favicon.png")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "bootstrap-lumen.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "jumbotron-narrow.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "sweet-alert.css")">
         <link rel="stylesheet" meedia="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))">
         <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-glyphicons.css"))">
+
         @style
     </head>
     <body>
@@ -38,6 +40,7 @@
 
     </body>
     <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))" type="text/javascript"></script>
+    <script src="@routes.Assets.at("/public/javascripts", "sweet-alert.js")" type="text/javascript"></script>
     <script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.js"))" type="text/javascript"></script>
     @script
 </html>
