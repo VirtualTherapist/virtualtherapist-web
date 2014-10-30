@@ -120,8 +120,8 @@
             </tr>
             @for(question <- questions) {
                 <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@question.answer.id">@question.answer.answer</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion(question.id)" data-pk="@question.id">@question.question</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(question.answer.id)" data-pk="@question.answer.id">@question.answer.answer</a></td>
                     <td><a class="btn btn-danger" href="@routes.QuestionController.deleteQuestion(question.id)">Verwijder</a></td>
                 </tr>
             }
@@ -137,7 +137,7 @@
             </tr>
             @for(answer <- answers) {
                 <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@answer.id">@answer.answer</a></td>
+                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(answer.id)" data-pk="@answer.id">@answer.answer</a></td>
                     <td><a class="btn btn-danger" href="@routes.QuestionController.deleteAnswer(answer.id)">Delete</a></td>
                 </tr>
             }

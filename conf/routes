@@ -3,31 +3,36 @@
 # ~~~~
 
 # Home page
-
 GET         /                                controllers.ActivityController.activity()
-GET         /gebruikers/all                  controllers.UserController.showUsers()
-GET         /gebruikers/:id                  controllers.UserController.userPage(id: Integer)
-GET         /gebruikers/delete/:id           controllers.UserController.deleteUser(id: Integer)
 
-GET         /vragen                          controllers.QuestionController.questionpage()
-POST        /vragen                          controllers.QuestionController.searchQuestion()
-POST        /vragen/opslaan                  controllers.QuestionController.saveQuestion()
-GET         /vragen/all                      controllers.QuestionController.showQuestions()
-GET         /antwoord/delete/:id             controllers.QuestionController.deleteAnswer(id: Integer)
-GET         /vragen/delete/:id               controllers.QuestionController.deleteQuestion(id: Integer)
-POST        /vragen/update                   controllers.QuestionController.updateQuestion()
-POST        /antwoord/update                 controllers.QuestionController.updateAnswer()
-
+# Authentication
 GET         /login                           controllers.LoginController.login()
 POST        /login                           controllers.LoginController.validateLogin()
 GET         /register                        controllers.LoginController.register()
 POST        /register                        controllers.LoginController.createUser()
 GET         /logout                          controllers.LoginController.logout()
 
-GET         /analyse/:id                     controllers.AnalysisController.analysisPageForUser(id: Integer)
-GET         /analyse                         controllers.AnalysisController.analysisPage()
+# User
+GET         /users/all                       controllers.UserController.showUsers()
+GET         /users/:id                       controllers.UserController.userPage(id: Integer)
+GET         /users/delete/:id                controllers.UserController.deleteUser(id: Integer)
 
-#GET         /keywordtrends                   controllers.AnalysisController.keywordTrendPage()
+# Questions
+GET         /questions                       controllers.QuestionController.questionpage()
+POST        /questions                       controllers.QuestionController.searchQuestion()
+POST        /questions/save                  controllers.QuestionController.saveQuestion()
+GET         /questions/all                   controllers.QuestionController.showQuestions()
+GET         /questions/delete/:id            controllers.QuestionController.deleteQuestion(id: Integer)
+POST        /questions/update/:id            controllers.QuestionController.updateQuestion(id: Integer)
+
+# Answers
+POST        /answers/update/:id              controllers.QuestionController.updateAnswer(id: Integer)
+GET         /answers/delete/:id              controllers.QuestionController.deleteAnswer(id: Integer)
+
+GET         /analysis/:id                    controllers.AnalysisController.analysisPageForUser(id: Integer)
+GET         /analysis                        controllers.AnalysisController.analysisPage()
+
+#GET         /keywordtrends                  controllers.AnalysisController.keywordTrendPage()
 
 GET         /server                          controllers.APIController.WebSocket()
 
@@ -44,17 +49,16 @@ POST        /api/rating                      controllers.APIController.setChatRa
 GET         /initDB                          controllers.LoginController.initializeDB()
 
 # Chat calls
-# POST        /chat/message                    controllers.APIController.message()
+# POST        /chat/message                  controllers.APIController.message()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /swagger-ui                     controllers.Assets.at(path="/public/swagger-ui", file = "index.html")
-GET         /swagger-ui/*file               controllers.Assets.at(path ="/public/swagger-ui", file)
-GET         /assets/*file                   controllers.Assets.at(path, file)
+GET         /swagger-ui                       controllers.Assets.at(path="/public/swagger-ui", file = "index.html")
+GET         /swagger-ui/*file                 controllers.Assets.at(path ="/public/swagger-ui", file)
+GET         /assets/*file                     controllers.Assets.at(path, file)
 
 # Enable webjar based resources to be returned
-GET         /webjars/*file                   controllers.WebJarAssets.at(file)
+GET         /webjars/*file                    controllers.WebJarAssets.at(file)
 
 # API docs route
-GET     /api-docs                       controllers.ApiHelpController.getResources()
-
-GET     /api-docs/api                   controllers.ApiHelpController.getResource(path = "/api")
+GET     /api-docs                             controllers.ApiHelpController.getResources()
+GET     /api-docs/api                         controllers.ApiHelpController.getResource(path = "/api")
