@@ -25,7 +25,7 @@
                 <h4 class="login-name">@firstname @lastname</h4>
                 <ul class="nav nav-pills">
                     <li class=@{if (request.path == routes.ActivityController.activity().toString()) "active" else ""}><a href="@routes.ActivityController.activity()">Activiteiten</a></li>
-                    <li class=@{if (request.path == routes.QuestionController.questionpage().toString()) "active" else ""}><a href="@routes.QuestionController.questionpage()">Vraag & Antwoord</a></li>
+                    <li class=@{if (request.path == routes.QuestionController.questionpage(1).toString()) "active" else ""}><a href="@routes.QuestionController.questionpage(1)">Vraag & Antwoord</a></li>
                     <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse</a></li>
                     <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
                     <li><a href="@routes.LoginController.register()">Maak nieuwe user aan</a></li>

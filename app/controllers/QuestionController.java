@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.PagingList;
 import filters.SessionFilter;
 import models.*;
 import play.Logger;
@@ -24,15 +25,19 @@ import static play.libs.Json.toJson;
 public class QuestionController extends Controller
 {
 
-    public static Result questionpage()
+    public static Result questionpage(int page)
     {
-        List<Question> allQuestions = Ebean.find(Question.class).findList();
-
-        return ok(questions.render(allQuestions, null, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
+        int pageLength = 10;
+        PagingList<Question> pagingList = Ebean.find(Question.class).findPagingList(pageLength);
+        List<Question> allQuestions = pagingList.getPage(page).getList();
+        //int i = pagingList.getPageSize();
+        return ok(questions.render(pagingList, allQuestions, page, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 
     public static Result showQuestions()
     {
+
+
         Set<Question> allQuestions = Ebean.find(Question.class).findSet();
 
         return ok(toJson(allQuestions));
@@ -104,7 +109,7 @@ public class QuestionController extends Controller
 
         saveKeywords(question);
 
-        return questionpage();
+        return questionpage(0);
     }
 
     private static void saveKeywords(Question question)
@@ -153,7 +158,7 @@ public class QuestionController extends Controller
     {
         Ebean.find(Answer.class, id).delete();
 
-        return questionpage();
+        return questionpage(0);
     }
 
     public static Result deleteQuestion(Integer id)
@@ -165,7 +170,7 @@ public class QuestionController extends Controller
 
         q.delete();
 
-        return questionpage();
+        return questionpage(0);
     }
 
     public static Result updateQuestion(Integer id)
@@ -181,7 +186,7 @@ public class QuestionController extends Controller
 
         saveKeywords(q);
 
-        return questionpage();
+        return questionpage(0);
     }
 
     public static Result updateAnswer(Integer id)
@@ -192,6 +197,6 @@ public class QuestionController extends Controller
         a.answer = answerForm.get("value");
         a.save();
 
-        return questionpage();
+        return questionpage(0);
     }
 }

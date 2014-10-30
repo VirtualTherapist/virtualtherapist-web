@@ -1,4 +1,4 @@
-@(questions: java.util.List[Question])(answers: java.util.List[Answer])(firstname: String)(lastname: String)(error: String)(errorType: String)
+@(pageList: com.avaje.ebean.PagingList[Question])(questions: List[Question])(count: Int)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 @style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
 
@@ -47,15 +47,15 @@
                     html = "";
                     for(question in questions){
                         html += '<tr>' +
-                            '<td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" >' + questions[question]["question"] + '</a></td>' +
-                            '<td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" >' + question[question]["answer"]["answer"] + '</a></td>' +
+                            '<td><a class="update-delete-question editable editable-click" href="#"  data-url="/answers/update/' + questions[question]["id"] + '" data-pk="' + questions[question]["id"] + '" href="#" >' + questions[question]["question"] + '</a></td>' +
+                            '<td><a class="update-delete-question" href="#" >' + questions[question]["answer"]['answer'] + '</a></td>' +
                             '<td><a class="btn btn-danger btn-xs"  ><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>' +
                         '</tr>';
                     }
                     $("#answers" ).html(html);
                     //alert('you have searched: ' + search);
-                } ).fail ( function ( ) {
-//                    alert('you have failded: ' + search);
+                } ).fail ( function ( search ) {
+//                    alert('you have failed: ' + search);
                 } )
             })
         })
@@ -117,7 +117,9 @@
         </div>
     </div>
     <br>
+
     @if( questions != null ) {
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -127,33 +129,48 @@
                 </tr>
             </thead>
             <tbody id="answers">
-            @for(question <- questions) {
+            @if(questions.size() <= 0){
                 <tr>
-
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@question.answer.id">@question.answer.answer</a></td>
-                    <td><a class="btn btn-danger btn-xs"  shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
+                    <td colspan="3">
+                        <b>Er zijn nog geen vragen aangemaakt</b>
+                    </td>
                 </tr>
+            } else {
+                @for(question <- questions) {
+                    <tr>
+
+                        <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion(question.id)" data-pk="@question.id">@question.question</a></td>
+                        <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(question.answer.id)" data-pk="@question.answer.id">@question.answer.answer</a></td>
+                        <td><a class="btn btn-danger btn-xs"  shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
+                    </tr>
+                }
             }
             </tbody>
         </table>
+
+    }
+    @if(pageList.getTotalPageCount > 0){
+        <div class="row">
+            <div class="col-md-12">
+                <nav style="float : right ;">
+                    <ul class="pagination">
+                        @if(pageList.getPage(count).hasPrev){
+                        <li><a href="@routes.QuestionController.questionpage(0)">&laquo;</a></li>
+
+                            <li><a href="@routes.QuestionController.questionpage(count-1)">@{count-1}</a></li>
+                        }
+                        <li class="active"><a href="#">@count</a></li>
+                        @if(pageList.getPage(count).hasNext){
+                            <li><a href="@routes.QuestionController.questionpage(count+1)">@{count+1}</a></li>
+
+                        <li><a href="@routes.QuestionController.questionpage(pageList.getTotalPageCount() - 1)">&raquo;</a></li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
     }
 
-    <!--@if( answers != null ) {
-        <h5>Antwoord:</h5>
-        <table id="questions" class="table table-striped">
-            <tr>
-                <th>Antwoord:</th>
-                <th>Verwijderen</th>
-            </tr>
-            @for(answer <- answers) {
-                <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(answer.id)" data-pk="@answer.id">@answer.answer</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteAnswer(answer.id)">Delete</a></td>
-                </tr>
-            }
-        </table>
-    }-->
 
 
 }(script)(firstname)(lastname)(error)(errorType)
