@@ -1,35 +1,11 @@
 import java.util.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import controllers.LoginController;
-import controllers.routes;
-import models.Question;
-import modelsTest.BaseModelTest;
-import modelsTest.UserTest;
 import org.junit.*;
 
-import org.junit.runner.Computer;
-import org.mockito.Answers;
-import org.mockito.Mockito;
-import play.Logger;
-import play.Play;
-import play.libs.Crypto;
-import play.libs.ws.WS;
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
 import utils.HashUtil;
 import utils.NLPUtil;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
 
 /**
@@ -95,10 +71,10 @@ public class ApplicationTest {
 //        });
 //    }
 
-    @Test public void testHash() {
-        String hash = HashUtil.createHash("helderbas@gmail.com", "Bas1991");
-        assertThat(hash).isEqualTo("cae352dbfc4552aca527f49211d6dedd09924e50cd64e73a800fb65806f2f477");
-    }
+//    @Test public void testHash() {
+//        String hash = HashUtil.createHash("helderbas@gmail.com", "Bas1991");
+//        assertThat(hash).isEqualTo("cae352dbfc4552aca527f49211d6dedd09924e50cd64e73a800fb65806f2f477");
+//    }
 
     @Test
     public void testNLPMessageTagging() {

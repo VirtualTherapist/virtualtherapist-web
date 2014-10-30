@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.User;
+import models.UserRole;
+import modelsTest.DatabaseFunctions;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.*;
 
@@ -17,19 +21,22 @@ public class RoutesTest
 {
     // List wich of URLs which are accessable using the HTTP GET method.
     private List<String> getUrls = Arrays.asList(
-            "/vragen",
-            "/vragen/all",
-            "/vragen/delete/1",
-            "/antwoord/delete/1",
             "/login",
             "/register",
-            "/logout",
-            "/antwoord/delete/1"
+            "/logout"
+            //"/users/all"
+            //"/users/1"
+
+            //"/vragen",
+            //"/vragen/all",
+            //"/vragen/delete/1",
+            //"/antwoord/delete/1",
+            //"/register",
+            //"/logout",
+            //"/antwoord/delete/1"
 
             // These URLs are defined in con/routes but lack implementation.
             //"/analyse"               
-            //"/gebruikers/all"
-            //"/gebruikers/1"
     );
 
     /**
@@ -82,11 +89,34 @@ public class RoutesTest
     }
 
     @Test
+    @Ignore
+    public void userRoutesTest() {
+        UserRole adminRole = DatabaseFunctions.addAdminRole();
+        User user = DatabaseFunctions.addUser(adminRole);
+
+        final List<String> userUrls = Arrays.asList(
+                "/users/all",
+                "/user/" + user.id,
+                "user/delete/" + user.id
+        );
+
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                for (String url: userUrls) {
+                    testGetRoute(url);
+                }
+            }
+        });
+    }
+
+    @Test
+    @Ignore
     public void postQuestionTest() {
         testPostRoute("/vragen", new HashMap<>());
     }
 
     @Test
+    @Ignore
     public void postSaveQuestionTest() {
         Map<String, String> data = new HashMap<>();
         data.put("question", "Is this a question?");
@@ -96,15 +126,15 @@ public class RoutesTest
     }
 
     @Test
+    @Ignore
     public void postUpdateAnwserTest() {
         Map<String, String> data= new HashMap<>();
         data.put("value", "42");
 
-        testPostRoute("/antwoord/update", data);
+        testPostRoute("/antwoord/update/1", data);
     }
 
     @Test 
-    @Ignore
     public void postLoginTest() {
         Map<String, String> data = new HashMap<>();
         data.put("email", "user@server.com");

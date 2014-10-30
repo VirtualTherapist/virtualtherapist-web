@@ -33,4 +33,5 @@ public class Chat extends Model {
     @CreatedTimestamp
     public Date createdAt;
 
+    public int rating = 0;
 }

@@ -1,3 +1,7 @@
+.clickable {
+    cursor: pointer;
+}
+
 .client {
     font-style: bold;
     color: #158cba;

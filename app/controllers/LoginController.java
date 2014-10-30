@@ -55,15 +55,11 @@ public class LoginController extends Controller
     {
         DynamicForm loginForm = form().bindFromRequest();
 
-        System.out.println(loginForm.get("password"));
-
         String hash = HashUtil.createHash(loginForm.get("email"), loginForm.get("password"));
 
         User user             = new User();
         user.email            = loginForm.get("email");
         user.password         = hash;
-
-        System.out.println("user.password: " + user.password);
 
         UserRole adminRole = Ebean.find(UserRole.class).where().eq("level", "10").findUnique();
 
@@ -106,7 +102,7 @@ public class LoginController extends Controller
         user.email            = registerForm.get("email");
         user.password         = hash;
 
-        Logger.debug(registerForm.get("userrole"));
+//        Logger.debug(registerForm.get("userrole"));
 
         UserRole rol = Ebean.find(UserRole.class).where().eq("name", registerForm.get("userrole")).findUnique();
 
@@ -165,7 +161,7 @@ public class LoginController extends Controller
         cal.add(Calendar.HOUR_OF_DAY, Integer.valueOf(Play.application().configuration().getString("session.expererationtime")));
         cal.getTime();
 
-        Logger.debug("email: " + email + " firstname: " + firstname + " lastname: " + lastname);
+//        Logger.debug("email: " + email + " firstname: " + firstname + " lastname: " + lastname);
 
         session(Crypto.encryptAES("expiretime"), Crypto.encryptAES(String.valueOf(cal.getTimeInMillis())));
         session(Crypto.encryptAES("loggedin"), Crypto.encryptAES("true"));

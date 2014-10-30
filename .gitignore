@@ -13,8 +13,6 @@ dist
 /.project
 /RUNNING_PID
 /.settings
-conf/evolutions
-<<<<<<< HEAD
+conf/evolutions/*
 conf/application.conf
 *.log
-application.conf

@@ -50,7 +50,7 @@ public class QuestionTest extends BaseTest
                 data.put("value", "Has this question changed?");
 
                 FakeRequest request = new FakeRequest().withFormUrlEncodedBody(data);
-                callAction(routes.ref.QuestionController.updateQuestion(), request);
+                callAction(routes.ref.QuestionController.updateQuestion(question.id), request);
                 
                 question = Ebean.find(Question.class, question.id);
                 assertThat(question.question).isEqualTo("Has this question changed?");
