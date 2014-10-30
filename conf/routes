@@ -3,26 +3,32 @@
 # ~~~~
 
 # Home page
-
 GET         /                                controllers.ActivityController.activity()
-GET         /gebruikers/all                  controllers.UserController.showUsers()
-GET         /gebruikers/:id                  controllers.UserController.userPage(id: Integer)
-GET         /gebruikers/delete/:id           controllers.UserController.deleteUser(id: Integer)
 
-GET         /vragen                          controllers.QuestionController.questionpage()
-POST        /vragen                          controllers.QuestionController.searchQuestion()
-POST        /vragen/opslaan                  controllers.QuestionController.saveQuestion()
-GET         /vragen/all                      controllers.QuestionController.showQuestions()
-GET         /antwoord/delete/:id             controllers.QuestionController.deleteAnswer(id: Integer)
-GET         /vragen/delete/:id               controllers.QuestionController.deleteQuestion(id: Integer)
-POST        /vragen/update                   controllers.QuestionController.updateQuestion()
-POST        /antwoord/update                 controllers.QuestionController.updateAnswer()
-
+# Authentication
 GET         /login                           controllers.LoginController.login()
 POST        /login                           controllers.LoginController.validateLogin()
 GET         /register                        controllers.LoginController.register()
 POST        /register                        controllers.LoginController.createUser()
 GET         /logout                          controllers.LoginController.logout()
+
+# User
+GET         /users/all                       controllers.UserController.showUsers()
+GET         /users/:id                       controllers.UserController.userPage(id: Integer)
+GET         /users/delete/:id                controllers.UserController.deleteUser(id: Integer)
+
+# Questions
+GET         /questions                       controllers.QuestionController.questionpage()
+POST        /questions                       controllers.QuestionController.searchQuestion()
+POST        /questions/save                  controllers.QuestionController.saveQuestion()
+GET         /questions/all                   controllers.QuestionController.showQuestions()
+GET         /questions/delete/:id            controllers.QuestionController.deleteQuestion(id: Integer)
+POST        /questions/update/:id            controllers.QuestionController.updateQuestion(id: Integer)
+
+# Answers
+POST        /antwoord/update                 controllers.QuestionController.updateAnswer()
+GET         /antwoord/delete/:id             controllers.QuestionController.deleteAnswer(id: Integer)
+
 
 GET         /analyse/:id                     controllers.AnalysisController.analysisPageForUser(id: Integer)
 GET         /analyse                         controllers.AnalysisController.analysisPage()

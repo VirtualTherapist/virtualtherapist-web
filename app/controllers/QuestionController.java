@@ -168,11 +168,11 @@ public class QuestionController extends Controller
         return questionpage();
     }
 
-    public static Result updateQuestion()
+    public static Result updateQuestion(Integer id)
     {
         DynamicForm questionForm    = form().bindFromRequest();
 
-        Question q = Ebean.find(Question.class, questionForm.get("pk"));
+        Question q = Ebean.find(Question.class, id);
         q.question = questionForm.get("value");
         q.save();
 
