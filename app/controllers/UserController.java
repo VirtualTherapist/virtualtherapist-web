@@ -36,7 +36,7 @@ public class UserController extends Controller
     {
         Ebean.find(User.class, id).delete();
         List<User> allUsers = Ebean.find(User.class).findList();
-        return redirect("/gebruikers/all");
+        return redirect(controllers.routes.UserController.showUsers());
     }
 
     public static Result showProfile()
