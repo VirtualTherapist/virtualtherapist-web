@@ -1,22 +1,13 @@
-import com.avaje.ebean.Ebean;
-import controllers.LoginController;
+
 import models.Answer;
 import models.Question;
 import models.User;
 import models.UserRole;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.openqa.selenium.android.library.Logger;
-import play.db.ebean.Model;
 import play.mvc.Http;
-import play.mvc.Http.*;
 import play.twirl.api.Content;
-import play.twirl.api.Html;
-import views.html.analysis;
-import views.html.userdetail;
 
 import java.util.*;
 
