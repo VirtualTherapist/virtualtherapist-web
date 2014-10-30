@@ -66,7 +66,7 @@ public class APIController extends SwaggerBaseApiController {
             rating = Integer.parseInt(postVariables.get("rating")[0]);
             chatId = Integer.parseInt(postVariables.get("chat_id")[0]);
         } catch (NullPointerException e) {
-            System.out.println("Could rate chat. Chat id or rating is missing.");
+            Logger.debug("Could rate chat. Chat id or rating is missing.");
             return badRequest("Variables 'rating' and/or 'chat_id' are missing.");
         }
 
@@ -74,14 +74,14 @@ public class APIController extends SwaggerBaseApiController {
         
         // User can't rate chats from other users.
         if (!chat.user.equals(user)) {
-            System.out.println("Could rate chat. User is not chat owner."); 
+            Logger.debug("Could rate chat. User is not chat owner."); 
             return unauthorized();
         }
 
         chat.rating = rating;
         chat.save();
 
-        System.out.println("Rated chat " + chatId + " with " + rating + " stars.");
+        Logger.debug("Rated chat " + chatId + " with " + rating + " stars.");
         return ok();
     }
 
@@ -142,7 +142,7 @@ public class APIController extends SwaggerBaseApiController {
         try {
             map = mapper.readValue(s, 
                     new TypeReference<HashMap<String,String>>(){});
-            Logger.debug("Json: " +map);
+            Logger.debug("Json: " + map);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -268,18 +268,16 @@ public class APIController extends SwaggerBaseApiController {
     }
 
     /**
-     *
      * @param user
      * @param question
      * @param keywords
      */
-    private static ArrayList<Object> storeChat(User user, String question, SortedMap<String, String>[] keywords)
-    {
+    private static ArrayList<Object> storeChat(User user, String question, SortedMap<String, String>[] keywords) {
         List<Object> toReturn = new ArrayList<Object>();
         // Store the userquestion
         UserQuestion q          = new UserQuestion();
-            q.asked_question    = question;
-            q.user              = user;
+        q.asked_question    = question;
+        q.user              = user;
         q.save();
 
         toReturn.add(q);
@@ -287,46 +285,41 @@ public class APIController extends SwaggerBaseApiController {
         List<String> keywordsList = new ArrayList<String>();
 
         // store keywords
-        for(SortedMap<String, String> map : keywords)
-        {
-            for(Map.Entry<String, String> entry : map.entrySet())
-            {
+        for(SortedMap<String, String> map : keywords) {
+            for(Map.Entry<String, String> entry : map.entrySet()) {
                 Logger.debug("key: " + entry.getKey() + " Value: " + entry.getValue());
 
                 Category cat = Ebean.find(Category.class).where().eq("name", entry.getValue()).findUnique();
-                if( cat == null )
-                {
+                if (cat == null) {
                     cat = new Category();
-                        cat.name = entry.getValue();
+                    cat.name = entry.getValue();
                     cat.save();
                 }
 
                 Logger.debug("Category: " + cat.name);
 
                 Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", entry.getKey()).findUnique();
-                if( keyword == null )
-                {
+                if (keyword == null) {
                     keyword = new Keyword();
-                        keyword.keyword = entry.getKey();
+                    keyword.keyword = entry.getKey();
                     keyword.save();
                 }
 
                 Logger.debug("Keyword: " + keyword.keyword);
 
                 KeywordCategory keyCat = Ebean.find(KeywordCategory.class).where().eq("keyword", keyword).eq("category", cat).findUnique();
-                if( keyCat == null )
-                {
+                if (keyCat == null) {
                     keyCat = new KeywordCategory();
-                        keyCat.keyword  = keyword;
-                        keyCat.category = cat;
+                    keyCat.keyword  = keyword;
+                    keyCat.category = cat;
                     keyCat.save();
                 }
 
                 Logger.debug("Koppeling: " +  keyCat.id);
 
                 UserQuestionKeyword link = new UserQuestionKeyword();
-                    link.userquestion       = q;
-                    link.keywordCategory    = keyCat;
+                link.userquestion       = q;
+                link.keywordCategory    = keyCat;
                 link.save();
 
                 Logger.debug("Link: " + link.id);
@@ -337,9 +330,8 @@ public class APIController extends SwaggerBaseApiController {
             toReturn.add(keywordsList);
         }
 
-        Logger.debug("Questoin: " + q.asked_question);
+        Logger.debug("Question: " + q.asked_question);
 
         return (ArrayList<Object>) toReturn;
-
     }
 }
