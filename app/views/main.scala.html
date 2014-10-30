@@ -21,7 +21,7 @@
 
         <div class="container">
             <div class="sidebar">
-                <img class="logo" src="@routes.Assets.at("/public/images", "virtualcoach.png")" />
+                <a href="@routes.UserController.showProfile()"><img class="logo" src="@routes.Assets.at("/public/images", "virtualcoach.png")" /></a>
                 <h4 class="login-name">@firstname @lastname</h4>
                 <ul class="nav nav-pills">
                     <li class=@{if (request.path == routes.ActivityController.activity().toString()) "active" else ""}><a href="@routes.ActivityController.activity()">Activiteiten</a></li>
@@ -29,6 +29,7 @@
                     <li class=@{if (request.path == routes.AnalysisController.analysisPage().toString()) "active" else ""}><a href="@routes.AnalysisController.analysisPage()">Analyse</a></li>
                     <li class=@{if (request.path == routes.UserController.showUsers().toString()) "active" else ""}><a href="@routes.UserController.showUsers()">Gebruikers</a></li>
                     <li><a href="@routes.LoginController.register()">Maak nieuwe user aan</a></li>
+                    <li class=@{if (request.path == routes.UserController.showProfile().toString()) "active" else ""}><a href="@routes.UserController.showProfile()">Mijn profiel</a></li>
                     <li><a href="@routes.LoginController.logout()">Uitloggen</a></li>
 
                 </ul>
