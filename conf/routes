@@ -9,6 +9,9 @@ GET         /gebruikers/all                  controllers.UserController.showUser
 GET         /gebruikers/:id                  controllers.UserController.userPage(id: Integer)
 GET         /gebruikers/delete/:id           controllers.UserController.deleteUser(id: Integer)
 
+GET         /profile                         controllers.UserController.showProfile()
+POST        /profile/save                   controllers.UserController.saveProfile()
+
 GET         /vragen                          controllers.QuestionController.questionpage()
 POST        /vragen                          controllers.QuestionController.searchQuestion()
 POST        /vragen/opslaan                  controllers.QuestionController.saveQuestion()
