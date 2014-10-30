@@ -2,23 +2,17 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.*;
 import filters.APIAuthHeaderFilter;
 import models.*;
 import play.Logger;
-import play.api.libs.json.Json;
 import play.libs.F;
-import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.With;
-import scala.util.parsing.json.JSONArray;
-import scala.util.parsing.json.JSONObject;
 import utils.NLPUtil;
 
-import java.io.ObjectInputStream;
 import java.util.*;
 
 import static play.libs.Json.toJson;
@@ -128,7 +122,7 @@ public class APIController extends SwaggerBaseApiController
         try {
             map = mapper.readValue(s,
                     new TypeReference<HashMap<String,String>>(){});
-            Logger.debug("poep" +map);
+            Logger.debug("Json: " +map);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -139,8 +133,6 @@ public class APIController extends SwaggerBaseApiController
     @ApiOperation(nickname = "WebSocket", value="", notes = "Returns chat websocket", response = WebSocket.class, httpMethod = "GET")
     public static WebSocket<String> WebSocket()
     {
-        //NLPUtil tokenizer = NLPUtil.getInstance();
-
         return new WebSocket<String>()
         {
             // Called when the Websocket Handshake is done.
@@ -154,33 +146,89 @@ public class APIController extends SwaggerBaseApiController
                         // parse the json string from websocket into a map
                         Map<String, String> data = parseJson(event);
                         Logger.debug("incomming: "+event);
-                        if(data.containsKey("token")){ // check for the token
-                            if(APIAuthHeaderFilter.authenticate(data.get("token"))){ // see if the token is valid.
+                        if(data.containsKey("token"))
+                        { // check for the token
+                            if(APIAuthHeaderFilter.authenticate(data.get("token")))
+                            { // see if the token is valid.
                                 if( data.containsKey("question") ) // see if there's a question to be checked
                                 {
-                                    String user_email = data.get("email"); // fetch the user mail
-                                    User user = Ebean.find(User.class).where().eq("email", user_email).findUnique();
-                                    Logger.debug("user: "+user.email);
-                                    Chat userChat = Ebean.find(Chat.class).where().eq("user", user).orderBy("createdAt, createdAt desc").findList().get(0); // get the latest room
+                                    String user_email   = data.get("email"); // fetch the user mail
+                                    User user           = Ebean.find(User.class).where().eq("email", user_email).findUnique();
+                                    Chat userChat       = Ebean.find(Chat.class, data.get("chatid")); // get the latest room
+                                    String question     = data.get("question"); // fetch the question
 
-                                    String question = data.get("question"); // fetch the question
-                                    SortedMap<String, String>[] tokens = NLPUtil.getInstance().tagMessage(question);
-                                    Logger.debug("user: "+user.email);
-                                    storeChat(user, question, tokens); // store everything that's being said
-
-
-//                                    Logger.debug("Tokens: "+tokens[0]);
-//                                    Logger.debug("Vraag: " + );
+                                    SortedMap<String, String>[] tokens  = NLPUtil.getInstance().tagMessage(question);
+                                    List<Object> retrievedData          = storeChat(user, question, tokens); // store everything that's being said
+                                    UserQuestion userQ                  = (UserQuestion) retrievedData.get(0);
 
                                     //Code om de beste question uit te kiezen
                                     //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
-                                    List<Question> theQuestion = Ebean.find(Question.class).where().eq("question", question).findList();
+                                    Question bestQuestion      = null;
+                                    int record                 = 9999;
+                                    List<String> userQKeywords = new ArrayList<String>((List<String>)retrievedData.get(1));
 
-                                    Answer bestAnswer = new Answer();
+                                    for(String item : userQKeywords)
+                                    {
+                                        Logger.debug("Questionkeyword: " + item);
+                                    }
+
+                                    Logger.debug("APIController: UserQuestion " + userQ.asked_question);
+
+                                    for(Question q : Ebean.find(Question.class).findList())
+                                    {
+
+                                        Logger.debug(q.question);
+
+                                        List<String> questionKeywords = new ArrayList<String>();
+                                        for(QuestionKeyword keyword : Ebean.find(QuestionKeyword.class).where().eq("question", q).findList())
+                                        {
+                                            questionKeywords.add(keyword.keywordCategory.keyword.keyword);
+                                        }
+
+                                        int preCheckSize    = userQKeywords.size();
+                                        Logger.debug("voor " + questionKeywords.size() + " || " + userQKeywords.size());
+                                        userQKeywords.removeAll(questionKeywords);
+                                        Logger.debug("na " + questionKeywords.size() + " || " + userQKeywords.size());
+                                        int afterCheckSize  = userQKeywords.size();
+
+                                        Logger.debug("Question: " + q.question + " hits met userquestion: " + question + " || " + userQKeywords.size());
+
+                                        if( preCheckSize != afterCheckSize)//Dus geen hits gevonden
+                                        {
+                                            if(userQKeywords.size() < record)
+                                            {
+                                                record       = userQKeywords.size();
+                                                bestQuestion = q;
+                                                Logger.debug("Record: " + record);
+                                            }
+                                        }
+                                    }
+
 
                                     //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
-                                    if(theQuestion.size() == 0){ bestAnswer.answer = "Geen antwoord gevonden"; }
-                                    else { bestAnswer.answer = theQuestion.get(0).answer.answer; }
+                                    String answerString;
+                                    if(bestQuestion == null)    { answerString = "Geen antwoord gevonden"; }
+                                    else                        { answerString = bestQuestion.answer.answer; }
+
+                                    Answer bestAnswer = Ebean.find(Answer.class).where().eq("answer", answerString).findUnique();
+                                    if( bestAnswer == null )
+                                    {
+                                        bestAnswer = new Answer();
+                                            bestAnswer.answer = answerString;
+                                        bestAnswer.save();
+                                    }
+
+                                    Logger.debug("Chat: "       + userChat.mood);
+                                    Logger.debug("Bestanswer: " + bestAnswer.answer);
+                                    Logger.debug("Question: "   + userQ.asked_question);
+
+                                    ChatLine line  = new ChatLine();
+                                    line.chat           = userChat;
+                                    line.answer         = bestAnswer;
+                                    line.userQuestion   = userQ;
+                                    line.save();
+
+                                    Logger.debug("Chatline: " + line.id);
 
                                     Logger.debug("Antwoord: " + bestAnswer.answer);
 
@@ -210,19 +258,73 @@ public class APIController extends SwaggerBaseApiController
      * @param question
      * @param keywords
      */
-    private static void storeChat(User user, String question, SortedMap<String, String>[] keywords){
+    private static ArrayList<Object> storeChat(User user, String question, SortedMap<String, String>[] keywords)
+    {
+        List<Object> toReturn = new ArrayList<Object>();
         // Store the userquestion
-        UserQuestion q = new UserQuestion();
-        q.asked_question = question;
-        q.user = user;
+        UserQuestion q          = new UserQuestion();
+            q.asked_question    = question;
+            q.user              = user;
         q.save();
 
+        toReturn.add(q);
+
+        List<String> keywordsList = new ArrayList<String>();
+
         // store keywords
-        for(SortedMap<String, String> map : keywords){
-            for(Map.Entry<String, String> entry : map.entrySet()){
+        for(SortedMap<String, String> map : keywords)
+        {
+            for(Map.Entry<String, String> entry : map.entrySet())
+            {
                 Logger.debug("key: " + entry.getKey() + " Value: " + entry.getValue());
+
+                Category cat = Ebean.find(Category.class).where().eq("name", entry.getValue()).findUnique();
+                if( cat == null )
+                {
+                    cat = new Category();
+                        cat.name = entry.getValue();
+                    cat.save();
+                }
+
+                Logger.debug("Category: " + cat.name);
+
+                Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", entry.getKey()).findUnique();
+                if( keyword == null )
+                {
+                    keyword = new Keyword();
+                        keyword.keyword = entry.getKey();
+                    keyword.save();
+                }
+
+                Logger.debug("Keyword: " + keyword.keyword);
+
+                KeywordCategory keyCat = Ebean.find(KeywordCategory.class).where().eq("keyword", keyword).eq("category", cat).findUnique();
+                if( keyCat == null )
+                {
+                    keyCat = new KeywordCategory();
+                        keyCat.keyword  = keyword;
+                        keyCat.category = cat;
+                    keyCat.save();
+                }
+
+                Logger.debug("Koppeling: " +  keyCat.id);
+
+                UserQuestionKeyword link = new UserQuestionKeyword();
+                    link.userquestion       = q;
+                    link.keywordCategory    = keyCat;
+                link.save();
+
+                Logger.debug("Link: " + link.id);
+
+                keywordsList.add(entry.getKey());
             }
+
+            toReturn.add(keywordsList);
         }
+
+        Logger.debug("Questoin: " + q.asked_question);
+
+        return (ArrayList<Object>) toReturn;
 
     }
 
