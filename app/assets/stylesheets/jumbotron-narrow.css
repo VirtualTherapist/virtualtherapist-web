@@ -84,18 +84,18 @@ body {
         text-align: center;
     }
 }
-header {
+header, .header {
     padding-bottom: 15px;
     display: inline;
     float: left;
     width: 100%;
 }
-header > h1{
+header > h1, .header > h1{
     margin: 0px;
     display: inline;
     float: left;
 }
-header > .btn-group{
+header > .btn-group, .header > .btn-group{
     display: inline;
     float: right;
 }

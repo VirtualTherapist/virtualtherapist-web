@@ -83,67 +83,69 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-striped chats">
-                <thead>
-                    <tr>
-                        <th>Nr</th>
-                        <th>Datum</th>
-                        <th>Aanleiding</th>
-                        <th>Beoordeling</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody style="cursor:pointer;">
-                    @if(chats.size <= 0) {
+            <div class="col-lg-12">
+                <table class="table table-striped chats">
+                    <thead>
                         <tr>
-                            <td colspan="5">
-                                <b>Er hebben nog geen gesprekken plaatsgevonden.</b>
-                            </td>
+                            <th>Nr</th>
+                            <th>Datum</th>
+                            <th>Aanleiding</th>
+                            <th>Beoordeling</th>
+                            <th style="width: 5px;"></th>
                         </tr>
+                    </thead>
 
-                    } else {
-                        @for(chat <- chats) {
-                            <tr id="chat-@chat.id" class="chat">
-                                <td>@chat.id</td>
-                                <td>@chat.createdAt.format("dd MMM yyyy")</td>
-                                <td>@chat.mood</td>
-                                <td>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                </td>
-                                <td id="chatdisplay-icon-@chat.id" class="chatdisplay-icon"><span class="glyphicon glyphicon-plus"></span></td>
-                            </tr>
-                            <tr id="chatdisplay-@chat.id" class="chatdisplay" style="display : none ; ">
+                    <tbody style="cursor:pointer;">
+                        @if(chats.size <= 0) {
+                            <tr>
                                 <td colspan="5">
-                                @if(chat.chatlines.size <= 0) {
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <b>Er heeft geen gesprek plaatsgevonden</b>
-                                        </div>
-                                    </div>
-                                } else {
-                                    @for(chatline <- chat.chatlines) {
+                                    <b>Er hebben nog geen gesprekken plaatsgevonden.</b>
+                                </td>
+                            </tr>
+
+                        } else {
+                            @for(chat <- chats) {
+                                <tr id="chat-@chat.id" class="chat">
+                                    <td>@chat.id</td>
+                                    <td>@chat.createdAt.format("dd MMM yyyy")</td>
+                                    <td>@chat.mood</td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    </td>
+                                    <td id="chatdisplay-icon-@chat.id" class="chatdisplay-icon"><span class="glyphicon glyphicon-plus"></span></td>
+                                </tr>
+                                <tr id="chatdisplay-@chat.id" class="chatdisplay" style="display : none ; ">
+                                    <td colspan="5">
+                                    @if(chat.chatlines.size <= 0) {
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <p class="well">
-                                                    <span class="client"><b>@chatline.userQuestion.user.first_name <i> </i> @chatline.userQuestion.user.last_name</b></span> </br>
-                                                    @chatline.answer.answer
-                                                    <br> <span class="timestamp pull-right">@chatline.createdAt.format("mm:ss")</span>
-                                                </p>
+                                                <b>Er heeft geen gesprek plaatsgevonden</b>
                                             </div>
                                         </div>
+                                    } else {
+                                        @for(chatline <- chat.chatlines) {
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <p class="well">
+                                                        <span class="client"><b>@chatline.userQuestion.user.first_name <i> </i> @chatline.userQuestion.user.last_name</b></span> </br>
+                                                        @chatline.answer.answer
+                                                        <br> <span class="timestamp pull-right">@chatline.createdAt.format("mm:ss")</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        }
                                     }
-                                }
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </body>
-            </table>
+                    </body>
+                </table>
+            </div>
         </div>
             <!---->
 }(script)(firstname)(lastname)(error)(errorType)

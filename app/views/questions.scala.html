@@ -42,24 +42,29 @@
                         "search" : search,
                         "where" : where
                     }
-                } ).done ( function ( data ) {
-                    console.log(data);
-                    alert('you have searched: ' + search);
+                } ).done ( function ( questions ) {
+
+                    html = "";
+                    for(question in questions){
+                        html += '<tr>' +
+                            '<td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" >' + questions[question]["question"] + '</a></td>' +
+                            '<td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" >' + question[question]["answer"]["answer"] + '</a></td>' +
+                            '<td><a class="btn btn-danger btn-xs"  ><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>' +
+                        '</tr>';
+                    }
+                    $("#answers" ).html(html);
+                    //alert('you have searched: ' + search);
                 } ).fail ( function ( ) {
 //                    alert('you have failded: ' + search);
                 } )
             })
-
-
         })
     </script>
 }
 
 @main("Virtual Therapist")(style){
 
-    <header>
-
-
+    <div class="header">
         <h1>Vragen</h1>
         <div class="btn-group">
             <button class="btn btn-primary btn-lg" id="questionButton">
@@ -67,7 +72,8 @@
                 Toevoegen
             </button>
         </div>
-    </header>
+    </div>
+
     <div class="row" style="display: none;" id="questionForm">
         <div class="col-md-12">
             <div class="well">
@@ -112,23 +118,27 @@
     </div>
     <br>
     @if( questions != null ) {
-        <table id="answers" class="table table-striped">
-            <tr>
-                <th>Vraag:</th>
-                <th>Antwoord:</th>
-                <th>Verwijderen</th>
-            </tr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Vraag:</th>
+                    <th>Antwoord:</th>
+                    <th style="width: 5px;">Verwijderen</th>
+                </tr>
+            </thead>
+            <tbody id="answers">
             @for(question <- questions) {
                 <tr>
                     <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion()" data-pk="@question.id">@question.question</a></td>
                     <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer()" data-pk="@question.answer.id">@question.answer.answer</a></td>
-                    <td><a class="btn btn-danger btn-xs" shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
+                    <td><a class="btn btn-danger btn-xs"  shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
                 </tr>
             }
+            </tbody>
         </table>
     }
 
-    @if( answers != null ) {
+    <!--@if( answers != null ) {
         <h5>Antwoord:</h5>
         <table id="questions" class="table table-striped">
             <tr>
@@ -142,7 +152,7 @@
                 </tr>
             }
         </table>
-    }
+    }-->
 
 
 }(script)(firstname)(lastname)(error)(errorType)
