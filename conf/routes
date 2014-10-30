@@ -17,6 +17,10 @@ GET         /users/all                       controllers.UserController.showUser
 GET         /users/:id                       controllers.UserController.userPage(id: Integer)
 GET         /users/delete/:id                controllers.UserController.deleteUser(id: Integer)
 
+# Profile
+GET         /profile                         controllers.UserController.showProfile()
+POST        /profile/save                    controllers.UserController.saveProfile()
+
 # Questions
 GET         /questions                       controllers.QuestionController.questionpage()
 POST        /questions                       controllers.QuestionController.searchQuestion()
