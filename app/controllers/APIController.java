@@ -66,19 +66,22 @@ public class APIController extends SwaggerBaseApiController {
             rating = Integer.parseInt(postVariables.get("rating")[0]);
             chatId = Integer.parseInt(postVariables.get("chat_id")[0]);
         } catch (NullPointerException e) {
+            System.out.println("Could rate chat. Chat id or rating is missing.");
             return badRequest("Variables 'rating' and/or 'chat_id' are missing.");
         }
 
         Chat chat = Ebean.find(Chat.class, chatId);
         
         // User can't rate chats from other users.
-        if (chat.user != user) {
+        if (!chat.user.equals(user)) {
+            System.out.println("Could rate chat. User is not chat owner."); 
             return unauthorized();
         }
 
         chat.rating = rating;
         chat.save();
 
+        System.out.println("Rated chat " + chatId + " with " + rating + " stars.");
         return ok();
     }
 
