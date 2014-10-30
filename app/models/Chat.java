@@ -34,6 +34,10 @@ public class Chat extends Model {
     @CreatedTimestamp
     public Date createdAt;
 
+
     @OneToMany(mappedBy="chat")
     public List<ChatLine> chatlines;
+
+    public int rating = 0;
+
 }

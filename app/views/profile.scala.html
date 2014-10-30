@@ -1,0 +1,39 @@
+@(user: User)(firstname: String)(lastname: String)(error: String)(errorType: String)
+
+@style = {<link rel="stylesheet" media="screen" href="@routes.Assets.at("/public/stylesheets", "main.css")">}
+
+@script = {<script rel="text/javascript" src="@routes.Assets.at("/public/javascripts", "user.js")"></script>}
+
+
+@main("Virtual Therapist - mijn profiel")(style){
+
+    <header>
+        <h1>Mijn profiel</h1>
+    </header>
+
+    <form role="form" class="create-question" method="POST" action="@routes.UserController.saveProfile()" >
+        <div class="form-group">
+            <label for="first_name">Voornaam</label>
+            <input type="text" class="form-control" name="first_name" id="first_name" value="@user.first_name">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Achternaam</label>
+            <input type="text" class="form-control" name="last_name" id="last_name" value="@user.last_name">
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail adres</label>
+            @user.email
+            <input type="email" class="form-control" name="email" id="email" value="@user.email" disabled="disabled">
+        </div>
+        <div class="form-group">
+            <label for="password">Wachtwoord</label>
+            <input type="password" class="form-control" name="password" id="password" value="">
+            <p class="help-block">Laat leeg om niet te wijzigen.</p>
+        </div>
+
+        <button type="submit" class="btn btn-warning">Opslaan</button>
+    </form>
+
+
+
+}(script)(firstname)(lastname)(error)(errorType)
