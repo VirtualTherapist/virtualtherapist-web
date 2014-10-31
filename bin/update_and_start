@@ -20,4 +20,4 @@ $PROJECT_DIR"activator" clean compile stage
 
 echo "Launching application."
 # Launch application in backgroud and redirect all output to /dev/null/.
-$PROJECT_DIR"target/universal/stage/bin/virtualcoach-web"  -Dpidfile.path=/tmp/play.pid >/dev/null 2>&1 &
+$PROJECT_DIR"target/universal/stage/bin/virtualcoach-web"  -Dpidfile.path=/tmp/play.pid -DapplyEvolutions.default=true >/dev/null 2>&1 &
