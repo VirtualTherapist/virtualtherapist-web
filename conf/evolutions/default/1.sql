@@ -21,6 +21,7 @@ create table chat (
   lat                       double,
   lng                       double,
   mood                      varchar(255),
+  rating                    integer,
   created_at                datetime not null,
   constraint pk_chat primary key (id))
 ;
