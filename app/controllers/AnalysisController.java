@@ -31,10 +31,10 @@ public class AnalysisController extends Controller {
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     }
 
-    //public static Result keywordTrendPage() {
-        //return ok(keywordtrends.render("Keyword Trends",
-                //Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
-                //Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
-    //}
+    public static Result keywordTrendPage() {
+        return ok(keywordtrends.render("Keyword Trends",
+                "Firstname",
+                "Lastname", "", ""));
+    }
 
 }

@@ -1,47 +1,49 @@
 @(title: String)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
-@style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
+@style = {
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"
+      rel="stylesheet"/>}
 
 @script = {
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart"]});
+    google.load("visualization", "1", {packages: ["corechart"]});
     google.setOnLoadCallback(drawChart);
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Dag', 'Snap', 'Game', 'Motivatie'],
-            ['1',  1,      4,       10],
-            ['2',  5,      4,       10],
-            ['3',  5,       11,     12],
-            ['4',  14,      4,      11],
-            ['5',  12,      4,      10],
-            ['6',  11,       12,    9],
-            ['7',  12,      4,      8],
-            ['8',  13,      6,      7],
-            ['9',  17,       12,    6],
-            ['10',  11,      8,     7],
-            ['11',  8,      1,      8],
-            ['12',  7,       10,    9],
-            ['13',  5,      1,      10],
-            ['14',  5,      12,     12],
-            ['15',  5,       11,    14],
-            ['16',  6,      5,      16],
-            ['17',  10,      6,     18],
-            ['18',  5,       11,    20],
-            ['19',  5,      4,      22],
-            ['20',  6,      4,      24],
-            ['21',  2,       1,     26],
-            ['22',  4,      4,      24],
-            ['23',  5,      6,      20],
-            ['24',  8,       10,    18],
-            ['25',  12,      4,     16],
-            ['26',  15,      5,     10],
-            ['27',  9,       11,    12],
-            ['28',  17,      1,     12],
-            ['29',  23,      8,     11],
-            ['30',  6,       9,     11],
-            ['31',  5,      1,      12]
+            ['1', 1, 4, 10],
+            ['2', 5, 4, 10],
+            ['3', 5, 11, 12],
+            ['4', 14, 4, 11],
+            ['5', 12, 4, 10],
+            ['6', 11, 12, 9],
+            ['7', 12, 4, 8],
+            ['8', 13, 6, 7],
+            ['9', 17, 12, 6],
+            ['10', 11, 8, 7],
+            ['11', 8, 1, 8],
+            ['12', 7, 10, 9],
+            ['13', 5, 1, 10],
+            ['14', 5, 12, 12],
+            ['15', 5, 11, 14],
+            ['16', 6, 5, 16],
+            ['17', 10, 6, 18],
+            ['18', 5, 11, 20],
+            ['19', 5, 4, 22],
+            ['20', 6, 4, 24],
+            ['21', 2, 1, 26],
+            ['22', 4, 4, 24],
+            ['23', 5, 6, 20],
+            ['24', 8, 10, 18],
+            ['25', 12, 4, 16],
+            ['26', 15, 5, 10],
+            ['27', 9, 11, 12],
+            ['28', 17, 1, 12],
+            ['29', 23, 8, 11],
+            ['30', 6, 9, 11],
+            ['31', 5, 1, 12]
         ]);
 
         var options = {
@@ -57,116 +59,137 @@
 
 @main(title)(style){
 
-    <h1>Keyword Trends</h1>
+<h1>Keyword Trends</h1>
 
 
-    <div style="margin-top: 50px">
-        <div>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                    Maand
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">September</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Augustus</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juli</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juni</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mei</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">April</a></li>
-                    <li role="presentation" class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ouder</a></li>
-                </ul>
-            </div>
-            <h4>Trends in Juli</h4>
+<div style="margin-top: 50px">
+    <div>
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                Maand
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">September</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Augustus</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juli</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Juni</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mei</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">April</a></li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ouder</a></li>
+            </ul>
         </div>
-        <div id="chart_div">
-
-        </div>
-        <div class="trending">
-            <h3>Top keywords voor Juli</h3>
-            <table class="table table-striped">
-                <tr>
-                    <th>Nr</th>
-                    <th>Keyword</th>
-                    <th>Aantal hits</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a href="#">Game</a></td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="#">Tijd</a></td>
-                    <td>11</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><a href="#">Snap</a></td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><a href="#">Motivatie</a></td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><a href="#">Controle</a></td>
-                    <td>11</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td><a href="#">Mindfulness</a></td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td><a href="#">Gewicht</a></td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td><a href="#">Zin</a></td>
-                    <td>11</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td><a href="#">Moe</a></td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td><a href="#">Vergeten</a></td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <td>11</td>
-                    <td><a href="#">Druk</a></td>
-                    <td>11</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td><a href="#">Anderen</a></td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <td>13</td>
-                    <td><a href="#">Mezelf</a></td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <td>14</td>
-                    <td><a href="#">Teleurstelling</a></td>
-                    <td>11</td>
-                </tr>
-                <tr>
-                    <td>15</td>
-                    <td><a href="#">Geluk</a></td>
-                    <td>10</td>
-                </tr>
-            </table>
-        </div>
+        <h4>Trends in Juli</h4>
     </div>
+    <div id="chart_div">
+
+    </div>
+    <div class="trending">
+        <h3>Top keywords voor Juli</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>Nr</th>
+                <th>Keyword</th>
+                <th>Aantal hits</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><a href="#">Game</a></td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><a href="#">Tijd</a></td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><a href="#">Snap</a></td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><a href="#">Motivatie</a></td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><a href="#">Controle</a></td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><a href="#">Mindfulness</a></td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><a href="#">Gewicht</a></td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><a href="#">Zin</a></td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td><a href="#">Moe</a></td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td><a href="#">Vergeten</a></td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td><a href="#">Druk</a></td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td><a href="#">Anderen</a></td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td><a href="#">Mezelf</a></td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td><a href="#">Teleurstelling</a></td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td><a href="#">Geluk</a></td>
+                <td>10</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <object height="400" width="300" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0"
+                id="widget_name">
+            <param name="movie"
+                   value="http://vhss-d.oddcast.com/vhss_editors/voki_player.swf?doc=http://188.226.243.85:8000/html/chat.xml"/>
+            <param name="quality" value="high"/>
+            <param name="allowScriptAccess" value="always"/>
+            <param name="width" value="300"/>
+            <param name="height" value="400"/>
+            <param name="allowNetworking" value="all"/>
+            <param name="wmode" value="transparent"/>
+            <param name="allowFullScreen" value="true"/>
+            <embed height="400" width="300"
+                   src="http://vhss-d.oddcast.com/vhss_editors/voki_player.swf?doc=http://188.226.243.85:8000/html/chat.xml"
+                   quality="high" allowScriptAccess="always" allowNetworking="all" wmode="transparent"
+                   allowFullScreen="true"
+                   pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"
+                   type="application/x-shockwave-flash" name="widget_name">
+        </object>
+    </div>
+</div>
 }(script)(firstname)(lastname)(error)(errorType)

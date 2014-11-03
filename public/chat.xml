@@ -1,0 +1,19 @@
+<VOKISC ACC="4800899" BASEURL="http://vhss-d.oddcast.com/ccs2/vhss/" COMMENTJS="launchEditorInComment" PARTNERID="16" CID="6" COMMENTLINK="http://www.voki.com/vokiCommentEditor.php?sc=10538429" DURL="http://vhss.oddcast.com" SCRIPTURL="http://vhss-d.oddcast.com" SENDTOPHONEJS="sendVokiToPhone" SENDTOPHONELINK="http%3A%2F%2Fvhss.oddcast.com%2Fvhss_editors%2FsendVokiToPhone.php%3Facc%3D4800899%26sc%3D10538429%26chsm%3D350afd6c6f675f7be5b5703bafa2a548%26pid%3D16" TRACKURL="http://data.oddcast.com/event.php" TTS="http://cache-a.oddcast.com" WATERMARK="watermarks/voki_watermark.swf" LOADER="loaders/voki_loader.swf">
+    <D V="f6bd1d47421c7fefdd42aa1e7ac4024d"/>
+    <SCENE ID="10538429" TITLE="VT">
+        <SKIN CATID="57" ID="131" URL="skins/aqua_voki_skin.swf">
+            <SKINCONF ALIGN="center" VOL="1" PLAY="1" MUTE="1" C1="0x000000" C2="0x" C3="0x" C4="0x">
+                <VOKI CMT="0" HST="0" ABT="0" CNT="0" EML="0" CHT="0" CEL="0"/>
+            </SKINCONF>
+        </SKIN>
+        <HOST CATID="16" URL="http://char.oddcast.com/oh/60/477/980/346/0/860/801/302/0/0/0/oh.swf?cs=140e906:1c40726:3a20206:2426266:0:101:101:101:101:101:1:100:50:0" XPOS="-43" YPOS="50" SCALE="80"/>
+        <BG CATID="18" URL="user/6cd/37530/bg/Buildings_15332.jpg" ID="301208"/>
+        <AUDIO PLAY="">
+            <TTS VOICE="2" LANG="11" ENGINE="4">
+                Hallo%252C%2Bik%2Bben%2Bde%2Bvirtuele%2Btherapeut.%2BHoe%2Bkan%2Bik%2Bhelpen%253F
+                Hallo%252C%2Bik%2Bben%2Bde%2Bvirtuele%2Btherapeut.%2BHoe%2Bkan%2Bik%2Bhelpen%253F
+                Hallo%252C%2Bik%2Bben%2Bde%2Bvirtuele%2Btherapeut.%2BHoe%2Bkan%2Bik%2Bhelpen%253F
+            </TTS>
+        </AUDIO>
+    </SCENE>
+</VOKISC>

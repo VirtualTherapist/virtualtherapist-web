@@ -27,7 +27,7 @@ GET         /logout                          controllers.LoginController.logout(
 GET         /analyse/:id                     controllers.AnalysisController.analysisPageForUser(id: Integer)
 GET         /analyse                         controllers.AnalysisController.analysisPage()
 
-#GET         /keywordtrends                   controllers.AnalysisController.keywordTrendPage()
+GET         /keywordtrends                   controllers.AnalysisController.keywordTrendPage()
 
 GET         /server                          controllers.APIController.WebSocket()
 
@@ -56,3 +56,6 @@ GET         /webjars/*file                   controllers.WebJarAssets.at(file)
 # API docs route
 GET     /api-docs                       controllers.ApiHelpController.getResources()
 GET     /api-docs/api                   controllers.ApiHelpController.getResource(path = "/api")
+
+
+GET /assets/chat.xml   controllers.Assets.at(path="/public", file="/chat.xml")
