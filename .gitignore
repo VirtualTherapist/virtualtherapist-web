@@ -15,4 +15,5 @@ dist
 /.settings
 conf/evolutions/*
 conf/application.conf
+exports/*
 *.log
