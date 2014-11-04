@@ -51,7 +51,8 @@ public class APIController extends SwaggerBaseApiController {
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "rating", value = "User rating of the chat", required = true, dataType = "int", paramType = "post"),
-            @ApiImplicitParam(name = "chat_id", value = "Id of chat", required = true, dataType = "int", paramType = "post")
+            @ApiImplicitParam(name = "chat_id", value = "Id of chat", required = true, dataType = "int", paramType = "post"),
+            @ApiImplicitParam(name = "comment", value = "Comment on chat", required = false, dataType = "string", paramType = "post")
     })
     @With(APIAuthHeaderFilter.class)
     public static Result setChatRating() {
@@ -66,8 +67,15 @@ public class APIController extends SwaggerBaseApiController {
             rating = Integer.parseInt(postVariables.get("rating")[0]);
             chatId = Integer.parseInt(postVariables.get("chat_id")[0]);
         } catch (NullPointerException e) {
-            Logger.debug("Could rate chat. Chat id or rating is missing.");
+            Logger.debug("Couldn't rate chat. Chat id or rating is missing.");
             return badRequest("Variables 'rating' and/or 'chat_id' are missing.");
+        }
+
+        String comment = "";
+        try {
+            comment = postVariables.get("comment")[0];
+        } catch (NullPointerException e) {
+            // Do nothing, comment is optional.
         }
 
         Chat chat = Ebean.find(Chat.class, chatId);
@@ -79,9 +87,10 @@ public class APIController extends SwaggerBaseApiController {
         }
 
         chat.rating = rating;
+        chat.comment = comment;
         chat.save();
 
-        Logger.debug("Rated chat " + chatId + " with " + rating + " stars.");
+        Logger.debug("Rated chat " + chatId + " with " + rating + " stars and comment: \"" + comment + "\".");
         return ok();
     }
 

@@ -34,4 +34,6 @@ public class Chat extends Model {
     public Date createdAt;
 
     public int rating = 0;
+
+    public String comment;
 }
