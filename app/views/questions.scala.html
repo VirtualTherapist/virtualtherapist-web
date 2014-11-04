@@ -27,20 +27,22 @@
                 where = [];
                 search = $('#search-text' ).val();
                 if($('#question' ).hasClass("active"))
-                {
-                    where.push('question');
-                }
+                    question_activated = true;
+                else
+                    question_activated = false;
                 if($('#answer' ).hasClass("active"))
-                {
-                    where.push('answer');
-                }
+                    answer_activated = true;
+                else
+                    answer_activated = false;
+
                 $.ajax (
                 {
                     url : "@routes.QuestionController.searchQuestion()",
                     method : "POST",
                     data: {
                         "search" : search,
-                        "where" : where
+                        "answer_activated" : answer_activated,
+                        "question_activated" : question_activated
                     }
                 } ).done ( function ( questions ) {
 

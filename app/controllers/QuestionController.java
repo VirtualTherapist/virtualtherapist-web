@@ -47,10 +47,9 @@ public class QuestionController extends Controller
     {
         Map<String, String[]> parameters = request().body().asFormUrlEncoded();
         String search = (String) parameters.get("search")[0];
+        boolean answerActivated =  Boolean.parseBoolean(parameters.get("answer_activated")[0]);
+        boolean questionActivated = Boolean.parseBoolean(parameters.get("question_activated")[0]);
         Collection<String[]> answer = parameters.values();
-
-        boolean answerActivated = false;
-        boolean questionActivated = false;
 
         DynamicForm searchForm        = form().bindFromRequest();
 
@@ -83,11 +82,11 @@ public class QuestionController extends Controller
         if( questionActivated )
         {
 //            Logger.debug("searching question");
-            foundQuestions = Ebean.find(Question.class).where().contains("question", search).findSet();
-            foundQuestions.addAll(Ebean.find(Question.class).where().like("question", search).findSet());
-            foundQuestions.addAll(Ebean.find(Question.class).where().eq("question", search).findSet());
+            foundAnswers = Ebean.find(Answer.class).where().contains("question", search).findSet();
+            //foundAnswers.addAll(Ebean.find(Question.class).where().like("question", search).findSet());
+            //foundAnswers.addAll(Ebean.find(Question.class).where().eq("question", search).findSet());
 
-            for( Question question : foundQuestions ){ returnData.add(question); }
+            for( Answer ans : foundAnswers ){ returnData.add(ans); }
         }
 
         return ok(toJson(returnData));
