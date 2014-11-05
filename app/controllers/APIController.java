@@ -11,6 +11,7 @@ import play.libs.F;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import play.mvc.With;
+import utils.LuceneUtil;
 import utils.NLPUtil;
 import java.util.*;
 
@@ -332,5 +333,11 @@ public class APIController extends SwaggerBaseApiController {
         Logger.debug("Question: " + q.asked_question);
 
         return (ArrayList<Object>) toReturn;
+    }
+
+    public static Result luceneTest() {
+        System.out.println("Lucene test");
+        LuceneUtil.getInstance().test();
+        return ok();
     }
 }
