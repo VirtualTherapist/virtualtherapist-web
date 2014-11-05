@@ -101,9 +101,10 @@ public class DatabaseFunctionsHelper
      * @param answer    Answer      The answer which belongs to this question
      * @return question Question    The question which was created
      */
-    public static Question createQuestion(String question, Answer answer){
+    public static Question createQuestion(String question, Answer answer, User user){
         Question qu = new Question();
         qu.question = question;
+        qu.user = user;
         qu.answer   = answer;
         qu.save();
 
@@ -126,6 +127,20 @@ public class DatabaseFunctionsHelper
         question.delete();
     }
 
+    /**
+     * createQuestionKeyword, creates a question keyword entry in the database
+     * @param question  Question        The question which is being linked to the keyword
+     * @param kq        KeywordCategory The keyword category id which is being linked
+     * @return QuestionKeyword          The question keyword object that was created
+     */
+    public static QuestionKeyword createQuestionKeyword(Question question, KeywordCategory kq) {
+        QuestionKeyword qk = new QuestionKeyword();
+        qk.keywordCategory = kq;
+        qk.question = question;
+        qk.save();
+
+        return qk;
+    }
     /**
      * createCategory, creates a new category entry in the category table
      * @param category  String      The name of the category
@@ -173,5 +188,66 @@ public class DatabaseFunctionsHelper
         keywordCategory.save();
 
         return keywordCategory;
+    }
+
+    /**
+     * createUserQuestion, creates a new entry in the user question table
+     * @param user  User     The user to link the question to
+     * @param question Question    The question which is being asked by the user
+     * @return  UserQuestion    The user question that was just added
+     */
+    public static UserQuestion createUserQuestion(User user, String question){
+        UserQuestion userQuestion = new UserQuestion();
+        userQuestion.asked_question = question;
+        userQuestion.user   = user;
+        userQuestion.save();
+
+        return userQuestion;
+    }
+
+    /**
+     * createUserQuestionKeywordCategory, creates a new entry in the userQuestionKeyword table.
+     * @param uq    UserQuestion        The question which was asked by the user
+     * @param kc    KeywordCategory     The keyword category to which the question belongs to
+     * @return      UserQuestionKeyword The user question keyword which was created
+     */
+    public static UserQuestionKeyword createUserQuestionKeywordCategory(UserQuestion uq, KeywordCategory kc){
+        UserQuestionKeyword uqk = new UserQuestionKeyword();
+        uqk.keywordCategory = kc;
+        uqk.userquestion = uq;
+        uqk.save();
+
+        return uqk;
+    }
+
+    /**
+     * deleteKeyword, removes the specified keyword from the table
+     * @param keyword Keyword   The keyword which is being removed
+     */
+    public static void deleteKeyword(Keyword keyword) {
+        keyword.delete();
+    }
+
+    /**
+     * deleteKeywordCategory, removes the specified keyword category
+     * @param kc    KeywordCategory     The keywordcategory which is being removed.
+     */
+    public static void deleteKeywordCategory(KeywordCategory kc){
+        kc.delete();
+    }
+
+    /**
+     * deleteQuestionKeyword, removes the questionkeyword entry.
+     * @param questionKeyword   QuestionKeyword     The questionkeyword entry that needs to be deleted
+     */
+    public static void deleteQuestionKeyword(QuestionKeyword questionKeyword){
+        questionKeyword.delete();
+    }
+
+    /**
+     * deleteUserQuestion, removes the userQuestion entry in the database.
+     */
+    public static void deleteUserQuestion(UserQuestion userQuestion){
+        userQuestion.delete();
     }
 }

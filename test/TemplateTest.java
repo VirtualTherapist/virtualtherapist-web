@@ -1,3 +1,4 @@
+import com.avaje.ebean.PagingList;
 import models.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,10 +88,11 @@ public class TemplateTest {
     public void questionsTest(){
         running(fakeApplication(), new Runnable(){
             public void run(){
-                List<Question> testQuestions = new LinkedList<Question>();
-                List<Answer> testAnswers = new LinkedList<Answer>();
+                PagingList<Question> testQuestions = Mockito.mock(PagingList.class);
+                List<Question> wtfQuestions = Mockito.mock(List.class);
                 //run your test
-                Content html = views.html.questions.render(testQuestions, testAnswers, "Voornaam", "Achternaam", "testError", "Test");
+                int count = 10;
+                Content html = views.html.questions.render(testQuestions, wtfQuestions, count, "Voornaam", "Achternaam", "testError", "Test");
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Voornaam");
             }
