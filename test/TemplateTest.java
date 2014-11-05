@@ -1,19 +1,17 @@
-
-import models.Answer;
-import models.Question;
-import models.User;
-import models.UserRole;
+import models.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import play.mvc.Http;
 import play.twirl.api.Content;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static play.test.Helpers.*;
 
 /**
@@ -104,10 +102,11 @@ public class TemplateTest {
        running(fakeApplication(), new Runnable(){
            public void run(){
                User testUser = Mockito.mock(User.class);
-
-               Content html = views.html.userdetail.render(testUser, "Voornaam", "Achternaam", "testError", "Test");
-               assertThat(contentType(html)).isEqualTo("text/html");
-               assertThat(contentAsString(html)).contains("Voornaam");
+               List<Chat> testChats;
+//               for()
+//               Content html = views.html.userdetail.render(testChat, testUser, "Voornaam", "Achternaam", "testError", "Test");
+//               assertThat(contentType(html)).isEqualTo("text/html");
+//               assertThat(contentAsString(html)).contains("Voornaam");
            }
        });
     }
