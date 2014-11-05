@@ -27,5 +27,5 @@ public class Question extends Model
 
     @Column(name="created_at")
     @CreatedTimestamp
-    public Date createdAt;
+    public Date creatanaytedAt;
 }
