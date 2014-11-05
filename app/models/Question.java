@@ -6,6 +6,7 @@ import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Akatchi on 9-10-2014.
@@ -19,13 +20,16 @@ public class Question extends Model
     @Constraints.Required
     public String question;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     public Answer answer;
 
-    @ManyToOne
     public User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<QuestionKeyword> questionKeyword;
 
     @Column(name="created_at")
     @CreatedTimestamp
     public Date createdAt;
+
 }
