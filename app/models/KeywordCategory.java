@@ -3,17 +3,14 @@ package models;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Akatchi on 9-10-2014.
  */
 @Entity
-public class KeywordCategory extends Model
-{
+public class KeywordCategory extends Model {
     @Id
     public Integer id;
 
@@ -22,6 +19,9 @@ public class KeywordCategory extends Model
     public Keyword keyword;
 
     @Constraints.Required
-    @OneToOne
+    @ManyToOne
     public Category category;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<QuestionKeyword> questionKeywordList;
 }
