@@ -17,6 +17,15 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
 public class AnalysisController extends Controller {
+
+    // Every question retrieves an Answer object as response. Even those questions
+    // without suitable answer. These questions get response "Geen antwoord gevonden".
+    // This variable contains that answer.
+    private static Answer noAnswer = Ebean.find(Answer.class)
+            .where()
+            .eq("answer", "Geen antwoord gevonden")
+            .findUnique();
+    
     public static Result analysisPageForUser(Integer userId) {
         User user = null;
         if(userId != null) {
@@ -27,21 +36,16 @@ public class AnalysisController extends Controller {
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
                 0, 0));
         //return ok();
-
     }
 
     public static Result analysisPage() {
         int amountOfQuestions = Ebean.find(ChatLine.class).findRowCount();
-        Answer answer = Ebean.find(Answer.class)
-            .where()
-            .eq("answer", "Geen antwoord gevonden")
-            .findUnique();
-
         int amountOfUnansweredQuestions = 0;
-        if (answer != null) {
+
+        if (noAnswer != null) {
             int amountOfUnAnsweredQuestions = Ebean.find(ChatLine.class)
                 .where()
-                .eq("answer_id", answer.id)
+                .eq("answer_id", noAnswer.id)
                 .findRowCount();
         }
 
@@ -83,5 +87,4 @@ public class AnalysisController extends Controller {
                 //Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 //Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     //}
-
 }
