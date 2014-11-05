@@ -1,4 +1,4 @@
-@(questions: java.util.List[Question])(answers: java.util.List[Answer])(firstname: String)(lastname: String)(error: String)(errorType: String)
+@(pageList: com.avaje.ebean.PagingList[Question])(questions: List[Question])(count: Int)(firstname: String)(lastname: String)(error: String)(errorType: String)
 
 @style = {<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>}
 
@@ -6,35 +6,58 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script src="@routes.Assets.at("/public/javascripts", "questions.js")" type="text/javascript"></script>
     <script type="text/javascript">
+        $.fn.extend({
+            toggleText:function(a,b){
+                if(this.html()==a){this.html(b)}
+                else{this.html(a)}
+            }
+        });
         $(document ).ready( function(){
+            $('#questionButton' ).click(function(){
+                $('#questionForm' ).slideToggle(200);
+                $('#questionButton').toggleText(
+                    '<span class="glyphicon glyphicon-remove"></span> Annuleren',
+                    '<span class="glyphicon glyphicon-plus"></span> Toevoegen'
+                );
+            });
 
             $('#search' ).click( function()
             {
+
                 where = [];
                 search = $('#search-text' ).val();
                 if($('#question' ).hasClass("active"))
-                {
-                    where.push('question');
-                }
+                    question_activated = true;
+                else
+                    question_activated = false;
                 if($('#answer' ).hasClass("active"))
-                {
-                    where.push('answer');
-                }
+                    answer_activated = true;
+                else
+                    answer_activated = false;
+
                 $.ajax (
                 {
                     url : "@routes.QuestionController.searchQuestion()",
                     method : "POST",
                     data: {
                         "search" : search,
-                        "where" : where
+                        "answer_activated" : answer_activated,
+                        "question_activated" : question_activated
                     }
-                } ).done ( function ( data )
-                {
-                    console.log(data);
-                    alert('you have searched: ' + search);
-                } ).fail ( function ( )
-                {
-//                    alert('you have failded: ' + search);
+                } ).done ( function ( questions ) {
+
+                    html = "";
+                    for(question in questions){
+                        html += '<tr>' +
+                            '<td><a class="update-delete-question editable editable-click" href="#"  data-url="/answers/update/' + questions[question]["id"] + '" data-pk="' + questions[question]["id"] + '" href="#" >' + questions[question]["question"] + '</a></td>' +
+                            '<td><a class="update-delete-question" href="#" >' + questions[question]["answer"]['answer'] + '</a></td>' +
+                            '<td><a class="btn btn-danger btn-xs"  ><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>' +
+                        '</tr>';
+                    }
+                    $("#answers" ).html(html);
+                    //alert('you have searched: ' + search);
+                } ).fail ( function ( search ) {
+//                    alert('you have failed: ' + search);
                 } )
             })
         })
@@ -43,105 +66,113 @@
 
 @main("Virtual Therapist")(style){
 
-        <header>
-            <h1>Vragen</h1>
-            <div class="btn-group">
-                <a href="" class="btn btn-primary btn-lg">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Voeg toe
-                </a>
-            </div>
-        </header>
-        <br><br><br>
-        <!--<form role="form" method="POST" action="@routes.QuestionController.searchQuestion()" >
-            <div class="form-group">
-                <label for="inputQuestion">Vraag</label>
-                <input type="text" class="form-control" name="question" placeholder="Vraag">
-            </div>
-            <div class="form-group">
-                <label for="inputAnswer">Antwoord</label>
-                <input type="text" class="form-control" name="answer" placeholder="Antwoord">
-            </div>
-            <button type="submit" class="btn btn-warning">Zoeken</button>
-        </form>
-        <br>-->
+    <div class="header">
+        <h1>Vragen</h1>
+        <div class="btn-group">
+            <button class="btn btn-primary btn-lg" id="questionButton">
+                <span class="glyphicon glyphicon-plus"></span>
+                Toevoegen
+            </button>
+        </div>
+    </div>
 
+    <div class="row" style="display: none;" id="questionForm">
+        <div class="col-md-12">
+            <div class="well">
+                <form role="form" method="POST" action="@routes.QuestionController.saveQuestion()" >
+                    <div class="form-group">
+                        <label for="inputQuestion">Vraag</label>
+                        <textarea type="text" class="form-control" name="question" placeholder="Vraag"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAnswer">Antwoord</label>
+                        <textarea class="form-control" name="answer" placeholder="Antwoord"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Opslaan</button>
+                </form>
 
+            </div>
+        </div>
+    </div>
 
-        <form role="form" class="create-question" method="POST" action="@routes.QuestionController.saveQuestion()" >
-            <div class="form-group">
-                <label for="inputQuestion">Vraag</label>
-                <input type="text" class="form-control" name="question" placeholder="Vraag">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="btn-group pull-left" data-toggle="buttons">
+                <label class="btn btn-default active"  id="question">
+                    <input type="checkbox">Vraag
+                </label>
+                <label class="btn btn-default" id="answer">
+                    <input type="checkbox">Antwoord
+                </label>
             </div>
-            <div class="form-group">
-                <label for="inputAnswer">Antwoord</label>
-                <input type="text" class="form-control" name="answer" placeholder="Antwoord">
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search-text">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-warning" id="search">
+                        <span class="glyphicon glyphicon-search"></span>
+                        Zoeken
+                    </button>
+                </span>
             </div>
-            <button type="submit" class="btn btn-warning">Opslaan</button>
-        </form>
-        <!--<div class="row">
-            <div class="well well-sm">Add More content</div>
-        </div>-->
+        </div>
+    </div>
+    <br>
+
+    @if( questions != null ) {
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Vraag:</th>
+                    <th>Antwoord:</th>
+                    <th style="width: 5px;">Verwijderen</th>
+                </tr>
+            </thead>
+            <tbody id="answers">
+            @if(questions.size() <= 0){
+                <tr>
+                    <td colspan="3">
+                        <b>Er zijn nog geen vragen aangemaakt</b>
+                    </td>
+                </tr>
+            } else {
+                @for(question <- questions) {
+                    <tr>
+
+                        <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion(question.id)" data-pk="@question.id">@question.question</a></td>
+                        <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(question.answer.id)" data-pk="@question.answer.id">@question.answer.answer</a></td>
+                        <td><a class="btn btn-danger btn-xs"  shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+
+    }
+    @if(pageList.getTotalPageCount > 0){
         <div class="row">
             <div class="col-md-12">
-                <div class="well">Hieronder kan je vragen en antwoorden bekijken</div>
+                <nav style="float : right ;">
+                    <ul class="pagination">
+                        @if(pageList.getPage(count).hasPrev){
+                        <li><a href="@routes.QuestionController.questionpage(0)">&laquo;</a></li>
+
+                            <li><a href="@routes.QuestionController.questionpage(count-1)">@{count-1}</a></li>
+                        }
+                        <li class="active"><a href="#">@count</a></li>
+                        @if(pageList.getPage(count).hasNext){
+                            <li><a href="@routes.QuestionController.questionpage(count+1)">@{count+1}</a></li>
+
+                        <li><a href="@routes.QuestionController.questionpage(pageList.getTotalPageCount() - 1)">&raquo;</a></li>
+                        }
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-5">
-                <div class="btn-group pull-left" data-toggle="buttons">
-                    <label class="btn btn-default active"  id="question">
-                        <input type="checkbox">Vraag
-                    </label>
-                    <label class="btn btn-default" id="answer">
-                        <input type="checkbox">Antwoord
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="search-text">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-warning" id="search">
-                            <span class="glyphicon glyphicon-search"></span>
-                            Zoeken
-                        </button>
-                    </span>
-                </div>
-            </div>
-        </div>
-    <br>
-    @if( questions != null ) {
-        <table id="answers" class="table table-striped">
-            <tr>
-                <th>Vraag:</th>
-                <th>Antwoord:</th>
-                <th>Verwijderen</th>
-            </tr>
-            @for(question <- questions) {
-                <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion(question.id)" data-pk="@question.id">@question.question</a></td>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(question.answer.id)" data-pk="@question.answer.id">@question.answer.answer</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteQuestion(question.id)">Verwijder</a></td>
-                </tr>
-            }
-        </table>
     }
 
-    @if( answers != null ) {
-        <h5>Antwoord:</h5>
-        <table id="questions" class="table table-striped">
-            <tr>
-                <th>Antwoord:</th>
-                <th>Verwijderen</th>
-            </tr>
-            @for(answer <- answers) {
-                <tr>
-                    <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(answer.id)" data-pk="@answer.id">@answer.answer</a></td>
-                    <td><a class="btn btn-danger" href="@routes.QuestionController.deleteAnswer(answer.id)">Delete</a></td>
-                </tr>
-            }
-        </table>
-    }
+
 
 }(script)(firstname)(lastname)(error)(errorType)

@@ -2,6 +2,7 @@ package controllers;
 
 
 import com.avaje.ebean.Ebean;
+import models.ChatLine;
 import models.User;
 import models.ChatLine;
 import models.Answer;
@@ -10,9 +11,11 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
 
-/**
- * Created by bas on 9-10-14.
- */
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 public class AnalysisController extends Controller {
     public static Result analysisPageForUser(Integer userId) {
         User user = null;
@@ -47,6 +50,32 @@ public class AnalysisController extends Controller {
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
                 amountOfQuestions, amountOfUnansweredQuestions));
+    }
+
+    public static Result exportChat()
+    {
+        String filename      = "chat_export.txt";
+
+        String dataLine = "";
+
+        for( ChatLine item : Ebean.find(ChatLine.class).findList())
+        {
+            dataLine += item.userQuestion.asked_question + "\n" + item.answer.answer + "\n";
+        }
+
+        try
+        {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("app/exports" + filename), "UTF-8"));
+            bw.write(dataLine);
+            bw.newLine();
+            bw.flush();
+            bw.close();
+        }
+        catch( Exception e ){}
+
+        File downloadMe = new File("app/exports" + filename);
+
+        return ok(downloadMe);
     }
 
     //public static Result keywordTrendPage() {

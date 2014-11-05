@@ -21,6 +21,7 @@ create table chat (
   lat                       double,
   lng                       double,
   mood                      varchar(255),
+  rating                    integer,
   created_at                datetime not null,
   constraint pk_chat primary key (id))
 ;
@@ -41,8 +42,10 @@ create table keyword (
 ;
 
 create table keyword_category (
+  id                        integer auto_increment not null,
   keyword_id                integer,
-  category_id               integer)
+  category_id               integer,
+  constraint pk_keyword_category primary key (id))
 ;
 
 create table question (
@@ -50,13 +53,15 @@ create table question (
   question                  varchar(255),
   answer_id                 integer,
   user_id                   integer,
-  created_at                bigint,
+  created_at                datetime not null,
   constraint pk_question primary key (id))
 ;
 
 create table question_keyword (
+  id                        integer auto_increment not null,
   question_id               integer,
-  keyword_id                integer)
+  keyword_category_id       integer,
+  constraint pk_question_keyword primary key (id))
 ;
 
 create table user (
@@ -77,16 +82,18 @@ create table user_question (
   constraint pk_user_question primary key (id))
 ;
 
+create table user_question_keyword (
+  id                        integer auto_increment not null,
+  userquestion_id           integer,
+  keyword_category_id       integer,
+  constraint pk_user_question_keyword primary key (id))
+;
+
 create table user_role (
   id                        integer auto_increment not null,
   name                      varchar(255),
   level                     integer,
   constraint pk_user_role primary key (id))
-;
-
-create table userquestion_keyword (
-  userquestion_id           integer,
-  keyword_id                integer)
 ;
 
 alter table chat add constraint fk_chat_user_1 foreign key (user_id) references user (id) on delete restrict on update restrict;
@@ -107,16 +114,16 @@ alter table question add constraint fk_question_user_8 foreign key (user_id) ref
 create index ix_question_user_8 on question (user_id);
 alter table question_keyword add constraint fk_question_keyword_question_9 foreign key (question_id) references question (id) on delete restrict on update restrict;
 create index ix_question_keyword_question_9 on question_keyword (question_id);
-alter table question_keyword add constraint fk_question_keyword_keyword_10 foreign key (keyword_id) references keyword (id) on delete restrict on update restrict;
-create index ix_question_keyword_keyword_10 on question_keyword (keyword_id);
+alter table question_keyword add constraint fk_question_keyword_keywordCategory_10 foreign key (keyword_category_id) references keyword_category (id) on delete restrict on update restrict;
+create index ix_question_keyword_keywordCategory_10 on question_keyword (keyword_category_id);
 alter table user add constraint fk_user_role_11 foreign key (role_id) references user_role (id) on delete restrict on update restrict;
 create index ix_user_role_11 on user (role_id);
 alter table user_question add constraint fk_user_question_user_12 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_user_question_user_12 on user_question (user_id);
-alter table userquestion_keyword add constraint fk_userquestion_keyword_userquestion_13 foreign key (userquestion_id) references user_question (id) on delete restrict on update restrict;
-create index ix_userquestion_keyword_userquestion_13 on userquestion_keyword (userquestion_id);
-alter table userquestion_keyword add constraint fk_userquestion_keyword_keyword_14 foreign key (keyword_id) references keyword (id) on delete restrict on update restrict;
-create index ix_userquestion_keyword_keyword_14 on userquestion_keyword (keyword_id);
+alter table user_question_keyword add constraint fk_user_question_keyword_userquestion_13 foreign key (userquestion_id) references user_question (id) on delete restrict on update restrict;
+create index ix_user_question_keyword_userquestion_13 on user_question_keyword (userquestion_id);
+alter table user_question_keyword add constraint fk_user_question_keyword_keywordCategory_14 foreign key (keyword_category_id) references keyword_category (id) on delete restrict on update restrict;
+create index ix_user_question_keyword_keywordCategory_14 on user_question_keyword (keyword_category_id);
 
 
 
@@ -144,9 +151,9 @@ drop table user;
 
 drop table user_question;
 
-drop table user_role;
+drop table user_question_keyword;
 
-drop table userquestion_keyword;
+drop table user_role;
 
 SET FOREIGN_KEY_CHECKS=1;
 
