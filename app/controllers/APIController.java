@@ -155,14 +155,16 @@ public class APIController extends SwaggerBaseApiController {
     {
         return new WebSocket<String>()
         {
-            // Called when the Websocket Handshake is done.
-            public void onReady(WebSocket.In<String> in, final WebSocket.Out<String> out) {
+            public void onReady(WebSocket.In<String> in, final WebSocket.Out<String> out)
+            {
                 // For each event received on the socket,
-                in.onMessage(new F.Callback<String>() {
-                    public void invoke(String event) {
+                in.onMessage(new F.Callback<String>()
+                {
+                    public void invoke(String event)
+                    {
                         // parse the json string from websocket into a map
                         Map<String, String> data = parseJson(event);
-                        Logger.debug("incomming: "+event);
+                        Logger.debug("incoming: "+event);
                         if(data.containsKey("token"))
                         { // check for the token
                             if(APIAuthHeaderFilter.authenticate(data.get("token")))
@@ -179,48 +181,36 @@ public class APIController extends SwaggerBaseApiController {
                                     UserQuestion userQ                  = (UserQuestion) retrievedData.get(0);
 
                                     //Code om de beste question uit te kiezen
-                                    //Hier moet straks het hele keyword zoeken gebeuren maar dit is evne voor he gemaakt gedaan
                                     Question bestQuestion      = null;
                                     int record                 = 9999;
                                     List<String> userQKeywords = new ArrayList<String>((List<String>)retrievedData.get(1));
+                                    List<String> questionKeywords;
 
-                                    for(String item : userQKeywords)
-                                    {
-                                        Logger.debug("Questionkeyword: " + item);
-                                    }
-
-                                    Logger.debug("APIController: UserQuestion " + userQ.asked_question);
+                                    boolean askedQuestionNegative = checkMood(question);
 
                                     for(Question q : Ebean.find(Question.class).findList())
                                     {
-
-                                        Logger.debug(q.question);
-
-                                        List<String> questionKeywords = new ArrayList<String>();
-                                        for(QuestionKeyword keyword : Ebean.find(QuestionKeyword.class).where().eq("question", q).findList())
+                                        //Check hier of de zin positief of negatief is ( als het tegenovergestelde is hoef je niet eens de keywords te tellen
+                                        if( askedQuestionNegative == checkMood(q.question) )
                                         {
-                                            questionKeywords.add(keyword.keywordCategory.keyword.keyword);
-                                        }
+                                            questionKeywords = findKeywords(q);
 
-                                        int preCheckSize    = userQKeywords.size();
-                                        Logger.debug("voor " + questionKeywords.size() + " || " + userQKeywords.size());
-                                        userQKeywords.removeAll(questionKeywords);
-                                        Logger.debug("na " + questionKeywords.size() + " || " + userQKeywords.size());
-                                        int afterCheckSize  = userQKeywords.size();
+                                            int preCheckSize = userQKeywords.size();
+                                            userQKeywords.removeAll(questionKeywords);
+                                            int afterCheckSize = userQKeywords.size();
 
-                                        Logger.debug("Question: " + q.question + " hits met userquestion: " + question + " || " + userQKeywords.size());
+                                            Logger.debug("Question: " + q.question + " hits met userquestion: " + question + " || " + userQKeywords.size());
 
-                                        if( preCheckSize != afterCheckSize)//Dus geen hits gevonden
-                                        {
-                                            if(userQKeywords.size() < record)
+                                            if (preCheckSize != afterCheckSize)//Dus hit gevonden -> question kan zinnig zijn
                                             {
-                                                record       = userQKeywords.size();
-                                                bestQuestion = q;
-                                                Logger.debug("Record: " + record);
+                                                if (userQKeywords.size() < record)
+                                                {
+                                                    record = userQKeywords.size();
+                                                    bestQuestion = q;
+                                                }
                                             }
                                         }
                                     }
-
 
                                     //Code om als er geen questoin gevonden is in ieder geval een standaard antwoord terug te sturen
                                     String answerString;
@@ -235,17 +225,11 @@ public class APIController extends SwaggerBaseApiController {
                                         bestAnswer.save();
                                     }
 
-                                    Logger.debug("Chat: "       + userChat.mood);
-                                    Logger.debug("Bestanswer: " + bestAnswer.answer);
-                                    Logger.debug("Question: "   + userQ.asked_question);
-
                                     ChatLine line  = new ChatLine();
-                                    line.chat           = userChat;
-                                    line.answer         = bestAnswer;
-                                    line.userQuestion   = userQ;
+                                        line.chat           = userChat;
+                                        line.answer         = bestAnswer;
+                                        line.userQuestion   = userQ;
                                     line.save();
-
-                                    Logger.debug("Chatline: " + line.id);
 
                                     Logger.debug("Antwoord: " + bestAnswer.answer);
 
@@ -265,6 +249,36 @@ public class APIController extends SwaggerBaseApiController {
                 });
             }
         };
+    }
+
+    private static boolean checkMood(String s)
+    {
+        String[] negativeWords = new String[]{
+                "niet", "geen", "nooit", "allerminst", "geenszins", "evenmin", "ontkennen", "loochenen", "tegenspreken",
+                "nalaten"
+        };
+
+        for( String negativeWord : negativeWords )
+        {
+            if( s.contains(negativeWord) ) { return true; }
+        }
+
+        return false;
+    }
+
+    /**
+     * Method to find keywords linked to a question
+     * @param q a question which you want to have the keywords from
+     * @return a arraylist with all the found keywords
+     */
+    private static ArrayList<String> findKeywords(Question q)
+    {
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(QuestionKeyword keyword : Ebean.find(QuestionKeyword.class).where().eq("question", q).findList())
+        {
+            toReturn.add(keyword.keywordCategory.keyword.keyword);
+        }
+        return toReturn;
     }
 
     /**
