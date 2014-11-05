@@ -4,6 +4,8 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import models.ChatLine;
 import models.User;
+import models.ChatLine;
+import models.Answer;
 import play.api.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -16,6 +18,14 @@ import java.io.OutputStreamWriter;
 
 public class AnalysisController extends Controller {
 
+    // Every question retrieves an Answer object as response. Even those questions
+    // without suitable answer. These questions get response "Geen antwoord gevonden".
+    // This variable contains that answer.
+    private static Answer noAnswer = Ebean.find(Answer.class)
+            .where()
+            .eq("answer", "Geen antwoord gevonden")
+            .findUnique();
+    
     public static Result analysisPageForUser(Integer userId) {
         User user = null;
         if(userId != null) {
@@ -23,15 +33,27 @@ public class AnalysisController extends Controller {
         }
         return ok(analysis.render("Analyse", user,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
-                Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
+                Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
+                0, 0));
         //return ok();
     }
 
     public static Result analysisPage() {
+        int amountOfQuestions = Ebean.find(ChatLine.class).findRowCount();
+        int amountOfUnansweredQuestions = 0;
+
+        if (noAnswer != null) {
+            int amountOfUnAnsweredQuestions = Ebean.find(ChatLine.class)
+                .where()
+                .eq("answer_id", noAnswer.id)
+                .findRowCount();
+        }
+
         //return ok();
         return ok(analysis.render("Analyse", null,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
-                Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
+                Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
+                amountOfQuestions, amountOfUnansweredQuestions));
     }
 
     public static Result exportChat()
@@ -65,5 +87,4 @@ public class AnalysisController extends Controller {
                 //Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 //Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
     //}
-
 }
