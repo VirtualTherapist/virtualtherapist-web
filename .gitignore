@@ -5,6 +5,7 @@ target
 tmp
 .history
 dist
+projectFilesBackup
 /.idea
 /*.iml
 /out
@@ -15,4 +16,5 @@ dist
 /.settings
 conf/evolutions/*
 conf/application.conf
+exports/*
 *.log

@@ -4,9 +4,10 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
- * Created by Akatchi on 8-10-2014.
+ * User model,
  */
 @Entity
 public class User extends Model
@@ -30,4 +31,6 @@ public class User extends Model
     @ManyToOne
     public UserRole role;
 
+    @OneToMany(cascade=CascadeType.REMOVE)
+    public List<UserQuestion> userQuestionList;
 }
