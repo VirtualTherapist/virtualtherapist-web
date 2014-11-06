@@ -125,7 +125,7 @@ public class AnalysisController extends Controller {
 
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("app/exports" + filename), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("app/exports/" + filename), "UTF-8"));
             bw.write(dataLine);
             bw.newLine();
             bw.flush();
@@ -133,7 +133,7 @@ public class AnalysisController extends Controller {
         }
         catch( Exception e ){}
 
-        File downloadMe = new File("app/exports" + filename);
+        File downloadMe = new File("app/exports/" + filename);
 
         return ok(downloadMe);
     }
