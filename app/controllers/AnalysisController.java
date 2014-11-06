@@ -2,10 +2,7 @@ package controllers;
 
 
 import com.avaje.ebean.Ebean;
-import models.Chat;
-import models.ChatLine;
-import models.User;
-import models.Answer;
+import models.*;
 import play.api.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -15,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
+import java.util.*;
 
 public class AnalysisController extends Controller {
 
@@ -58,7 +55,8 @@ public class AnalysisController extends Controller {
         return ok(analysis.render("Analyse", null,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
-                amountOfQuestions, amountOfUnansweredQuestions));
+                amountOfQuestions, amountOfUnansweredQuestions,
+                getKeywordUsageFromUser(userId)));
     }
 
     /**
@@ -78,7 +76,8 @@ public class AnalysisController extends Controller {
         return ok(analysis.render("Analyse", null,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
-                amountOfQuestions, amountOfUnansweredQuestions));
+                amountOfQuestions, amountOfUnansweredQuestions,
+                getKeywordUsage()));
     }
 
     public static Result exportChat()
@@ -107,9 +106,56 @@ public class AnalysisController extends Controller {
         return ok(downloadMe);
     }
 
-    //public static Result keywordTrendPage() {
-        //return ok(keywordtrends.render("Keyword Trends",
-                //Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
-                //Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
-    //}
+    private static Map<Keyword, Integer> getKeywordUsage()
+    {
+        Map<Keyword, Integer> toReturn = new HashMap<Keyword, Integer>();
+
+        for( QuestionKeyword item : Ebean.find(QuestionKeyword.class).findList() )
+        {
+            Keyword keyword = item.keywordCategory.keyword;
+            if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
+            else                               { toReturn.put(keyword, 1); }
+        }
+
+        return sortByValue(toReturn);
+    }
+
+    private static Map<Keyword, Integer> getKeywordUsageFromUser(int userId)
+    {
+        Map<Keyword, Integer> toReturn = new HashMap<Keyword, Integer>();
+
+        for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
+        {
+            if( item.userquestion.user.id == userId )
+            {
+                Keyword keyword = item.keywordCategory.keyword;
+                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                else { toReturn.put(keyword, 1); }
+            }
+        }
+
+        return sortByValue(toReturn);
+    }
+
+    //Method om een map op values te sorteren ( aangezien dit niet ondersteund wordt )
+    private static Map sortByValue(Map unsortMap)
+    {
+        List list = new LinkedList(unsortMap.entrySet());
+
+        Collections.sort(list, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                return ((Comparable) ((Map.Entry) (o2)).getValue()).compareTo(((Map.Entry) (o1)).getValue());
+            }
+        });
+
+        Map sortedMap = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry) it.next();
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
+    }
 }
