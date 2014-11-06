@@ -40,4 +40,6 @@ public class Chat extends Model {
 
     public int rating = 0;
 
+    public String comment;
+
 }
