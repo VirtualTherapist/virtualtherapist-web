@@ -2,8 +2,10 @@ package controllers;
 
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import models.*;
 import play.api.libs.Crypto;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
@@ -12,7 +14,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.List;
 import java.util.*;
+
+import org.joda.time.DateTime;
 
 import static play.libs.Json.toJson;
 
@@ -37,10 +42,23 @@ public class AnalysisController extends Controller {
         
         int amountOfQuestions = 0;
         int amountOfUnansweredQuestions = 0;
-        List<Chat> chats = Ebean.find(Chat.class)
-            .where()
-            .eq("user", user)
-            .findList();
+
+        ExpressionList query = Ebean.find(Chat.class).where().eq("user", user);
+
+        String fromTS =request().getQueryString("from");
+        String toTS=request().getQueryString("to");
+
+        if (fromTS != null) {
+            DateTime from = new DateTime(Long.parseLong(fromTS));
+            query = query.gt("createdAt", from);
+        }
+
+        if (toTS!= null) {
+            DateTime to = new DateTime(Long.parseLong(toTS));
+            query = query.lt("createdAt", to);
+        }
+
+        List<Chat> chats = Ebean.find(Chat.class).findList();
 
         // Iterate over all chats and count amount of chat lines and amount
         // of unanswered questions.
@@ -48,7 +66,7 @@ public class AnalysisController extends Controller {
             amountOfQuestions += chat.chatlines.size();
 
             for (ChatLine chatline : chat.chatlines) {
-                if (chatline.answer == noAnswer) {
+                if (chatline.answer == noAnswer)  {
                     amountOfUnansweredQuestions++;
                 }
             }
@@ -65,14 +83,26 @@ public class AnalysisController extends Controller {
      * Returns a view with analysis for for chats of all users.
      */
     public static Result analysisPage() {
-        int amountOfQuestions = Ebean.find(ChatLine.class).findRowCount();
+        ExpressionList query = Ebean.find(ChatLine.class).where();
+
+        String fromTS =request().getQueryString("from");
+        String toTS=request().getQueryString("to");
+
+        if (fromTS != null) {
+            DateTime from = new DateTime(Long.parseLong(fromTS));
+            query = query.gt("createdAt", from);
+        }
+
+        if (toTS!= null) {
+            DateTime to = new DateTime(Long.parseLong(toTS));
+            query = query.lt("createdAt", to);
+        }
+
+        int amountOfQuestions = query.findRowCount();
         int amountOfUnansweredQuestions = 0;
 
         if (noAnswer != null) {
-            int amountOfUnAnsweredQuestions = Ebean.find(ChatLine.class)
-                .where()
-                .eq("answer_id", noAnswer.id)
-                .findRowCount();
+            int amountOfUnAnsweredQuestions = query.eq("answer_id", noAnswer.id).findRowCount();
         }
 
         return ok(analysis.render("Analyse", null,
