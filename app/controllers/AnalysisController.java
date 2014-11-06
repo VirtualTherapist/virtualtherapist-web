@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
 
+import static play.libs.Json.toJson;
+
 public class AnalysisController extends Controller {
 
     // Every question retrieves an Answer object as response. Even those questions
@@ -110,7 +112,7 @@ public class AnalysisController extends Controller {
     {
         Map<Keyword, Integer> toReturn = new HashMap<Keyword, Integer>();
 
-        for( QuestionKeyword item : Ebean.find(QuestionKeyword.class).findList() )
+        for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
             Keyword keyword = item.keywordCategory.keyword;
             if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
@@ -126,7 +128,7 @@ public class AnalysisController extends Controller {
 
         for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
-            if( item.userquestion.user.id == userId )
+            if (item.userquestion.user.id == userId)
             {
                 Keyword keyword = item.keywordCategory.keyword;
                 if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }

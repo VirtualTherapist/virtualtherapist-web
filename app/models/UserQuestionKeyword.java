@@ -15,10 +15,11 @@ public class UserQuestionKeyword extends Model
     public Integer id;
 
     @Constraints.Required
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToOne
     public UserQuestion userquestion;
 
     @Constraints.Required
     @OneToOne
     public KeywordCategory keywordCategory;
+
 }
