@@ -42,10 +42,23 @@ public class AnalysisController extends Controller {
         
         int amountOfQuestions = 0;
         int amountOfUnansweredQuestions = 0;
-        List<Chat> chats = Ebean.find(Chat.class)
-            .where()
-            .eq("user", user)
-            .findList();
+
+        ExpressionList query = Ebean.find(Chat.class).where().eq("user", user);
+
+        String fromTS =request().getQueryString("from");
+        String toTS=request().getQueryString("to");
+
+        if (fromTS != null) {
+            DateTime from = new DateTime(Long.parseLong(fromTS));
+            query = query.gt("createdAt", from);
+        }
+
+        if (toTS!= null) {
+            DateTime to = new DateTime(Long.parseLong(toTS));
+            query = query.lt("createdAt", to);
+        }
+
+        List<Chat> chats = Ebean.find(Chat.class).findList();
 
         // Iterate over all chats and count amount of chat lines and amount
         // of unanswered questions.
