@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -32,5 +33,8 @@ public class User extends Model
     public UserRole role;
 
     @OneToMany(cascade=CascadeType.REMOVE)
+    @JsonIgnore
     public List<UserQuestion> userQuestionList;
+
+    public String test;
 }

@@ -127,7 +127,7 @@
                 <tr>
                     <th>Vraag:</th>
                     <th>Antwoord:</th>
-                    <th style="width: 5px;">Verwijderen</th>
+                    <th style="width: 5px;">Opties</th>
                 </tr>
             </thead>
             <tbody id="answers">
@@ -144,6 +144,8 @@
                         <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateQuestion(question.id)" data-pk="@question.id">@question.question</a></td>
                         <td><a class="update-delete-question" href="#" data-url="@routes.QuestionController.updateAnswer(question.answer.id)" data-pk="@question.answer.id">@question.answer.answer</a></td>
                         <td><a class="btn btn-danger btn-xs"  shref="@routes.QuestionController.deleteQuestion(question.id)"><span class="glyphicon glyphicon-remove"></span> Verwijder</a></td>
+                        <td><a class="btn btn-xs"  href="@routes.QuestionController.synonymPage(question.id)"><span class="glyphicon"></span>Synoniemen toevoegen</a></td>
+
                     </tr>
                 }
             }

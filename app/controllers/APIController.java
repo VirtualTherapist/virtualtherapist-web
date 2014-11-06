@@ -194,6 +194,7 @@ public class APIController extends SwaggerBaseApiController {
                                         if( askedQuestionNegative == checkMood(q.question) )
                                         {
                                             questionKeywords = findKeywords(q);
+                                            //Logger.debug(questionKeywords.toString());
 
                                             int preCheckSize = userQKeywords.size();
                                             userQKeywords.removeAll(questionKeywords);
@@ -276,7 +277,14 @@ public class APIController extends SwaggerBaseApiController {
         ArrayList<String> toReturn = new ArrayList<String>();
         for(QuestionKeyword keyword : Ebean.find(QuestionKeyword.class).where().eq("question", q).findList())
         {
+            Logger.debug("Found keyword");
             toReturn.add(keyword.keywordCategory.keyword.keyword);
+            if(keyword.keywordCategory.keyword.synonyms.size() > 0) {
+                Logger.debug("Found synonym");
+                for(Synonym synonym : keyword.keywordCategory.keyword.synonyms) {
+                    toReturn.add(synonym.synonym.keyword);
+                }
+            }
         }
         return toReturn;
     }

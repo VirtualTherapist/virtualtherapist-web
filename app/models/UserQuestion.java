@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -21,6 +22,7 @@ public class UserQuestion extends Model
     public User user;
 
     @ManyToOne(cascade=CascadeType.ALL)
+    @JsonIgnore
     public List<UserQuestionKeyword> userQuestionKeywordList;
 
     @Constraints.Required

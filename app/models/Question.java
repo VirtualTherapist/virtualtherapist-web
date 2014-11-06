@@ -32,4 +32,6 @@ public class Question extends Model
     @CreatedTimestamp
     public Date createdAt;
 
+    public String test;
+
 }
