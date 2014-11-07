@@ -18,6 +18,7 @@ public class Question extends Model
     public int id;
 
     @Constraints.Required
+    @Column(columnDefinition = "TEXT")
     public String question;
 
     @ManyToOne(cascade = CascadeType.ALL)
