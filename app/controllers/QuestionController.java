@@ -12,6 +12,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import utils.NLPUtil;
 import views.html.questions;
+import views.html.synonyms;
 
 import java.util.*;
 
@@ -32,6 +33,12 @@ public class QuestionController extends Controller
         List<Question> allQuestions = pagingList.getPage(page).getList();
         //int i = pagingList.getPageSize();
         return ok(questions.render(pagingList, allQuestions, page, Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", ""));
+    }
+
+    public static Result synonymPage(int questionId) {
+        Question question = Ebean.find(Question.class, questionId);
+
+        return ok(synonyms.render("Synonyms", Crypto.decryptAES(session(Crypto.encryptAES("firstname"))), Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "", question));
     }
 
     public static Result showQuestions()
@@ -197,5 +204,26 @@ public class QuestionController extends Controller
         a.save();
 
         return questionpage(0);
+    }
+
+    public static Result saveSynonym() {
+        DynamicForm form    = form().bindFromRequest();
+
+        Keyword keyword = Ebean.find(Keyword.class, Integer.parseInt(form.get("keyword_id")));
+
+        Keyword synonymKeyWord = new Keyword();
+        synonymKeyWord.keyword = form.get("synonym");
+        Ebean.save(synonymKeyWord);
+
+        Synonym synonym = new Synonym();
+        synonym.keyword = keyword;
+        synonym.synonym = synonymKeyWord;
+        synonym.save();
+
+        keyword.synonyms.add(synonym);
+
+        Ebean.save(keyword);
+
+        return synonymPage(Integer.parseInt(form.get("question_id")));
     }
 }

@@ -30,6 +30,9 @@ POST        /questions/save              controllers.QuestionController.saveQues
 GET         /questions/delete/:id        controllers.QuestionController.deleteQuestion(id: Int)
 POST        /questions/update/:id        controllers.QuestionController.updateQuestion(id: Int)
 
+GET         /synonyms                    controllers.QuestionController.synonymPage(questionId: Int)
+POST        /synonyms/save               controllers.QuestionController.saveSynonym()
+
 # Answers
 POST        /answers/update/:id          controllers.QuestionController.updateAnswer(id: Int)
 GET         /answers/delete/:id          controllers.QuestionController.deleteAnswer(id: Int)
