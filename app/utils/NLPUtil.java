@@ -20,7 +20,7 @@ import java.util.TreeMap;
  */
 public class NLPUtil {
 
-    public static final String POS_TAG_FILE_NAME = "lib/opennlp-bin/nl-pos-maxent.bin";
+    public static final String POS_TAG_FILE_NAME = "lib/opennlp-bin/nl-pos-perceptron.bin";
     public static final String TOKEN_FILE_NAME = "lib/opennlp-bin/nl-token.bin";
     public static final String SENTENCE_FILE_NAME = "lib/opennlp-bin/nl-sent.bin";
     private static NLPUtil instance;

@@ -1,0 +1,75 @@
+@(title: String)(firstname: String)(lastname: String)(error: String)(errorType: String)(question: Question)
+
+@style = {
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"
+      rel="stylesheet"/>}
+
+@script = {
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript">
+    $(document ).ready( function(){
+        @for(keyword <- question.questionKeyword) {
+            @if(keyword.keywordCategory.category.name == "N") {
+                $('#@keyword.id-button' ).click(function(){
+                    console.log('button click');
+                    $('#@keyword.id-form' ).slideToggle(200);
+                });
+                $('#@keyword.id-cancel' ).click(function(){
+                    $('#@keyword.id-form' ).slideToggle(200);
+                });
+            }
+        }
+    });
+</script>
+}
+
+@main(title)(style){
+
+    <div class="header">
+        <p>
+            <h1 style="width: 100%;">Synoniemen voor vraag: @question.id</h1>
+        </p>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
+                <h3 style="font-syle: italic;">@question.question</h3>
+                <hr/>
+                <p>Zelfstandige naamwoorden in deze zin:</p>
+                <br/>
+
+                @for(keyword <- question.questionKeyword) {
+                    @if(keyword.keywordCategory.category.name == "N") {
+                            <h4>@keyword.keywordCategory.keyword.keyword</h4>
+                            @for(synonym <- keyword.keywordCategory.keyword.synonyms) {
+                                <p> - @synonym.synonym.keyword</p>
+                            }
+                            <div class="row" style="display: none;" id="@keyword.id-form">
+                                <div class="col-md-12">
+                                    <div class="well">
+                                        <form role="form" method="POST" action="@routes.QuestionController.saveSynonym()" >
+                                            <div class="form-group">
+                                                <textarea type="text" class="form-control" name="synonym" placeholder="Synoniem"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Opslaan</button>
+                                            <button type="button" class="btn" id="@keyword.id-cancel">Annuleren</button>
+                                            <input type="hidden" name="question_id" value="@question.id">
+                                            <input type="hidden" name="keyword_id" value="@keyword.keywordCategory.keyword.id">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-xs" id="@keyword.id-button">
+                                Synoniem toevoegen
+                            </button>
+                            <hr/>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+
+}(script)(firstname)(lastname)(error)(errorType)
