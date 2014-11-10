@@ -66,7 +66,7 @@ public class AnalysisController extends Controller {
             amountOfQuestions += chat.chatlines.size();
 
             for (ChatLine chatline : chat.chatlines) {
-                if (chatline.answer == noAnswer)  {
+                if (chatline.answer.equals(noAnswer))  {
                     amountOfUnansweredQuestions++;
                 }
             }
@@ -99,16 +99,16 @@ public class AnalysisController extends Controller {
         }
 
         int amountOfQuestions = query.findRowCount();
-        int amountOfUnansweredQuestions = 0;
+        int amountOfUnAnsweredQuestions = 0;
 
         if (noAnswer != null) {
-            int amountOfUnAnsweredQuestions = query.eq("answer_id", noAnswer.id).findRowCount();
+            amountOfUnAnsweredQuestions = query.eq("answer", noAnswer).findRowCount();
         }
 
         return ok(analysis.render("Analyse", null,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
-                amountOfQuestions, amountOfUnansweredQuestions,
+                amountOfQuestions, amountOfUnAnsweredQuestions,
                 getKeywordUsage()));
     }
 
