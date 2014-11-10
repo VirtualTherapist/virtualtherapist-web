@@ -136,8 +136,10 @@
                                                 <div class="col-md-10">
                                                     <p class="well">
                                                         <span class="client"><b>@chatline.userQuestion.user.first_name <i> </i> @chatline.userQuestion.user.last_name</b></span> </br>
+                                                        @chatline.userQuestion.asked_question
+                                                        <br><span class="client"><b><i>Gegeven antwoord</i></b></span><br>
                                                         @chatline.answer.answer
-                                                        <br> <span class="timestamp pull-right">@chatline.createdAt.format("mm:ss")</span>
+                                                        <span class="timestamp pull-right">@chatline.createdAt.format("hh:mm:ss dd/MM/YYYY")</span><br>
                                                     </p>
                                                 </div>
                                             </div>
