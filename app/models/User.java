@@ -35,6 +35,4 @@ public class User extends Model
     @OneToMany(cascade=CascadeType.REMOVE)
     @JsonIgnore
     public List<UserQuestion> userQuestionList;
-
-    public String test;
 }

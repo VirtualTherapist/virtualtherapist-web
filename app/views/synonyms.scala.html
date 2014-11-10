@@ -44,7 +44,7 @@
                     @if(keyword.keywordCategory.category.name == "N") {
                             <h4>@keyword.keywordCategory.keyword.keyword</h4>
                             @for(synonym <- keyword.keywordCategory.keyword.synonyms) {
-                                <p> - synonym.synonym.keyword</p>
+                                <p> - @synonym.synonym.keyword</p>
                             }
                             <div class="row" style="display: none;" id="@keyword.id-form">
                                 <div class="col-md-12">

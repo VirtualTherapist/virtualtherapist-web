@@ -78,7 +78,6 @@ create table user (
   email                     varchar(255),
   password                  varchar(255),
   role_id                   integer,
-  test                      varchar(255),
   constraint pk_user primary key (id))
 ;
 

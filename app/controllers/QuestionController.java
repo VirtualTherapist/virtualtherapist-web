@@ -222,7 +222,7 @@ public class QuestionController extends Controller
 
         keyword.synonyms.add(synonym);
 
-        Ebean.update(keyword);
+        Ebean.save(keyword);
 
         return synonymPage(Integer.parseInt(form.get("question_id")));
     }
