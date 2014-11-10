@@ -58,7 +58,7 @@ public class AnalysisController extends Controller {
             query = query.lt("createdAt", to);
         }
 
-        List<Chat> chats = Ebean.find(Chat.class).findList();
+        List<Chat> chats = Ebean.find(Chat.class).where().eq("user", user).findList();
 
         // Iterate over all chats and count amount of chat lines and amount
         // of unanswered questions.
@@ -76,7 +76,9 @@ public class AnalysisController extends Controller {
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
                 amountOfQuestions, amountOfUnansweredQuestions,
-                getKeywordUsageFromUser(userId)));
+                getKeywordUsageFromUser(userId),
+                getTrendingAnswersFromUser(userId)
+                ));
     }
 
     /**
@@ -109,7 +111,9 @@ public class AnalysisController extends Controller {
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
                 amountOfQuestions, amountOfUnAnsweredQuestions,
-                getKeywordUsage()));
+                getKeywordUsage(),
+                getTrendingAnswers()
+                ));
     }
 
     public static Result exportChat()
@@ -136,6 +140,37 @@ public class AnalysisController extends Controller {
         File downloadMe = new File("app/exports/" + filename);
 
         return ok(downloadMe);
+    }
+
+    private static Map<Answer, Integer> getTrendingAnswers()
+    {
+        Map<Answer, Integer> toReturn = new HashMap<Answer, Integer>();
+
+        for( ChatLine item : Ebean.find(ChatLine.class).findList() )
+        {
+            Answer answer = item.answer;
+            if( toReturn.containsKey(answer) ){ toReturn.put(answer, toReturn.get(answer) + 1); }
+            else                              { toReturn.put(answer, 1); }
+        }
+
+        return sortByValue(toReturn);
+    }
+
+    private static Map<Answer, Integer> getTrendingAnswersFromUser(int userId)
+    {
+        Map<Answer, Integer> toReturn = new HashMap<Answer, Integer>();
+
+        for( ChatLine item : Ebean.find(ChatLine.class).findList() )
+        {
+            if (item.chat.user.id == userId)
+            {
+                Answer answer = item.answer;
+                if( toReturn.containsKey(answer) ){ toReturn.put(answer, toReturn.get(answer) + 1); }
+                else                              { toReturn.put(answer, 1); }
+            }
+        }
+
+        return sortByValue(toReturn);
     }
 
     private static Map<Keyword, Integer> getKeywordUsage()
