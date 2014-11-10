@@ -40,6 +40,8 @@ GET         /answers/delete/:id          controllers.QuestionController.deleteAn
 GET         /analysis/:id                controllers.AnalysisController.analysisPageForUser(id: Int)
 GET         /analysis                    controllers.AnalysisController.analysisPage()
 
+POST        /analysis/keyword/usage      controllers.AnalysisController.keywordUsage()
+
 #Moet later in een functie call dit is voor nu om te testen
 GET         /exportChat                  controllers.AnalysisController.exportChat()
 

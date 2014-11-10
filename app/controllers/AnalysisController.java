@@ -3,11 +3,15 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.api.libs.Crypto;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.util.parsing.json.JSONObject;
+import scala.util.parsing.json.JSONObject$;
+import utils.KeywordUsage;
 import views.html.*;
 
 import java.io.BufferedWriter;
@@ -180,8 +184,11 @@ public class AnalysisController extends Controller {
         for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
             Keyword keyword = item.keywordCategory.keyword;
-            if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
-            else                               { toReturn.put(keyword, 1); }
+            if(! keyword.keyword.equals("?")) {
+                if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                else                               { toReturn.put(keyword, 1); }
+            }
+
         }
 
         return sortByValue(toReturn);
@@ -225,4 +232,84 @@ public class AnalysisController extends Controller {
         }
         return sortedMap;
     }
+
+    public static Result keywordUsage() {
+
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", params.get("keyword")[0]).findUnique();
+
+        System.out.println(keyword.keyword);
+
+        ArrayList<KeywordUsage> keywordUsages = new ArrayList<>();
+
+        for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
+        {
+            Keyword usedKeyword = item.keywordCategory.keyword;
+            if(keyword.keyword.equals(usedKeyword.keyword)) {
+                Date createdAt = item.userquestion.createdAt;
+                int foundDateIndex = -1;
+                if((foundDateIndex = listContaintsDate(keywordUsages, createdAt)) == -1) {
+                    //keywordMap.put(Long.toString(createdAt.getTime()), 1);
+                    KeywordUsage usage = new KeywordUsage();
+                    usage.time = createdAt.getTime();
+                    usage.usage = 1;
+                    keywordUsages.add(usage);
+                }else{
+                    //keywordMap.put(foundDate, keywordMap.get(foundDate) +1);
+                    keywordUsages.get(foundDateIndex).usage += 1;
+                }
+            }
+
+        }
+
+        /*
+        Date date1 = new Date();
+        Date date2 = new Date();
+        Date date3 = new Date();
+
+        Integer int1 = new Integer(1);
+        Integer int2 = new Integer(2);
+        Integer int3 = new Integer(4);
+
+        TreeMap<Date, Integer> map = new TreeMap();
+        map.put(date1, int1);
+        map.put(date2, int2);
+        map.put(date3, int3);
+
+                    ['Dag', 'Snap', 'Game', 'Motivatie'],
+            ['1',  1,      4,       10],
+            ['2',  5,      4,       10],
+            ['3',  5,       11,     12],
+            ['4',  14,      4,      11],
+            ['5',  12,      4,      10],
+            ['6',  11,       12,    9],
+            ['7',  12,      4,      8]
+
+        */
+
+        return ok(toJson(keywordUsages));
+    }
+
+    private static int listContaintsDate(ArrayList<KeywordUsage> keywordUsages, Date date) {
+        Calendar cal = Calendar.getInstance();
+        for(KeywordUsage usage : keywordUsages) {
+            long time = usage.time;
+            cal.setTime(new Date(time));
+            int keyDay = cal.get(Calendar.DAY_OF_MONTH);
+            int keyMonth = cal.get(Calendar.MONTH);
+            int keyYear = cal.get(Calendar.YEAR);
+
+            cal.setTime(date);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int month = cal.get(Calendar.MONTH);
+            int year = cal.get(Calendar.YEAR);
+
+            if(keyDay == day && keyMonth == month && keyYear == year) {
+                return keywordUsages.indexOf(usage);
+            }
+        }
+        return -1;
+    }
+
+
 }

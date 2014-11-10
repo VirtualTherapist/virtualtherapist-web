@@ -10,6 +10,46 @@
 
 @script = {
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart(keyword, arrayData) {
+        var data = google.visualization.arrayToDataTable(arrayData);
+
+        var options = {
+            title: 'Keyword verloop',
+            backgroundColor: { fill:'transparent' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+
+    $(document ).ready( function(){
+        @for((key, value) <- keywordUsage) {
+            $('#@key.keyword' ).click(function(){
+                $('#chart_wrapper' ).show(200);
+
+                $.ajax({
+                    type :  "POST",
+                    dataType: 'json',
+                    data: {'keyword':'@key.keyword'},
+                    url  :  "@routes.AnalysisController.keywordUsage()",
+                    success: function(data){
+                        console.log(data);
+                        var entry = data[0];
+                        for(name in entry) {
+                            console.log(name);
+                        }
+                    }
+                });
+
+            });
+        }
+    });
+</script>
 }
 
 @main(title)(style){
@@ -45,8 +85,17 @@
         </table>
     </div>
 
+    <br/>
+
     <div class="trending">
         <h3>Trending keywords</h3>
+        <div style="display:none;" id="chart_wrapper" class="row">
+            <div class="col-md-12">
+                <div class="well">
+                    <div id="chart_div"></div>
+                </div>
+            </div>
+        </div>
         <table class="table table-striped">
             <tr>
                 <th>Nr</th>
@@ -57,12 +106,19 @@
                 <tr>
                     @{index+=1}
                     <td>@index</td>
-                    <td>@key.keyword</td>
+                    <td>
+                        <button class="btn btn-xs" id="@key.keyword">
+                            @key.keyword
+                        </button>
+                    </td>
+
                     <td>@value</td>
                 </tr>
             }
         </table>
     </div>
+
+    <br/>
 
     <div class="trending">
         <h3>Vraag - Antwoord ratio</h3>
@@ -93,4 +149,6 @@
             </tr>
         </table>
     </div>
+
+    <br/>
 }(script)(firstname)(lastname)(error)(errorType)
