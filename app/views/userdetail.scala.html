@@ -111,11 +111,13 @@
                                     <td>@chat.createdAt.format("dd MMM yyyy")</td>
                                     <td>@chat.mood</td>
                                     <td>
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        @for(i <- 1 until 6) {
+                                            @if(chat.rating >= i) {
+                                                <span class="glyphicon glyphicon-star"></span>
+                                            } else {
+                                                <span class="glyphicon glyphicon-star-empty"></span>
+                                            }
+                                        }
                                     </td>
                                     <td>@chat.comment</td>
                                     <td id="chatdisplay-icon-@chat.id" class="chatdisplay-icon"><span class="glyphicon glyphicon-plus"></span></td>
