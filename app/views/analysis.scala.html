@@ -132,10 +132,18 @@
         <h1>Analyse - @user.first_name @user.last_name</h1>
     }
     <div class="btn-group btn-group-justified">
-        <a href="@routes.AnalysisController.analysisPage()?from=@{now.dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.dayOfWeek().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Vandaag</a> 
-        <a href="@routes.AnalysisController.analysisPage()?from=@{now.withDayOfWeek(1).dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.withDayOfWeek(7).dayOfWeek().roundCeilingCopy().getMillis()}"  class="btn btn-primary btn-lg">Deze week</a>
-        <a href="@routes.AnalysisController.analysisPage()?from=@{now.monthOfYear().roundFloorCopy().getMillis()}&to=@{now.monthOfYear().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Deze maand</a>
-        <a href="@routes.AnalysisController.analysisPage()?from=@{now.yearOfEra().roundFloorCopy().getMillis()}&to=@{now.yearOfEra().roundCeilingCopy().getMillis()}"  class="btn btn-primary btn-lg">Dit jaar</a>
+        @if(user == null) {
+            <a href="@routes.AnalysisController.analysisPage()?from=@{now.dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.dayOfWeek().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Vandaag</a>
+            <a href="@routes.AnalysisController.analysisPage()?from=@{now.withDayOfWeek(1).dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.withDayOfWeek(7).dayOfWeek().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Deze week</a>
+            <a href="@routes.AnalysisController.analysisPage()?from=@{now.monthOfYear().roundFloorCopy().getMillis()}&to=@{now.monthOfYear().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Deze maand</a>
+            <a href="@routes.AnalysisController.analysisPage()?from=@{now.yearOfEra().roundFloorCopy().getMillis()}&to=@{now.yearOfEra().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Dit jaar</a>
+        }else{
+            <a href="@routes.AnalysisController.analysisPageForUser(user.id)?from=@{now.dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.dayOfWeek().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Vandaag</a>
+            <a href="@routes.AnalysisController.analysisPageForUser(user.id)?from=@{now.withDayOfWeek(1).dayOfWeek().roundFloorCopy().getMillis()}&to=@{now.withDayOfWeek(7).dayOfWeek().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Deze week</a>
+            <a href="@routes.AnalysisController.analysisPageForUser(user.id)?from=@{now.monthOfYear().roundFloorCopy().getMillis()}&to=@{now.monthOfYear().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Deze maand</a>
+            <a href="@routes.AnalysisController.analysisPageForUser(user.id)?from=@{now.yearOfEra().roundFloorCopy().getMillis()}&to=@{now.yearOfEra().roundCeilingCopy().getMillis()}" class="btn btn-primary btn-lg">Dit jaar</a>
+
+        }
     </div>
 
     <div class="trending">
@@ -216,7 +224,7 @@
                 @if(amountOfQuestions == 0) {
                   <td>0</td>
                 } else {
-                  <td>@(amountOfUnansweredQuestions / amountOfQuestions * 100) %</td>
+                  <td>@AnalysisController.calculateAnsweredPercentage(amountOfQuestions, amountOfUnansweredQuestions) %</td>
                 }
             </tr>
         </table>

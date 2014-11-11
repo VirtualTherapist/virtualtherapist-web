@@ -18,6 +18,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 
@@ -25,7 +27,9 @@ import org.joda.time.DateTime;
 
 import static play.libs.Json.toJson;
 
-public class AnalysisController extends Controller {
+public class AnalysisController extends Controller
+{
+    private static Date fromDt, toDt;
 
     // Every question retrieves an Answer object as response. Even those questions
     // without suitable answer. These questions get response "Geen antwoord gevonden".
@@ -52,25 +56,23 @@ public class AnalysisController extends Controller {
         String fromTS =request().getQueryString("from");
         String toTS=request().getQueryString("to");
 
-        if (fromTS != null) {
-            DateTime from = new DateTime(Long.parseLong(fromTS));
-            query = query.gt("createdAt", from);
-        }
+        if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
+        else{ fromDt = new DateTime(0).toDate(); }
 
-        if (toTS!= null) {
-            DateTime to = new DateTime(Long.parseLong(toTS));
-            query = query.lt("createdAt", to);
-        }
+        if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
+        else{ toDt = new DateTime(0).toDate(); }
 
-        List<Chat> chats = Ebean.find(Chat.class).where().eq("user", user).findList();
+        List<Chat> chats = Ebean.find(Chat.class).where().eq("user", user).between("createdAt", fromDt, toDt).findList();
 
         // Iterate over all chats and count amount of chat lines and amount
         // of unanswered questions.
         for (Chat chat : chats) {
             amountOfQuestions += chat.chatlines.size();
 
-            for (ChatLine chatline : chat.chatlines) {
-                if (chatline.answer.equals(noAnswer))  {
+            for (ChatLine chatline : chat.chatlines)
+            {
+                if (chatline.answer.equals(noAnswer))
+                {
                     amountOfUnansweredQuestions++;
                 }
             }
@@ -89,20 +91,16 @@ public class AnalysisController extends Controller {
      * Returns a view with analysis for for chats of all users.
      */
     public static Result analysisPage() {
-        ExpressionList query = Ebean.find(ChatLine.class).where();
-
         String fromTS =request().getQueryString("from");
         String toTS=request().getQueryString("to");
 
-        if (fromTS != null) {
-            DateTime from = new DateTime(Long.parseLong(fromTS));
-            query = query.gt("createdAt", from);
-        }
+        if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
+        else{ fromDt = new DateTime(0).toDate(); }
 
-        if (toTS!= null) {
-            DateTime to = new DateTime(Long.parseLong(toTS));
-            query = query.lt("createdAt", to);
-        }
+        if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
+        else{ toDt = new DateTime(0).toDate(); }
+
+        ExpressionList query = Ebean.find(ChatLine.class).where().between("createdAt", fromDt, toDt);
 
         int amountOfQuestions = query.findRowCount();
         int amountOfUnAnsweredQuestions = 0;
@@ -118,6 +116,14 @@ public class AnalysisController extends Controller {
                 getKeywordUsage(),
                 getTrendingAnswers()
                 ));
+    }
+
+    public static String calculateAnsweredPercentage(int total, int part)
+    {
+        DecimalFormat df = new DecimalFormat("#.00");
+        double answer = ((double) part / (double) total ) * 100;
+
+        return df.format(answer);
     }
 
     public static Result exportChat()
@@ -150,11 +156,14 @@ public class AnalysisController extends Controller {
     {
         Map<Answer, Integer> toReturn = new HashMap<Answer, Integer>();
 
-        for( ChatLine item : Ebean.find(ChatLine.class).findList() )
+        for (ChatLine item : Ebean.find(ChatLine.class).findList())
         {
-            Answer answer = item.answer;
-            if( toReturn.containsKey(answer) ){ toReturn.put(answer, toReturn.get(answer) + 1); }
-            else                              { toReturn.put(answer, 1); }
+            if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
+            {
+                Answer answer = item.answer;
+                if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+                else { toReturn.put(answer, 1); }
+            }
         }
 
         return sortByValue(toReturn);
@@ -168,9 +177,12 @@ public class AnalysisController extends Controller {
         {
             if (item.chat.user.id == userId)
             {
-                Answer answer = item.answer;
-                if( toReturn.containsKey(answer) ){ toReturn.put(answer, toReturn.get(answer) + 1); }
-                else                              { toReturn.put(answer, 1); }
+                if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
+                {
+                    Answer answer = item.answer;
+                    if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+                    else { toReturn.put(answer, 1); }
+                }
             }
         }
 
@@ -188,7 +200,6 @@ public class AnalysisController extends Controller {
                 if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
                 else                               { toReturn.put(keyword, 1); }
             }
-
         }
 
         return sortByValue(toReturn);
@@ -202,9 +213,12 @@ public class AnalysisController extends Controller {
         {
             if (item.userquestion.user.id == userId)
             {
-                Keyword keyword = item.keywordCategory.keyword;
-                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
-                else { toReturn.put(keyword, 1); }
+                if( item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt) )
+                {
+                    Keyword keyword = item.keywordCategory.keyword;
+                    if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                    else { toReturn.put(keyword, 1); }
+                }
             }
         }
 

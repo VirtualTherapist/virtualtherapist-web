@@ -77,7 +77,7 @@ public class TemplateTest {
         running(fakeApplication(), new Runnable(){
             public void run(){
                 User testUser = Mockito.mock(User.class);
-                Content html = views.html.analysis.render("Title", testUser, "Voornaam", "Achternaam", "testError", "Test", 1,1);
+                Content html = views.html.analysis.render("Title", testUser, "Voornaam", "Achternaam", "testError", "Test", 1,1, null, null);
                 assertThat(contentType(html)).isEqualTo("text/html");
                 assertThat(contentAsString(html)).contains("Title");
             }
