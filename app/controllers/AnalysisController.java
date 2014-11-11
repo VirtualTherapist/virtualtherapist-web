@@ -57,10 +57,10 @@ public class AnalysisController extends Controller
         String toTS=request().getQueryString("to");
 
         if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
-        else{ fromDt = new DateTime(0).toDate(); }
+        else{ /*fromDt = new DateTime(0).toDate();*/ }
 
         if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
-        else{ toDt = new DateTime(0).toDate(); }
+        else{ /*toDt = new DateTime(0).toDate();*/ }
 
         List<Chat> chats = Ebean.find(Chat.class).where().eq("user", user).between("createdAt", fromDt, toDt).findList();
 
@@ -95,10 +95,10 @@ public class AnalysisController extends Controller
         String toTS=request().getQueryString("to");
 
         if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
-        else{ fromDt = new DateTime(0).toDate(); }
+        else{ /*fromDt = new DateTime(0).toDate();*/ }
 
         if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
-        else{ toDt = new DateTime(0).toDate(); }
+        else{ /*toDt = new DateTime(0).toDate();*/ }
 
         ExpressionList query = Ebean.find(ChatLine.class).where().between("createdAt", fromDt, toDt);
 
@@ -158,12 +158,14 @@ public class AnalysisController extends Controller
 
         for (ChatLine item : Ebean.find(ChatLine.class).findList())
         {
-            if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
-            {
-                Answer answer = item.answer;
-                if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
-                else { toReturn.put(answer, 1); }
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.createdAt.after(fromDt) && item.createdAt.before(toDt)) ) {
+                    continue;
+                }
             }
+            Answer answer = item.answer;
+            if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+            else { toReturn.put(answer, 1); }
         }
 
         return sortByValue(toReturn);
@@ -177,12 +179,14 @@ public class AnalysisController extends Controller
         {
             if (item.chat.user.id == userId)
             {
-                if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
-                {
-                    Answer answer = item.answer;
-                    if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
-                    else { toReturn.put(answer, 1); }
+                if(!(fromDt == null && toDt == null)) {
+                    if( !(item.createdAt.after(fromDt) && item.createdAt.before(toDt)) ) {
+                        continue;
+                    }
                 }
+                Answer answer = item.answer;
+                if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+                else { toReturn.put(answer, 1); }
             }
         }
 
@@ -195,6 +199,11 @@ public class AnalysisController extends Controller
 
         for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
+                    continue;
+                }
+            }
             Keyword keyword = item.keywordCategory.keyword;
             if(! keyword.keyword.equals("?")) {
                 if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
@@ -213,12 +222,14 @@ public class AnalysisController extends Controller
         {
             if (item.userquestion.user.id == userId)
             {
-                if( item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt) )
-                {
-                    Keyword keyword = item.keywordCategory.keyword;
-                    if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
-                    else { toReturn.put(keyword, 1); }
+                if(!(fromDt == null && toDt == null)) {
+                    if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
+                        continue;
+                    }
                 }
+                Keyword keyword = item.keywordCategory.keyword;
+                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                else { toReturn.put(keyword, 1); }
             }
         }
 
@@ -247,7 +258,7 @@ public class AnalysisController extends Controller
         return sortedMap;
     }
 
-    public static Result keywordUsage() {
+    public static Result keywordUsageChartData() {
 
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", params.get("keyword")[0]).findUnique();
@@ -269,6 +280,12 @@ public class AnalysisController extends Controller
         {
             if(user != null) {
                 if(!item.userquestion.user.equals(user)) {
+                    continue;
+                }
+            }
+
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
                     continue;
                 }
             }

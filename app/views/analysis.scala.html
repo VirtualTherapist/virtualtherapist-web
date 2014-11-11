@@ -78,7 +78,7 @@
                 type :  "POST",
                 dataType: 'json',
                 data: data,
-                url  :  "@routes.AnalysisController.keywordUsage()",
+                url  :  "@routes.AnalysisController.keywordUsageChartData()",
                 success: function(data){
                     console.log(data);
                     var dataArray = new Array();
@@ -96,7 +96,8 @@
                         var usageArray = new Array();
                         var entry = data[i];
                         console.log(entry);
-                        usageArray[usageIndex] = new Date(entry.time);
+                        var date = new Date(entry.time);
+                        usageArray[usageIndex] = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                         usageArray[usageIndex + 1] = entry.usage;
 
                         var usage = entry.usage;
