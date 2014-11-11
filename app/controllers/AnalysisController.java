@@ -3,11 +3,15 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.api.libs.Crypto;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.util.parsing.json.JSONObject;
+import scala.util.parsing.json.JSONObject$;
+import utils.KeywordUsage;
 import views.html.*;
 
 import java.io.BufferedWriter;
@@ -53,10 +57,10 @@ public class AnalysisController extends Controller
         String toTS=request().getQueryString("to");
 
         if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
-        else{ fromDt = new DateTime(0).toDate(); }
+        else{ /*fromDt = new DateTime(0).toDate();*/ }
 
         if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
-        else{ toDt = new DateTime(0).toDate(); }
+        else{ /*toDt = new DateTime(0).toDate();*/ }
 
         List<Chat> chats = Ebean.find(Chat.class).where().eq("user", user).between("createdAt", fromDt, toDt).findList();
 
@@ -91,10 +95,10 @@ public class AnalysisController extends Controller
         String toTS=request().getQueryString("to");
 
         if (fromTS != null) { fromDt = new DateTime(Long.parseLong(fromTS)).toDate();}
-        else{ fromDt = new DateTime(0).toDate(); }
+        else{ /*fromDt = new DateTime(0).toDate();*/ }
 
         if (toTS!= null) { toDt = new DateTime(Long.parseLong(toTS)).toDate(); }
-        else{ toDt = new DateTime(0).toDate(); }
+        else{ /*toDt = new DateTime(0).toDate();*/ }
 
         ExpressionList query = Ebean.find(ChatLine.class).where().between("createdAt", fromDt, toDt);
 
@@ -154,12 +158,14 @@ public class AnalysisController extends Controller
 
         for (ChatLine item : Ebean.find(ChatLine.class).findList())
         {
-            if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
-            {
-                Answer answer = item.answer;
-                if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
-                else { toReturn.put(answer, 1); }
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.createdAt.after(fromDt) && item.createdAt.before(toDt)) ) {
+                    continue;
+                }
             }
+            Answer answer = item.answer;
+            if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+            else { toReturn.put(answer, 1); }
         }
 
         return sortByValue(toReturn);
@@ -173,12 +179,14 @@ public class AnalysisController extends Controller
         {
             if (item.chat.user.id == userId)
             {
-                if( item.createdAt.after(fromDt) && item.createdAt.before(toDt) )
-                {
-                    Answer answer = item.answer;
-                    if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
-                    else { toReturn.put(answer, 1); }
+                if(!(fromDt == null && toDt == null)) {
+                    if( !(item.createdAt.after(fromDt) && item.createdAt.before(toDt)) ) {
+                        continue;
+                    }
                 }
+                Answer answer = item.answer;
+                if (toReturn.containsKey(answer)) { toReturn.put(answer, toReturn.get(answer) + 1); }
+                else { toReturn.put(answer, 1); }
             }
         }
 
@@ -191,11 +199,15 @@ public class AnalysisController extends Controller
 
         for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
-            if( item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt) )
-            {
-                Keyword keyword = item.keywordCategory.keyword;
-                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
-                else { toReturn.put(keyword, 1); }
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
+                    continue;
+                }
+            }
+            Keyword keyword = item.keywordCategory.keyword;
+            if(! keyword.keyword.equals("?")) {
+                if( toReturn.containsKey(keyword) ){ toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                else                               { toReturn.put(keyword, 1); }
             }
         }
 
@@ -210,12 +222,14 @@ public class AnalysisController extends Controller
         {
             if (item.userquestion.user.id == userId)
             {
-                if( item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt) )
-                {
-                    Keyword keyword = item.keywordCategory.keyword;
-                    if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
-                    else { toReturn.put(keyword, 1); }
+                if(!(fromDt == null && toDt == null)) {
+                    if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
+                        continue;
+                    }
                 }
+                Keyword keyword = item.keywordCategory.keyword;
+                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
+                else { toReturn.put(keyword, 1); }
             }
         }
 
@@ -243,4 +257,104 @@ public class AnalysisController extends Controller
         }
         return sortedMap;
     }
+
+    public static Result keywordUsageChartData() {
+
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", params.get("keyword")[0]).findUnique();
+
+        User user = null;
+        System.out.println(params);
+        if(params.containsKey("user")) {
+            String userIdString = params.get("user")[0];
+            int userId = Integer.parseInt(params.get("user")[0]);
+            user = Ebean.find(User.class, userId);
+        }
+
+        System.out.println(keyword.keyword);
+        System.out.println(user);
+
+        ArrayList<KeywordUsage> keywordUsages = new ArrayList<>();
+
+        for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
+        {
+            if(user != null) {
+                if(!item.userquestion.user.equals(user)) {
+                    continue;
+                }
+            }
+
+            if(!(fromDt == null && toDt == null)) {
+                if( !(item.userquestion.createdAt.after(fromDt) && item.userquestion.createdAt.before(toDt)) ) {
+                    continue;
+                }
+            }
+            Keyword usedKeyword = item.keywordCategory.keyword;
+            if(keyword.keyword.equals(usedKeyword.keyword)) {
+                Date createdAt = item.userquestion.createdAt;
+                int foundDateIndex = -1;
+                if((foundDateIndex = listContaintsDate(keywordUsages, createdAt)) == -1) {
+                    //keywordMap.put(Long.toString(createdAt.getTime()), 1);
+                    KeywordUsage usage = new KeywordUsage();
+                    usage.time = createdAt.getTime();
+                    usage.usage = 1;
+                    keywordUsages.add(usage);
+                }else{
+                    //keywordMap.put(foundDate, keywordMap.get(foundDate) +1);
+                    keywordUsages.get(foundDateIndex).usage += 1;
+                }
+            }
+
+        }
+
+        /*
+        Date date1 = new Date();
+        Date date2 = new Date();
+        Date date3 = new Date();
+
+        Integer int1 = new Integer(1);
+        Integer int2 = new Integer(2);
+        Integer int3 = new Integer(4);
+
+        TreeMap<Date, Integer> map = new TreeMap();
+        map.put(date1, int1);
+        map.put(date2, int2);
+        map.put(date3, int3);
+
+                    ['Dag', 'Snap', 'Game', 'Motivatie'],
+            ['1',  1,      4,       10],
+            ['2',  5,      4,       10],
+            ['3',  5,       11,     12],
+            ['4',  14,      4,      11],
+            ['5',  12,      4,      10],
+            ['6',  11,       12,    9],
+            ['7',  12,      4,      8]
+
+        */
+
+        return ok(toJson(keywordUsages));
+    }
+
+    private static int listContaintsDate(ArrayList<KeywordUsage> keywordUsages, Date date) {
+        Calendar cal = Calendar.getInstance();
+        for(KeywordUsage usage : keywordUsages) {
+            long time = usage.time;
+            cal.setTime(new Date(time));
+            int keyDay = cal.get(Calendar.DAY_OF_MONTH);
+            int keyMonth = cal.get(Calendar.MONTH);
+            int keyYear = cal.get(Calendar.YEAR);
+
+            cal.setTime(date);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int month = cal.get(Calendar.MONTH);
+            int year = cal.get(Calendar.YEAR);
+
+            if(keyDay == day && keyMonth == month && keyYear == year) {
+                return keywordUsages.indexOf(usage);
+            }
+        }
+        return -1;
+    }
+
+
 }
