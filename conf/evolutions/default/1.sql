@@ -5,7 +5,7 @@
 
 create table answer (
   id                        integer auto_increment not null,
-  answer                    varchar(255),
+  answer                    TEXT,
   constraint pk_answer primary key (id))
 ;
 
@@ -22,6 +22,7 @@ create table chat (
   lng                       double,
   mood                      varchar(255),
   rating                    integer,
+  comment                   varchar(255),
   created_at                datetime not null,
   constraint pk_chat primary key (id))
 ;
@@ -50,7 +51,7 @@ create table keyword_category (
 
 create table question (
   id                        integer auto_increment not null,
-  question                  varchar(255),
+  question                  TEXT,
   answer_id                 integer,
   test                      varchar(255),
   created_at                datetime not null,
