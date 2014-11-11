@@ -228,8 +228,13 @@ public class AnalysisController extends Controller
                     }
                 }
                 Keyword keyword = item.keywordCategory.keyword;
-                if (toReturn.containsKey(keyword)) { toReturn.put(keyword, toReturn.get(keyword) + 1); }
-                else { toReturn.put(keyword, 1); }
+                if(! keyword.keyword.equals("?")) {
+                    if (toReturn.containsKey(keyword)) {
+                        toReturn.put(keyword, toReturn.get(keyword) + 1);
+                    } else {
+                        toReturn.put(keyword, 1);
+                    }
+                }
             }
         }
 
