@@ -18,6 +18,7 @@ public class Question extends Model
     public int id;
 
     @Constraints.Required
+    @Column(columnDefinition = "TEXT")
     public String question;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -31,5 +32,7 @@ public class Question extends Model
     @Column(name="created_at")
     @CreatedTimestamp
     public Date createdAt;
+
+    public String test;
 
 }

@@ -1,13 +1,16 @@
 package helpers;
 
 import com.avaje.ebean.Ebean;
+import controllers.routes;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import play.mvc.Http;
+import play.mvc.Result;
 import play.test.FakeApplication;
+import play.test.FakeRequest;
 import play.test.Helpers;
 
 import java.io.IOException;
@@ -16,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-import static play.test.Helpers.fakeApplication;
+import static play.test.Helpers.*;
+import static play.test.Helpers.cookie;
 
 /**
  * DatabseHelper, sets up the database before each test.
@@ -25,6 +29,26 @@ import static play.test.Helpers.fakeApplication;
 public class DatabaseHelper {
     protected final Http.Request request = mock(Http.Request.class);
     protected FakeApplication fakeApp;
+    protected Http.Cookie cookie;
+
+    public void initSession(){
+
+        Result initDb = callAction(
+                routes.ref.LoginController.initializeDB(),
+                new FakeRequest(GET, "/initDB")
+        );
+
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("email", "admin@therapist.com");
+        data.put("password", "password");
+
+        Result result = callAction(
+                routes.ref.LoginController.validateLogin(),
+                new FakeRequest(POST, "/login").withFormUrlEncodedBody(data)
+        );
+
+        cookie = cookie("PLAY_SESSION",result);
+    }
 
     @Before
     public void setupDatabase(){

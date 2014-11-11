@@ -3,7 +3,6 @@ package models;
 import com.avaje.ebean.Ebean;
 import helpers.DatabaseFunctionsHelper;
 import helpers.DatabaseHelper;
-import modelsTest.DatabaseFunctions;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;

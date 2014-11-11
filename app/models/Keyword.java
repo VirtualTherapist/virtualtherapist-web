@@ -20,4 +20,7 @@ public class Keyword extends Model
 
     @OneToMany(cascade = CascadeType.ALL)
     public List<KeywordCategory> keywordCategoryList;
+
+    @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
+    public List<Synonym> synonyms;
 }

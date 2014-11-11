@@ -1,3 +1,4 @@
+import helpers.DatabaseFunctionsHelper;
 import org.junit.Test;
 import org.junit.Ignore;
 import play.mvc.Result;
@@ -9,7 +10,6 @@ import java.util.Map;
 
 import models.User;
 import models.UserRole;
-import modelsTest.DatabaseFunctions;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.*;
@@ -91,8 +91,8 @@ public class RoutesTest
     @Test
     @Ignore
     public void userRoutesTest() {
-        UserRole adminRole = DatabaseFunctions.addAdminRole();
-        User user = DatabaseFunctions.addUser(adminRole);
+        UserRole adminRole = DatabaseFunctionsHelper.addAdminRole();
+        User user = DatabaseFunctionsHelper.addUser(adminRole);
 
         final List<String> userUrls = Arrays.asList(
                 "/users/all",

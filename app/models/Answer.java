@@ -15,6 +15,7 @@ public class Answer extends Model {
     public int id;
 
     @Constraints.Required
+    @Column(columnDefinition = "TEXT")
     public String answer;
 
     @OneToMany(cascade = CascadeType.ALL)
