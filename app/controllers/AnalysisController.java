@@ -76,7 +76,7 @@ public class AnalysisController extends Controller {
             }
         }
 
-        return ok(analysis.render("Analyse", null,
+        return ok(analysis.render("Analyse", user,
                 Crypto.decryptAES(session(Crypto.encryptAES("firstname"))),
                 Crypto.decryptAES(session(Crypto.encryptAES("lastname"))), "", "",
                 amountOfQuestions, amountOfUnansweredQuestions,
@@ -238,12 +238,26 @@ public class AnalysisController extends Controller {
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Keyword keyword = Ebean.find(Keyword.class).where().eq("keyword", params.get("keyword")[0]).findUnique();
 
+        User user = null;
+        System.out.println(params);
+        if(params.containsKey("user")) {
+            String userIdString = params.get("user")[0];
+            int userId = Integer.parseInt(params.get("user")[0]);
+            user = Ebean.find(User.class, userId);
+        }
+
         System.out.println(keyword.keyword);
+        System.out.println(user);
 
         ArrayList<KeywordUsage> keywordUsages = new ArrayList<>();
 
         for( UserQuestionKeyword item : Ebean.find(UserQuestionKeyword.class).findList() )
         {
+            if(user != null) {
+                if(!item.userquestion.user.equals(user)) {
+                    continue;
+                }
+            }
             Keyword usedKeyword = item.keywordCategory.keyword;
             if(keyword.keyword.equals(usedKeyword.keyword)) {
                 Date createdAt = item.userquestion.createdAt;

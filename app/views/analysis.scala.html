@@ -12,13 +12,46 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
+    function calculateGridLines(high, low) {
+        // Take the Max/Min of all data values in all graphs
+        var totalMax = high;
+        var totalMin = low;
+
+        // Figure out the largest number (positive or negative)
+        var biggestNumber = Math.max(Math.abs(totalMax),Math.abs(totalMin));
+
+        // Round to an exponent of 10 appropriate for the biggest number
+        var roundingExp = Math.floor(Math.log(biggestNumber) / Math.LN10);
+        var roundingDec = Math.pow(10,roundingExp);
+
+        // Round your max and min to the nearest exponent of 10
+        var newMax = Math.ceil(totalMax/roundingDec)*roundingDec;
+        var newMin = Math.floor(totalMin/roundingDec)*roundingDec;
+
+        // Determine the range of your values
+        var range = newMax - newMin;
+
+        // Calculate the best factor for number of gridlines (2-5 gridlines)
+        // If the range of numbers divided by 2 or 5 is a whole number, use it
+        for (var i = 2; i <= 5; ++i) {
+            if ( Math.round(range/i) == range/i) {
+                var gridlines = i
+            }
+        }
+        return gridlines;
+    }
+
     google.load("visualization", "1", {packages:["corechart"]});
     google.setOnLoadCallback(drawChart);
-    function drawChart(keyword, arrayData) {
+    function drawChart(arrayData, lines) {
         var data = google.visualization.arrayToDataTable(arrayData);
 
         var options = {
             title: 'Keyword verloop',
+            width: 800,
+            chartArea: {width: '70%'},
+            pointSize: 5,
+            vAxis: {minValue:1, maxValue:5, format:'#', gridLines:lines},
             backgroundColor: { fill:'transparent' }
         };
 
@@ -28,26 +61,65 @@
     }
 
     $(document ).ready( function(){
-        @for((key, value) <- keywordUsage) {
-            $('#@key.keyword' ).click(function(){
-                $('#chart_wrapper' ).show(200);
 
-                $.ajax({
-                    type :  "POST",
-                    dataType: 'json',
-                    data: {'keyword':'@key.keyword'},
-                    url  :  "@routes.AnalysisController.keywordUsage()",
-                    success: function(data){
-                        console.log(data);
-                        var entry = data[0];
-                        for(name in entry) {
-                            console.log(name);
+        $('.keyword_btn' ).click(function(){
+            var keyword = this.id;
+            $('#chart_wrapper' ).show(200);
+
+            var data;
+
+            @if(user == null) {
+                data = {'keyword': keyword};
+            }else{
+                data = {'keyword': keyword, 'user': @user.id};
+            }
+
+            $.ajax({
+                type :  "POST",
+                dataType: 'json',
+                data: data,
+                url  :  "@routes.AnalysisController.keywordUsage()",
+                success: function(data){
+                    console.log(data);
+                    var dataArray = new Array();
+                    var nameArray = new Array();
+                    nameArray[0] = "time";
+                    nameArray[1] = keyword;
+
+                    dataArray[0] = nameArray;
+
+                    var lowest = 999999;
+                    var highest = 0;
+
+                    for(i = 0; i < data.length; i++) {
+                        var usageIndex = 0;
+                        var usageArray = new Array();
+                        var entry = data[i];
+                        console.log(entry);
+                        usageArray[usageIndex] = new Date(entry.time);
+                        usageArray[usageIndex + 1] = entry.usage;
+
+                        var usage = entry.usage;
+
+                        if(usage < lowest) {
+                            lowest = entry.usage;
                         }
-                    }
-                });
 
+                        if(usage > highest) {
+                            highest = entry.usage;
+                        }
+
+                        dataArray[i + 1] = usageArray;
+                    }
+
+                    var gridLines = calculateGridLines(highest, lowest);
+
+                    console.log(dataArray);
+                    drawChart(dataArray, gridLines);
+                }
             });
-        }
+
+        });
     });
 </script>
 }
@@ -107,7 +179,7 @@
                     @{index+=1}
                     <td>@index</td>
                     <td>
-                        <button class="btn btn-xs" id="@key.keyword">
+                        <button class="btn btn-xs keyword_btn" id="@key.keyword">
                             @key.keyword
                         </button>
                     </td>
